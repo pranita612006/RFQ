@@ -10,4 +10,9 @@ urlpatterns = [
     path('get_sales_cycles/', views.get_sales_cycles, name='get_sales_cycles'),
     path('get_segments/', views.get_segments, name='get_segments'),
     path('get_opportunity_details/', views.get_opportunity_details, name='get_opportunity_details'),
+      # Existing routes...
+    path("opportunity/", views.opportunity_creation, name="opportunity_creation"),
+
+    # New ECN Request route
+    path("opportunity_ecn/", views.opportunitycreation_ecn, name="opportunitycreation_ecn"),
 ]

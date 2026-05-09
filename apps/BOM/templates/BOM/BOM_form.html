@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="container-fluid full-dashboard bg-white pb-5">
     <div class="d-flex justify-content-between align-items-center pt-2 px-2">
@@ -15,79 +15,87 @@
     <div class="px-2">
         <h6 class="font-weight-bold">Step 1 : <span class="text-secondary font-weight-normal">Create BOM</span></h6>
         
-        <form method="post">
+        <form method="post" id="bom-form" onsubmit="return false;">
             {% csrf_token %}
             <div class="row small">
                 <div class="col-md-5">
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Customer Name</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="customer_name" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Item Creation Id</label>
-                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8"><select id="item_creation_id" class="form-control form-control-sm bg-light"><option></option></select></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Description</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="description" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary text-muted">UOM_Code</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="uom_code" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Fixture_No</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="fixture_no" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">No_Of_MEFT</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="no_of_meft" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Action Status</label>
-                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8"><select id="action_status" class="form-control form-control-sm bg-light"><option></option></select></div>
                     </div>
                 </div>
 
                 <div class="col-md-5">
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Customer ID</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="customer_id" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary bg-light border pr-1">Last ECN No</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-secondary opacity-50"></div>
+                        <div class="col-sm-8"><input type="text" id="last_ecn_no" class="form-control form-control-sm bg-secondary opacity-50"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">No_Of_Parts</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="no_of_parts" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Last_Date_Modified</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="last_date_modified" class="form-control form-control-sm bg-light"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">BOM Creation ID</label>
-                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8">
+                            <select id="bom_creation_id" class="form-control form-control-sm bg-light">
+                                <option value=""></option>
+                                {% for h in headers %}
+                                <option value="{{ h.bom_creation_id }}">{{ h.bom_creation_id }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Table_Id</label>
-                        <div class="col-sm-8"><select class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8"><select id="table_id" class="form-control form-control-sm bg-light"><option></option></select></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Create_Date</label>
-                        <div class="col-sm-8"><input type="text" class="form-control form-control-sm bg-light" value="14-Mar-26"></div>
+                        <div class="col-sm-8"><input type="text" id="create_date" class="form-control form-control-sm bg-light" value="14-Mar-26"></div>
                     </div>
                 </div>
             </div>
 
             <div class="mt-2">
-                <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Create</button>
-                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Edit</button>
-                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
-                <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
-                <button class="btn btn-sm text-white px-2 mr-1" style="background-color: #2a6ebb;"><u>S</u>endApproval</button>
-                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb">ECN</button>
+                <button type="button" id="btn-create" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Create</button>
+                <button type="button" id="btn-edit" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Edit</button>
+                <button type="button" id="btn-save" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
+                <button type="button" id="btn-delete" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
+                <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1" style="background-color: #2a6ebb;"><u>S</u>endApproval</button>
+                <button type="button" id="btn-ecn" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb">ECN</button>
+                <span id="step1-msg" class="text-success ml-2 font-weight-bold"></span>
             </div>
         </form>
     </div>
@@ -98,12 +106,12 @@
         <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material List</span></h6>
         
         <div class="d-flex align-items-center mb-2 small">
-            <span class="mr-4">BOM Creation : </span>
-            <span class="mr-5">Table ID : </span>
-            <button class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Table</button>
-            <button class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">New Part</button>
-            <button class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Trans</button>
-            <button class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Paste BOM Trans</button>
+            <span class="mr-4">BOM Creation : <strong id="lbl-bom-creation"></strong></span>
+            <span class="mr-5">Table ID : <strong id="lbl-table-id"></strong></span>
+            <button type="button" id="btn-copy-table" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Table</button>
+            <button type="button" id="btn-new-part" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">New Part</button>
+            <button type="button" id="btn-copy-trans" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Trans</button>
+            <button type="button" id="btn-paste-trans" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Paste BOM Trans</button>
         </div>
 
         <div class="table-responsive">
@@ -122,25 +130,26 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
-                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
-                        <td><input type="text" class="form-control form-control-sm border-0"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" class="form-control form-control-sm border-0" disabled></td>
-                        <td><select class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><select id="part_entry_type" class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><select id="part_number" class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><input type="text" id="part_quantity" class="form-control form-control-sm border-0"></td>
+                        <td><input type="text" id="part_description" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" id="part_uom_code" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" id="part_categorisation" class="form-control form-control-sm border-0" disabled></td>
+                        <td><input type="text" id="part_routing_link_code" class="form-control form-control-sm border-0" disabled></td>
+                        <td><select id="part_status" class="form-control form-control-sm border-0"><option></option></select></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="mb-3">
-            <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Add</button>
-            <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
-            <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
-            <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Complete</button>
-            <button class="btn btn-sm text-white px-3" style="background-color: #2a6ebb;">Download</button>
+            <button type="button" id="btn-add" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Add</button>
+            <button type="button" id="btn-save-part" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
+            <button type="button" id="btn-delete-part" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
+            <button type="button" id="btn-complete" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Complete</button>
+            <button type="button" id="btn-download" class="btn btn-sm text-white px-3" style="background-color: #2a6ebb;">Download</button>
+            <span id="step2-msg" class="text-success ml-2 font-weight-bold"></span>
         </div>
 
         <div class="table-responsive border" style="max-height: 300px; overflow-x: auto;">
@@ -157,12 +166,246 @@
                         <th>Categorisation</th>
                         <th>Routing_Link_Code</th>
                         <th>Start_Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    </tbody>
+                <tbody id="bom-trans-body">
+                </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ajaxUrl = "{% url 'bom_ajax_action' %}";
+        
+        function showMsg(elementId, msg) {
+            const el = document.getElementById(elementId);
+            el.textContent = msg;
+            setTimeout(() => el.textContent = "", 3000);
+        }
+
+        function getHeaderData() {
+            return {
+                customer_name: document.getElementById("customer_name").value,
+                item_creation_id: document.getElementById("item_creation_id").value,
+                description: document.getElementById("description").value,
+                uom_code: document.getElementById("uom_code").value,
+                fixture_no: document.getElementById("fixture_no").value,
+                no_of_meft: document.getElementById("no_of_meft").value,
+                action_status: document.getElementById("action_status").value,
+                customer_id: document.getElementById("customer_id").value,
+                last_ecn_no: document.getElementById("last_ecn_no").value,
+                no_of_parts: document.getElementById("no_of_parts").value,
+                last_date_modified: document.getElementById("last_date_modified").value,
+                bom_creation_id: document.getElementById("bom_creation_id").value,
+                table_id: document.getElementById("table_id").value,
+                create_date: document.getElementById("create_date").value
+            };
+        }
+
+        function setHeaderData(data) {
+            document.getElementById("customer_name").value = data.customer_name || "";
+            document.getElementById("item_creation_id").value = data.item_creation_id || "";
+            document.getElementById("description").value = data.description || "";
+            document.getElementById("uom_code").value = data.uom_code || "";
+            document.getElementById("fixture_no").value = data.fixture_no || "";
+            document.getElementById("no_of_meft").value = data.no_of_meft || "";
+            document.getElementById("action_status").value = data.action_status || "";
+            document.getElementById("customer_id").value = data.customer_id || "";
+            document.getElementById("last_ecn_no").value = data.last_ecn_no || "";
+            document.getElementById("no_of_parts").value = data.no_of_parts || "";
+            document.getElementById("last_date_modified").value = data.last_date_modified || "";
+            
+            let bomSelect = document.getElementById("bom_creation_id");
+            if(data.bom_creation_id && ![...bomSelect.options].some(o => o.value === data.bom_creation_id)) {
+                let opt = new Option(data.bom_creation_id, data.bom_creation_id);
+                bomSelect.add(opt);
+            }
+            bomSelect.value = data.bom_creation_id || "";
+            
+            document.getElementById("table_id").value = data.table_id || "";
+            document.getElementById("create_date").value = data.create_date || "";
+            
+            document.getElementById("lbl-bom-creation").textContent = data.bom_creation_id || "";
+            document.getElementById("lbl-table-id").textContent = data.table_id || "";
+            
+            loadParts();
+        }
+
+        function clearHeaderData() {
+            setHeaderData({});
+            document.getElementById("bom-trans-body").innerHTML = "";
+        }
+
+        function sendAjax(action, data, onSuccess) {
+            data.action = action;
+            fetch(ajaxUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === "success") {
+                    onSuccess(res);
+                } else {
+                    alert("Error: " + res.message);
+                }
+            })
+            .catch(e => alert("Request failed"));
+        }
+
+        // Step 1 Actions
+        document.getElementById("btn-create").addEventListener("click", () => {
+            sendAjax("create", getHeaderData(), (res) => {
+                showMsg("step1-msg", "Done");
+            });
+        });
+
+        document.getElementById("btn-edit").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            sendAjax("edit", { bom_creation_id: bom_id }, (res) => {
+                setHeaderData(res.data);
+                showMsg("step1-msg", "Loaded");
+            });
+        });
+
+        document.getElementById("btn-save").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            sendAjax("save", getHeaderData(), (res) => {
+                showMsg("step1-msg", "Done");
+            });
+        });
+
+        document.getElementById("btn-delete").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            if(confirm("Are you sure you want to delete this BOM?")) {
+                sendAjax("delete", { bom_creation_id: bom_id }, (res) => {
+                    clearHeaderData();
+                    showMsg("step1-msg", "Done");
+                });
+            }
+        });
+
+        document.getElementById("btn-send-approval").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            sendAjax("send_approval", { bom_creation_id: bom_id }, (res) => {
+                showMsg("step1-msg", "Done");
+                document.getElementById("action_status").value = "SEND_APPROVAL";
+            });
+        });
+
+        document.getElementById("btn-ecn").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            sendAjax("ecn", { bom_creation_id: bom_id }, (res) => {
+                showMsg("step1-msg", "Done");
+                document.getElementById("action_status").value = "ECN";
+            });
+        });
+
+        // Step 2 Add Part
+        function loadParts() {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return;
+            sendAjax("get_parts", { bom_creation_id: bom_id }, (res) => {
+                const tbody = document.getElementById("bom-trans-body");
+                tbody.innerHTML = "";
+                res.data.forEach(p => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${p.entry_type || ''}</td>
+                        <td>${p.grp_part_no || ''}</td>
+                        <td>${p.grp_part_descp || ''}</td>
+                        <td>${p.part_number || ''}</td>
+                        <td>${p.quantity || ''}</td>
+                        <td>${p.description || ''}</td>
+                        <td>${p.uom_code || ''}</td>
+                        <td>${p.categorisation || ''}</td>
+                        <td>${p.routing_link_code || ''}</td>
+                        <td>${p.start_date || ''}</td>
+                        <td><button type="button" class="btn btn-sm btn-danger py-0 px-2 btn-del-part" data-id="${p.id}">X</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+                document.querySelectorAll(".btn-del-part").forEach(btn => {
+                    btn.addEventListener("click", function() {
+                        const pid = this.getAttribute("data-id");
+                        sendAjax("delete_part", { part_id: pid }, (r) => {
+                            showMsg("step2-msg", "Done");
+                            loadParts();
+                        });
+                    });
+                });
+            });
+        }
+
+        document.getElementById("btn-add").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            
+            const pData = {
+                bom_creation_id: bom_id,
+                entry_type: document.getElementById("part_entry_type").value,
+                part_number: document.getElementById("part_number").value,
+                quantity: document.getElementById("part_quantity").value,
+                description: document.getElementById("part_description").value,
+                uom_code: document.getElementById("part_uom_code").value,
+                categorisation: document.getElementById("part_categorisation").value,
+                routing_link_code: document.getElementById("part_routing_link_code").value,
+                part_status: document.getElementById("part_status").value
+            };
+            
+            sendAjax("add_part", pData, (res) => {
+                showMsg("step2-msg", "Done");
+                loadParts();
+            });
+        });
+
+        // Other Step 2 Actions
+        document.getElementById("btn-complete").addEventListener("click", () => {
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            sendAjax("complete", { bom_creation_id: bom_id }, (res) => {
+                showMsg("step2-msg", "Done");
+            });
+        });
+        
+        document.getElementById("btn-download").addEventListener("click", (e) => {
+            e.preventDefault();
+            const bom_id = document.getElementById("bom_creation_id").value;
+            if(!bom_id) return alert("Select BOM Creation ID first");
+            
+            fetch(ajaxUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'download', bom_creation_id: bom_id })
+            })
+            .then(response => {
+                if(!response.ok) throw new Error("Network response was not ok");
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "bom_" + bom_id + ".csv";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                showMsg("step2-msg", "Done");
+            })
+            .catch(err => alert("Download failed"));
+        });
+
+    });
+</script>
 {% endblock %}

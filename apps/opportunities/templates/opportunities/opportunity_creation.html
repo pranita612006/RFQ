@@ -1,85 +1,74 @@
 {% extends "layouts/base.html" %}
 {% load static %}
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'assets/scss/custom.scss' %}">
-{% endblock %}
+
 
 {% block content %}
 <div class="container-fluid mt-4">
   <div class="card card-primary">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3 class="card-title mb-0">Opportunity Creation</h3>
-      <button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
-    </div>
-
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% if messages %}
-      <div class="px-3 pt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">
-          {{ message }}
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      <div class="card-body scrollable-form p-3">
-        <div class="row gx-3">
-          <!-- LEFT COLUMN -->
-          <div class="col-md-4">
-            <h6 class="mb-2">Opportunity Details</h6>
-
-            
-            <div class="form-group mb-2">
-                <label for="searchOpportunityNo">Search Opportunity No</label>
-                <select id="searchOpportunityNo" class="form-control">
-    <option value="">Select Opportunity</option>
-</select>
-            </div>
-
-
-            <div class="form-group mb-2">
-              <label for="lastEcnNo">Last ECN No</label>
-              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
-            </div>
-
-
-            <div class="form-group mb-2">
-                <label for="itemNo">Item No / Part Number</label>
-                <select id="itemNo" name="itemNo" class="form-control">
-    <option value="">Select Item No</option>
-</select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="projectName">Project Name</label>
-              <input type="text" class="form-control" id="projectName" name="projectName">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="opportunityReceivedDate">Opportunity Received Date</label>
-              <input type="date" class="form-control" id="opportunityReceivedDate" name="opportunityReceivedDate">
-            </div>
-
-
-            <div class="form-group mb-2">
-    <label for="salespersonCode">Salesperson Code</label>
-    <select id="salespersonCode" name="salespersonCode" class="form-control">
-        <option value="">Select Salesperson Code</option>
-    </select>
+<button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
 </div>
 
-            <div class="form-group mb-2">
-              <label for="contactNo">Contact No</label>
-              <input type="text" class="form-control" id="contactNo" name="contactNo">
-            </div>
+<form method="post" novalidate>
+{% csrf_token %}
+ {% if messages %}
+ <div class="px-3 pt-3">
+ {% for message in messages %}
+ <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">
+ {{ message }}
+</div>
+{% endfor %}
+</div>
+{% endif %}
+<div class="card-body scrollable-form p-3">
+<div class="row gx-3">
+ <!-- LEFT COLUMN -->
+ <div class="col-md-4">
+ <h6 class="mb-2">Opportunity Details</h6>
 
-            <div class="form-group mb-2">
-              <label for="contactName">Contact Name</label>
-              <input type="text" class="form-control" id="contactName" name="contactName">
-            </div>
+            
+<div class="form-group mb-2"> <label for="searchOpportunityNo">Search Opportunity No</label>
+   <select id="searchOpportunityNo" class="form-control">
+    <option value="">Select Opportunity</option>
+</select>
+ </div>
+<div class="form-group mb-2"> <label for="lastEcnNo">Last ECN No</label>
+ <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
+</div>
 
-            <div class="form-group mb-2">
+
+<div class="form-group mb-2">
+ <label for="itemNo">Item No / Part Number</label>
+<select id="itemNo" name="itemNo" class="form-control">
+<option value="">Select Item No</option>
+</select>
+ </div>
+<div class="form-group mb-2">
+<label for="projectName">Project Name</label>
+ <input type="text" class="form-control" id="projectName" name="projectName">
+  </div>
+<div class="form-group mb-2">
+ <label for="opportunityReceivedDate">Opportunity Received Date</label>
+ <input type="date" class="form-control" id="opportunityReceivedDate" name="opportunityReceivedDate">
+ </div>
+ <div class="form-group mb-2">
+    <label for="salespersonCode">Salesperson Code</label>
+    <select id="salespersonCode" name="salespersonCode" class="form-control">
+       <option value="">Select Salesperson Code</option>
+  </select>
+</div>
+
+ <div class="form-group mb-2">
+  <label for="contactNo">Contact No</label>
+ <input type="text" class="form-control" id="contactNo" name="contactNo">
+</div>
+
+ <div class="form-group mb-2">
+  <label for="contactName">Contact Name</label>
+<input type="text" class="form-control" id="contactName" name="contactName">
+ </div>
+  <div class="form-group mb-2">
     <label for="salesCycleCode">Sales Cycle Code</label>
     <select id="salesCycleCode" name="salesCycleCode" class="form-control">
         <option value="">Select Sales Cycle Code</option>
@@ -87,15 +76,15 @@
 </div>
 
 
-            <div class="form-group mb-2">
-              <label for="creationDate">Creation Date</label>
-              <input type="date" class="form-control" id="creationDate" name="creationDate" value="{{ creation_date|default:'' }}">
-            </div>
+ <div class="form-group mb-2">
+  <label for="creationDate">Creation Date</label>
+ <input type="date" class="form-control" id="creationDate" name="creationDate" value="{{ creation_date|default:'' }}">
+ </div>
 
-            <div class="form-group mb-2">
-                <label for="status">Status</label>
-                <select id="status" name="status" class="form-control">
-        <option value="">Select Status</option>
+ <div class="form-group mb-2">
+<label for="status">Status</label>
+ <select id="status" name="status" class="form-control">
+ <option value="">Select Status</option>
         <option value="Not Started">Not Started</option>
         <option value="In Progress">In Progress</option>
         <option value="Won">Won</option>
@@ -340,29 +329,32 @@
       <div class="card-footer text-right">
         <button type="submit" name="action" value="add" class="btn btn-primary">Add</button>
         <button type="button" class="btn btn-warning">Update</button>
-        <button type="button" class="btn btn-info">ECN Request</button>
-        <button type="button" class="btn btn-danger">Delete</button>
-        <button type="button" class="btn btn-success">Complete</button>
-      </div>
-      <div class="px-3 pb-3">
-        <details>
-          <summary class="btn btn-outline-primary mt-2">Send Email</summary>
-          <div class="border rounded p-3 mt-2">
-            <div class="form-group mb-2">
-              <label for="recipient_email">Recipient Email</label>
-              <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
-            </div>
-            <button type="submit" class="btn btn-primary" formaction="{% url 'send_item_email' %}">
-              Send Email
-            </button>
-          </div>
-        </details>
-      </div>
-      <a href="/feasibility_form/?customer_id={{ global_customer_id }}&name={{ global_customer_name }}" class="btn btn-primary">
+        <a href="{% url 'opportunitycreation_ecn' %}?customer_id={{ selected_customer_id }}&customer_name={{ selected_name }}"
+   class="btn btn-primary">
+   ECN Request
+</a>
+
+<button type="button" class="btn btn-danger">Delete</button>
+<button type="button" class="btn btn-success">Complete</button>
+</div>
+<div class="px-3 pb-3">
+ <details>
+   <summary class="btn btn-outline-primary mt-2">Send Email</summary>
+ <div class="border rounded p-3 mt-2">
+<div class="form-group mb-2">
+ <label for="recipient_email">Recipient Email</label>
+ <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
+ </div>
+  <button type="submit" class="btn btn-primary" formaction="{% url 'send_item_email' %}">Send Email
+ </button>
+ </div>
+</details>
+</div>
+<a href="/feasibility_form/" class="btn btn-primary">
     Go to Feasibility
-      </a>
-    </form>
-  </div>
+</a>
+ </form>
+</div>
 </div>
 
 <script>

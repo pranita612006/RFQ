@@ -16,12 +16,15 @@ logger = logging.getLogger(__name__)
 
 @require_active_customer
 # ✅ ECN Request Page
+def item_creation_page(request):
+    return render(request, "item_creation/item_creation_form.html")
+
 def ecn_request_page(request):
-    context = {
-        "customer_id": request.GET.get("customer_id", ""),
-        "customer_name": request.GET.get("customer_name", ""),
-    }
-    return render(request, "item_creation/frm_itemcreation_ecn.html", context)
+    # Pass customer_id and customer_name if provided in query string
+    return render(request, "item_creation/frm_itemcreation_ecn.html", {
+        "customer_id": request.GET.get("customer_id"),
+        "customer_name": request.GET.get("customer_name"),
+    })
 
 # ✅ Item Creation Form
 def item_creation_form(request):

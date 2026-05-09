@@ -1,0 +1,173 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECN – Request For Opportunity Creation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .ecn-container {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .form-group input {
+            padding: 6px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .buttons button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .buttons .update { background: #4CAF50; color: #fff; }
+        .buttons .delete { background: #f44336; color: #fff; }
+        .buttons .back { background: #2196F3; color: #fff; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
+        }
+        table th {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+<div class="ecn-container">
+    <h2>VOSS<br>ECN – Request For Opportunity Creation</h2>
+
+    <form>
+        <div class="form-grid">
+            <!-- Top section -->
+            <div class="form-group"><label>Search Opportunity No</label><input type="text"></div>
+            <div class="form-group"><label>Item_No/Part No</label><input type="text"></div>
+            <div class="form-group"><label>ECN ID</label><input type="text"></div>
+            <div class="form-group"><label>ECN TYPE</label><input type="text"></div>
+            <div class="form-group"><label>Project_Name</label><input type="text"></div>
+            <div class="form-group"><label>Opportunity Received Date</label><input type="date"></div>
+            <div class="form-group"><label>Salesperson Code</label><input type="text"></div>
+            <div class="form-group"><label>Contact No</label><input type="text" value="CUST-005"></div>
+            <div class="form-group"><label>Contact Name</label><input type="text" value="Shubhangi R Dalvi"></div>
+            <div class="form-group"><label>Sales Cycle Code</label><input type="text"></div>
+            <div class="form-group"><label>Creation Date</label><input type="date" value="2026-05-02"></div>
+            <div class="form-group"><label>Status</label><input type="text"></div>
+            <div class="form-group"><label>Reason</label><input type="text"></div>
+            <div class="form-group"><label>Status Date</label><input type="date"></div>
+
+            <!-- Middle section -->
+            <div class="form-group"><label>Cust ID</label><input type="text" value="CUST-005"></div>
+            <div class="form-group"><label>Supply Location</label><input type="text" value="Satara"></div>
+            <div class="form-group"><label>Segment No</label><input type="text"></div>
+            <div class="form-group"><label>Segment Description</label><input type="text"></div>
+            <div class="form-group"><label>Part Name</label><input type="text"></div>
+            <div class="form-group"><label>SOP Date</label><input type="date"></div>
+            <div class="form-group"><label>Drawing Revision No</label><input type="text"></div>
+            <div class="form-group"><label>Application</label><input type="text"></div>
+            <div class="form-group"><label>Business</label><input type="text"></div>
+            <div class="form-group"><label>Voss Plant Location</label><input type="text"></div>
+            <div class="form-group"><label>Sales Goahead Date</label><input type="date"></div>
+            <div class="form-group"><label>Part Price 1</label><input type="number"></div>
+            <div class="form-group"><label>Part Price 2</label><input type="number"></div>
+
+            <!-- Customer section -->
+            <div class="form-group"><label>Customer Name</label><input type="text" value="Cooper Corporation Pvt. Ltd."></div>
+            <div class="form-group"><label>Annual Volume 1</label><input type="number"></div>
+            <div class="form-group"><label>Annual Volume 2</label><input type="number"></div>
+            <div class="form-group"><label>Annual Volume 3</label><input type="number"></div>
+            <div class="form-group"><label>Annual Volume 4</label><input type="number"></div>
+            <div class="form-group"><label>Annual Volume 5</label><input type="number"></div>
+            <div class="form-group"><label>Estimated Value (PA)</label><input type="number"></div>
+            <div class="form-group"><label>Annual Volume Year 1</label><input type="text"></div>
+            <div class="form-group"><label>Annual Volume Year 2</label><input type="text"></div>
+            <div class="form-group"><label>Annual Volume Year 3</label><input type="text"></div>
+            <div class="form-group"><label>Annual Volume Year 4</label><input type="text"></div>
+            <div class="form-group"><label>Annual Volume Year 5</label><input type="text"></div>
+            <div class="form-group"><label>Life Cycle in Years</label><input type="number"></div>
+            <div class="form-group"><label>Remarks</label><input type="text"></div>
+            <div class="form-group"><label>Quote Status</label><input type="text"></div>
+            <div class="form-group"><label>Category Type</label><input type="text"></div>
+        </div>
+
+        <div class="buttons">
+            <button type="submit" class="update">Update</button>
+            <button type="button" class="delete">Delete</button>
+            <button type="button" class="back">Back</button>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ECN_ID</th>
+                <th>ECN_TYPE</th>
+                <th>CustomerID</th>
+                <th>CustomerNa</th>
+                <th>Item_No</th>
+                <th>No_2</th>
+                <th>Creation_Da</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Closed</th>
+                <th>Date_Closed</th>
+                <th>Segment_No</th>
+                <th>Estimated_C</th>
+                <th>Sales_Cycle_</th>
+                <th>Estimated_V</th>
+                <th>Part_...</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="16">[Data rows go here]</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+{% endblock %}

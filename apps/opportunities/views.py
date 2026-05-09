@@ -39,14 +39,17 @@ def opportunity_creation(request):
                 status=request.POST.get('status'),
                 remarks=request.POST.get('remarks'),
             )
-            # Use redirect to refresh the page after saving
-            return redirect(request.path + f"?customer_id={customer_id}&name={customer_name}")
+            
+    from django.shortcuts import render
 
-    # 2. Now these variables are defined and can be passed to the template
-    return render(request, "opportunities/opportunity_creation.html", {
-        "selected_customer_id": customer_id,
-        "selected_customer_name": customer_name,
-    })
+# Existing views...
+
+def opportunitycreation_ecn(request):
+    """
+    Render the ECN Request For Opportunity Creation page.
+    """
+    return render(request, "opportunities/frm_opportunitycreation_ecn.html")
+
 
 
 def send_item_email(request):
