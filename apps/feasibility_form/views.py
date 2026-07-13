@@ -344,19 +344,16 @@ def get_opportunity_data(request):
     if not item_no:
         return JsonResponse({"status": "error", "message": "Item number is required"})
     
-    
+    normalized_item_no = item_no.zfill(8) if item_no else ""
     record = Feasibility.objects.filter(item_no=item_no).first()
     if not record:
-        record = Feasibility.objects.filter(item_no=item_no.zfill(8)).first()
-
-        normalized_item_no = item_no.zfill(8)
+        record = Feasibility.objects.filter(item_no=normalized_item_no).first()
     
     print("Searching for Item_No:", normalized_item_no)  # Debug log
 
-
-    record = Feasibility.objects.filter(item_no=normalized_item_no).first()
     if not record:
         return JsonResponse({"status": "error", "message": "No feasibility data found"})
+
 
     data = {
         "customer_name": record.customer_name,

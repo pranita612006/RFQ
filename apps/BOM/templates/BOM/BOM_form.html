@@ -378,6 +378,40 @@
             });
         });
         
+        // Deep-link from BOP "BOM Details" (Access DoCmd.OpenForm equivalent)
+        const deepLinkParams = new URLSearchParams(window.location.search);
+        const linkedBomId = deepLinkParams.get("bom_creation_id");
+        const linkedItemId = deepLinkParams.get("item_creation_id");
+        const linkedCustomerId = deepLinkParams.get("customer_id");
+        const linkedCustomerName = deepLinkParams.get("customer_name");
+
+        if (linkedCustomerId) {
+            document.getElementById("customer_id").value = linkedCustomerId;
+        }
+        if (linkedCustomerName) {
+            document.getElementById("customer_name").value = linkedCustomerName;
+        }
+        if (linkedItemId) {
+            const itemSelect = document.getElementById("item_creation_id");
+            if (![...itemSelect.options].some(o => o.value === linkedItemId)) {
+                itemSelect.add(new Option(linkedItemId, linkedItemId));
+            }
+            itemSelect.value = linkedItemId;
+        }
+        if (linkedBomId) {
+            const bomSelect = document.getElementById("bom_creation_id");
+            if (![...bomSelect.options].some(o => o.value === linkedBomId)) {
+                bomSelect.add(new Option(linkedBomId, linkedBomId));
+            }
+            bomSelect.value = linkedBomId;
+            document.getElementById("lbl-bom-creation").textContent = linkedBomId;
+            sendAjax("edit", { bom_creation_id: linkedBomId }, (res) => {
+                if (res.data) {
+                    setHeaderData(res.data);
+                }
+            });
+        }
+
         document.getElementById("btn-download").addEventListener("click", (e) => {
             e.preventDefault();
             const bom_id = document.getElementById("bom_creation_id").value;

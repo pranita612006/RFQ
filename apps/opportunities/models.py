@@ -33,6 +33,8 @@ class CustomerInfo(models.Model):
     customer_id = models.CharField(max_length=50, primary_key=True, db_column="customer_id")
     city = models.CharField(max_length=100, blank=True, null=True, db_column="city")
     contact = models.CharField(max_length=255, db_column="contact")
+    name = models.CharField(max_length=100, blank=True, null=True, db_column="name")
+    search_name = models.CharField(max_length=100, blank=True, null=True, db_column="search_name")
 
     class Meta:
         db_table = "tbl_customerinfo"

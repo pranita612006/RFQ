@@ -12,6 +12,6 @@ def require_active_customer(view_func):
         # We rely on the ActiveCustomerMiddleware having attached `request.has_active_customer`
         if not getattr(request, 'has_active_customer', False):
             messages.warning(request, "Please select a customer before proceeding.")
-            return redirect('customer_form') 
+            return redirect('customer_creation') 
         return view_func(request, *args, **kwargs)
     return _wrapped_view

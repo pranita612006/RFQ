@@ -2,17 +2,15 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from urllib.parse import urlencode
-from .models import Opportunity
-from apps.item_creation.models import ItemCard
-from .models import CustomerInfo, OppSalesPeople, OppSalesCycles, OppSegment, OpportunityMaster, OpportunityMasterECN
 from django.utils.timezone import now
 from django.db.models import Max
 
-from django.shortcuts import render, redirect  # Add redirect to your imports
+from .models import Opportunity, CustomerInfo, OppSalesPeople, OppSalesCycles, OppSegment, OpportunityMaster, OpportunityMasterECN
+from apps.item_creation.models import ItemCard
 from .forms import SendItemEmailForm
 from config.decorators import require_active_customer
 
@@ -39,17 +37,23 @@ def opportunity_creation(request):
                 status=request.POST.get('status'),
                 remarks=request.POST.get('remarks'),
             )
-            
-    from django.shortcuts import render
+            messages.success(request, "Opportunity created successfully!")
+            return redirect("opportunity_creation")
 
-# Existing views...
+    # 2. Render the form/page for GET requests
+    context = {
+        "customer_id": customer_id,
+        "customer_name": customer_name,
+    }
+    # NOTE: Make sure "opportunities/opportunity_creation.html" matches your actual template path
+    return render(request, "opportunities/opportunity_creation.html", context)
+
 
 def opportunitycreation_ecn(request):
     """
     Render the ECN Request For Opportunity Creation page.
     """
     return render(request, "opportunities/frm_opportunitycreation_ecn.html")
-
 
 
 def send_item_email(request):
@@ -105,6 +109,7 @@ def send_item_email(request):
 
     return redirect(redirect_url)
 
+
 def get_item_numbers(request):
     customer_id = request.GET.get("customer_id", "")
 
@@ -131,21 +136,15 @@ def get_item_numbers(request):
         "creation_date": creation_date
     })
 
+
 def get_salespersons(request):
     data = OppSalesPeople.objects.all().values("code", "name")
-
-    result = [
-        {"code": d["code"], "name": d["name"]}
-        for d in data
-    ]
-
+    result = [{"code": d["code"], "name": d["name"]} for d in data]
     return JsonResponse({"data": result})
 
-def get_sales_cycles(request):
-    data = OppSalesCycles.objects.all().values(
-        "code", "description", "probability_calculation"
-    )
 
+def get_sales_cycles(request):
+    data = OppSalesCycles.objects.all().values("code", "description", "probability_calculation")
     result = [
         {
             "code": d["code"],
@@ -154,20 +153,12 @@ def get_sales_cycles(request):
         }
         for d in data
     ]
-
     return JsonResponse({"data": result})
+
 
 def get_segments(request):
     data = OppSegment.objects.all().values("no", "description")
-
-    result = [
-        {
-            "no": d["no"],
-            "description": d["description"]
-        }
-        for d in data
-    ]
-
+    result = [{"no": d["no"], "description": d["description"]} for d in data]
     return JsonResponse({"data": result})
 
 
@@ -184,7 +175,7 @@ def get_opportunity_details(request):
             opportunity = OpportunityMaster.objects.filter(item_no='0'+val).values().first()
 
         if opportunity:
-            # ✅ FETCH LAST ECN (IMPORTANT)
+            # ✅ FETCH LAST ECN
             last_ecn = OpportunityMasterECN.objects.filter(
                 item_no=opportunity["item_no"]
             ).order_by("-ecn_id").values_list("ecn_id", flat=True).first()
@@ -202,4 +193,3 @@ def get_opportunity_details(request):
 
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
-

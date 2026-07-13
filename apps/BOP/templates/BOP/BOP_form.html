@@ -1,6 +1,52 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<style>
+    #bopTabs .nav-link {
+        background-color: #dbe5f1 !important;
+        color: #495057 !important;
+        border: 1px solid #b8c9db !important;
+        border-bottom: none !important;
+        border-radius: 4px 4px 0 0;
+        margin-right: 2px;
+    }
+
+    #bopTabs .nav-link.active {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 2px solid #5b9bd5 !important;
+        border-bottom: 2px solid #ffffff !important;
+        font-weight: bold;
+    }
+
+    .tab-content {
+        border: 1px solid #b8c9db !important;
+        border-top: 3px solid #5b9bd5 !important;
+    }
+
+    /* Custom Option Box Table Popup styling */
+    .bop-desc-row:hover {
+        background-color: #007bff !important;
+        color: white !important;
+    }
+
+    .bop-desc-row.selected {
+        background-color: #343a40 !important;
+        color: white !important;
+    }
+
+    #bop_desc_popup {
+        border-radius: 4px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    #bop_desc_popup table th {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        font-weight: bold;
+        border: 1px solid #444 !important;
+    }
+</style>
 <div class="container-fluid full-dashboard bg-white pb-5">
     <div class="d-flex justify-content-between align-items-center pt-2 px-2">
         <div class="d-flex align-items-center">
@@ -14,14 +60,16 @@
 
     <div class="px-2">
         <h6 class="font-weight-bold">Step 1 : <span class="text-secondary font-weight-normal">Create BOP</span></h6>
-        
-        <form method="post">
+
+        <form method="post" id="bopForm">
             {% csrf_token %}
             <div class="row no-gutters mb-2">
                 <div class="col-md-3 offset-md-3">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Customer Code :</span></div>
-                        <input type="text" class="form-control border-secondary" value="1">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Customer Code :</span></div>
+                        <input type="text" id="customer_code" name="customer_code" class="form-control border-secondary"
+                            value="{{ global_customer_code }}">
                     </div>
                 </div>
             </div>
@@ -29,113 +77,216 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Customer ID</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Customer ID</span></div>
+                        <input type="text" id="customer_id" name="customer_id" class="form-control border-secondary"
+                            value="{{ global_customer_id }}" readonly>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Item Creation Id</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Item Creation Id</span></div>
+                        <input type="text" id="item_creation_id" name="item_creation_id" list="items_list" class="form-control border-secondary" placeholder="Type or select Item ID...">
+                        <datalist id="items_list">
+                            {% for item in items %}
+                            <option value="{{ item }}">
+                            {% endfor %}
+                        </datalist>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Customer Name</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Customer Name</span></div>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control border-secondary"
+                            value="{{ global_customer_name }}" readonly>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Drawing No</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Drawing No</span></div>
+                        <input type="text" id="drawing_no" name="drawing_no" class="form-control border-secondary">
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Drawing Revision No</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Drawing Revision No</span></div>
+                        <input type="text" id="drawing_revision_no" name="drawing_revision_no"
+                            class="form-control border-secondary">
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Revision Date</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 140px;">Revision Date</span></div>
+                        <input type="text" id="revision_date" name="revision_date" class="form-control border-secondary"
+                            disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Cell</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Cell</span></div>
+                        <select id="cell" name="cell" class="form-control border-secondary">
+                            <option value="">Select Cell</option>
+                            {% for c in cells %}
+                            <option value="{{ c.code }}">{{ c.code }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Product Category</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Product Category</span></div>
+                        <select id="product_category" name="product_category" class="form-control border-secondary">
+                            <option value="">Select Product Category</option>
+                            {% for ct in cell_types %}
+                            <option value="{{ ct.code }}">{{ ct.code }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Last ECN No</span></div>
-                        <input type="text" class="form-control border-secondary" style="background-color: #c0c0c0;" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Last ECN No</span></div>
+                        <input type="text" id="last_ecn_no" name="last_ecn_no" class="form-control border-secondary"
+                            style="background-color: #c0c0c0;" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Part Set No</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Part
+                                Set No</span></div>
+                        <input type="text" id="part_set_no" name="part_set_no" class="form-control border-secondary"
+                            disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Part Name</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Part
+                                Name</span></div>
+                        <input type="text" id="part_name" name="part_name" class="form-control" readonly>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Project</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 140px;">Project</span></div>
+                        <input type="text" id="project" name="project" class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 140px;">Remark</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 140px;">Remark</span></div>
+                        <input type="text" id="remark" name="remark" class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Entry Date</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Entry Date</span></div>
+                        <input type="text" id="entry_date" name="entry_date" class="form-control border-secondary">
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">BOP Creation Id</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">BOP Creation Id</span></div>
+                        <input type="text" id="bop_creation_id" name="bop_creation_id" list="bop_list" class="form-control border-secondary" placeholder="Type or select BOP ID...">
+                        <datalist id="bop_list">
+                            {% for bop in bops %}
+                            <option value="{{ bop }}">
+                            {% endfor %}
+                        </datalist>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 140px;">Table_Id</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 140px;">Table_Id</span></div>
+                        <input type="text" id="table_id" name="table_id" list="table_list" class="form-control border-secondary" placeholder="Type or select Table ID...">
+                        <datalist id="table_list">
+                            {% for t in tables %}
+                            <option value="{{ t }}">
+                            {% endfor %}
+                        </datalist>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 160px;">Annual volumes 1</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 160px;">Annual volumes 1</span></div>
+                        <input type="text" id="annual_volume_1" name="annual_volume_1"
+                            class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 160px;">Annual volumes 2</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 160px;">Annual volumes 2</span></div>
+                        <input type="text" id="annual_volume_2" name="annual_volume_2"
+                            class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 160px;">Annual volumes 3</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 160px;">Annual volumes 3</span></div>
+                        <input type="text" id="annual_volume_3" name="annual_volume_3"
+                            class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 160px;">Annual volumes 4</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 160px;">Annual volumes 4</span></div>
+                        <input type="text" id="annual_volume_4" name="annual_volume_4"
+                            class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-muted border-secondary" style="width: 160px;">Annual volumes 5</span></div>
-                        <input type="text" class="form-control border-secondary" disabled>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-muted border-secondary"
+                                style="width: 160px;">Annual volumes 5</span></div>
+                        <input type="text" id="annual_volume_5" name="annual_volume_5"
+                            class="form-control border-secondary" disabled>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 160px;">Action Status</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 160px;">Action Status</span></div>
+                        <select id="action_status" name="action_status" class="form-control border-secondary">
+                            <option value=""></option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Send for Approval">Send for Approval</option>
+                        </select>
                     </div>
                     <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light text-secondary border-secondary" style="width: 160px;">Last_Modified_Date</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light text-secondary border-secondary"
+                                style="width: 160px;">Last_Modified_Date</span></div>
+                        <input type="text" id="last_modified_date" name="last_modified_date"
+                            class="form-control border-secondary">
                     </div>
                 </div>
             </div>
 
             <div class="mt-2">
-                <button type="button" class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Create</button>
-                <button type="button" class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Edit</button>
-                <button type="submit" class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Save</button>
-                <button type="button" class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Delete</button>
-                <button type="button" class="btn btn-sm text-white px-2 mr-1" style="background-color: #5b74a3;">BOM Details</button>
-                <button type="button" class="btn btn-sm text-white px-2 mr-1" style="background-color: #5b74a3;">Send Approval</button>
+                <!-- Create Button: Needs an ID so JavaScript can hide it after saving -->
+                <button type="button" id="btn-create" class="btn btn-sm text-white px-3 mr-1"
+                    style="background-color: #5b74a3;">Create</button>
+
+                <!-- Edit Button: Needs an ID if you want to trigger edit mode changes later -->
+                <button type="button" id="btn-edit" class="btn btn-sm text-white px-4 mr-1"
+                    style="background-color: #5b74a3;">Edit</button>
+
+                <!-- Save Button: Needs an ID so JavaScript can catch the click event and send the data to Django -->
+                <button type="submit" id="btn-save" class="btn btn-sm text-white px-4 mr-1"
+                    style="background-color: #5b74a3;">Save</button>
+
+                <!-- Delete Button: Starts hidden (display: none;) and needs an ID to show up after a record is saved -->
+                <button type="button" id="btn-delete" class="btn btn-sm text-white px-3 mr-1"
+                    style="background-color: #5b74a3; display: none;">Delete</button>
+
+                <!-- Other utility buttons -->
+                <button type="button" id="btn-bom-details" class="btn btn-sm text-white px-2 mr-1"
+                    style="background-color: #5b74a3;">BOM Details</button>
+                <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1"
+                    style="background-color: #5b74a3;">Send Approval</button>
                 <button type="button" class="btn btn-sm text-white px-4" style="background-color: #5b74a3;">ECN</button>
             </div>
         </form>
@@ -144,45 +295,61 @@
     <hr class="my-3" style="border-top: 2px solid #666;">
 
     <div class="px-2">
-        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add dependent fields</span></h6>
+        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add dependent
+                fields</span></h6>
         <div class="d-flex align-items-center mb-2 small">
             <span class="mr-1">BOP Creation : </span>
-            <input type="text" class="form-control form-control-sm mr-4" style="width: 150px;">
+            <input type="text" id="step2_bop_creation" class="form-control form-control-sm mr-4" style="width: 150px;">
             <span class="mr-1">Table ID : </span>
-            <input type="text" class="form-control form-control-sm mr-4" style="width: 60px;">
+            <input type="text" id="step2_table_id" class="form-control form-control-sm mr-4" style="width: 60px;">
             <button class="btn btn-sm text-white" style="background-color: #5b74a3;">Copy BOP Table</button>
         </div>
 
-        <ul class="nav nav-tabs border-0 small">
+        <ul class="nav nav-tabs border-0 small" id="bopTabs">
             <li class="nav-item">
-                <a class="nav-link active py-1 px-3 border-bottom-0" style="background-color: #62a2d9; color: white;">Cell Alignment</a>
+                <a class="nav-link active py-1 px-3" id="cell-tab" data-toggle="tab" href="#cell-alignment">Cell
+                    Alignment</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-1 px-3 border" style="background-color: #e9ecef;">BOP Tab</a>
+                <a class="nav-link py-1 px-3" id="bop-tab" data-toggle="tab" href="#bop-tab-content">BOP Tab</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-1 px-3 border" style="background-color: #e9ecef;">BOP Tooling</a>
+                <a class="nav-link py-1 px-3" id="tooling-tab" data-toggle="tab" href="#bop-tooling-content">BOP
+                    Tooling</a>
             </li>
         </ul>
-
-        <div class="border p-2" style="border-top: 3px solid #62a2d9;">
+    </div>
+    <div class="tab-content border p-2">
+        <div class="tab-pane fade show active" id="cell-alignment">
             <div class="row no-gutters small mb-1">
                 <div class="col-md-3 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Product Category</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Product Category</span></div>
+                        <select id="cell_align_product_category" class="form-control border-secondary">
+                            <option value="">Select Product Category</option>
+                            {% for ct in cell_types %}
+                            <option value="{{ ct.code }}">{{ ct.code }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-3 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Business</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Business</span></div>
+                        <select id="cell_align_business" class="form-control border-secondary">
+                            <option value="">Select Business</option>
+                            <option value="New">New</option>
+                            <option value="Replacement">Replacement</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">SOP Date</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">SOP
+                                Date</span></div>
+                        <input type="text" id="cell_align_sop_date" class="form-control border-secondary" readonly>
                     </div>
                 </div>
             </div>
@@ -190,79 +357,1668 @@
             <div class="row no-gutters small mb-2">
                 <div class="col-md-3 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Process</span></div>
-                        <select class="form-control border-secondary"><option></option></select>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Process</span></div>
+                        <select name="cell_align_process" id="cell_align_process" class="form-control">
+                            <option value="">-- Select Process --</option>
+                            {% for p in processes %}
+                            <option value="{{ p.process }}"
+                                data-location="{{ p.manufacturing_location|default_if_none:'' }}"
+                                data-cell="{{ p.cell|default_if_none:'' }}">
+                                {{ p.process }} | {{ p.manufacturing_location|default_if_none:'' }} |
+                                {{p.cell|default_if_none:'' }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
                     </div>
                 </div>
+
                 <div class="col-md-3 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Manufacturing Location</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Manufacturing Location</span>
+                        </div>
+                        <input type="text" id="cell_align_mfg_location" class="form-control border-secondary">
                     </div>
                 </div>
                 <div class="col-md-2 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Cell</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Cell</span></div>
+                        <input type="text" id="cell_align_cell" class="form-control border-secondary">
                     </div>
                 </div>
                 <div class="col-md-1 pr-1">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Quantity</span></div>
-                        <input type="text" class="form-control border-secondary">
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Quantity</span></div>
+                        <input type="text" id="cell_align_quantity" class="form-control border-secondary">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light border-secondary">Remarks</span></div>
-                        <textarea class="form-control border-secondary" rows="2"></textarea>
+                        <div class="input-group-prepend"><span
+                                class="input-group-text bg-light border-secondary">Remarks</span></div>
+                        <textarea id="cell_align_remarks" class="form-control border-secondary" rows="2"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="mb-3">
-                <button class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Add</button>
-                <button class="btn btn-sm text-white px-4 mr-4" style="background-color: #5b74a3;">Save</button>
-                <button class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Download</button>
-                <button class="btn btn-sm text-white px-3" style="background-color: #5b74a3;">Complete</button>
+                <button id="btn-cell-add" class="btn btn-sm text-white px-4 mr-1" style="background-color: #5b74a3;">Add</button>
+                <button id="btn-cell-save" class="btn btn-sm text-white px-4 mr-4" style="background-color: #5b74a3;">Save</button>
+                <button id="btn-cell-download" class="btn btn-sm text-white px-3 mr-1" style="background-color: #5b74a3;">Download</button>
+                <button id="btn-cell-complete" class="btn btn-sm text-white px-3" style="background-color: #5b74a3;">Complete</button>
             </div>
-
             <div class="table-responsive">
-                <table class="table table-sm table-bordered" style="font-size: 0.85rem;">
-                    <thead style="background-color: #e9ecef;">
+                <table class="table table-sm table-bordered" style="font-size: 0.85rem; border: 1px solid #b8c9db;">
+                    <thead style="background-color: #dbe5f1;">
                         <tr>
-                            <th style="width: 30px;"></th>
-                            <th>Product Category</th>
-                            <th>Process</th>
-                            <th>Manufacturing Location</th>
-                            <th>Cell</th>
-                            <th>Quantity</th>
-                            <th>Remarks</th>
+                            <th style="border: 1px solid #b8c9db;">Product Category</th>
+                            <th style="border: 1px solid #b8c9db;">Process</th>
+                            <th style="border: 1px solid #b8c9db;">Mfg Location</th>
+                            <th style="border: 1px solid #b8c9db;">Cell</th>
+                            <th style="border: 1px solid #b8c9db;">Quantity</th>
+                            <th style="border: 1px solid #b8c9db;">Remarks</th>
+                            <th style="border: 1px solid #b8c9db;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center"><i class="fas fa-pencil-alt text-primary" style="font-size: 0.7rem;"></i></td>
-                            <td>ABT</td>
-                            <td>Assembly</td>
-                            <td>Chennai</td>
-                            <td>Hybrid Assembly</td>
-                            <td>1</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td class="text-center"><i class="fas fa-pencil-alt text-primary" style="font-size: 0.7rem;"></i></td>
-                            <td>ABT</td>
-                            <td>Assembly</td>
-                            <td>Chennai</td>
-                            <td>SFS 7</td>
-                            <td>5</td>
-                            <td></td>
-                        </tr>
+                    <tbody id="cell-alignment-table-body">
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+        <!-- BOP Tab Content -->
+        <div class="tab-pane fade" id="bop-tab-content">
+            <div class="d-flex align-items-end mb-3">
+                <div style="flex-grow: 1;">
+                    <table class="table table-bordered mb-0"
+                        style="font-size: 0.85rem; border: 1px solid #b8c9db; border-collapse: collapse; max-width: 900px; width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; width: 15%; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Type
+                                </td>
+                                <td style="width: 35%; padding: 2px; border: 1px solid #b8c9db;">
+                                    <select id="bop_tab_type"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                        <option value="Select Type">Select Type</option>
+                                        <option value="Machine Center">Machine Center</option>
+                                        <option value="Work Center">Work Center</option>
+                                    </select>
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; width: 20%; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Run Time in Sec.
+                                </td>
+                                <td style="width: 30%; padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_run_time_sec"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    MHR Year
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="text" id="bop_mhr_year"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Run Time in Min.
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_run_time_min"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Process Desc.
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db; position: relative;">
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" id="bop_tab_desc_search"
+                                            class="form-control form-control-sm border-0 bg-transparent"
+                                            placeholder="-- Select/Search Process Description --"
+                                            style="box-shadow: none; font-size: 12px; width: 100%;" autocomplete="off">
+                                        <span style="cursor: pointer; padding-right: 5px; color: #6c757d;"
+                                            id="toggle_bop_desc_dropdown">▼</span>
+                                    </div>
+
+                                    <!-- Hidden select to keep existing backend/frontend bindings perfectly working -->
+                                    <select id="bop_tab_desc" style="display: none;">
+                                        <option value="">-- Select Process Description --</option>
+                                        <!-- PERF: Options now loaded via AJAX from /BOP/get_bop_tab_descriptions/ -->
+                                    </select>
+
+                                    <!-- Custom Option Box Table Popup -->
+                                    <div id="bop_desc_popup"
+                                        style="display: none; position: absolute; top: 100%; left: 0; z-index: 1050; background: white; border: 1px solid #b8c9db; box-shadow: 0 4px 8px rgba(0,0,0,0.15); width: 680px; max-height: 250px; overflow-y: auto; overflow-x: auto;">
+                                        <table class="table table-sm table-bordered mb-0"
+                                            style="font-size: 11px; width: 100%; table-layout: fixed;">
+                                            <thead
+                                                style="background-color: black; color: white; position: sticky; top: 0; z-index: 10;">
+                                                <tr>
+                                                    <th style="width: 200px; padding: 4px;">Name</th>
+                                                    <th style="width: 100px; padding: 4px;">No</th>
+                                                    <th style="width: 90px; padding: 4px;">MHR_Lower</th>
+                                                    <th style="width: 90px; padding: 4px;">MHR_Higher</th>
+                                                    <th style="width: 80px; padding: 4px;">MHR_Year</th>
+                                                    <th style="width: 120px; padding: 4px;">Categorisation</th>
+                                                    <th style="width: 90px; padding: 4px;">CostPerQnty</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="bop_desc_table_body">
+                                                <!-- PERF: Rows now loaded via AJAX from /BOP/get_bop_tab_descriptions/ -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Total Run Time
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_total_run_time"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    No.
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="text" id="bop_tab_no"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;" readonly>
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Cycle Time
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_cycle_time"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Operation No.
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="text" id="bop_operation_no"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    MHR Lower
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_mhr_lower"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    BOQ
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_boq"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    MHR Higher
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="number" id="bop_mhr_higher"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Categorision
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="text" id="bop_categorisation"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                                <td
+                                    style="background-color: #dbe5f1; padding: 4px 8px; vertical-align: middle; font-weight: normal; border: 1px solid #b8c9db;">
+                                    Remark
+                                </td>
+                                <td style="padding: 2px; border: 1px solid #b8c9db;">
+                                    <input type="text" id="bop_remark"
+                                        class="form-control form-control-sm border-0 bg-transparent"
+                                        style="box-shadow: none;">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <button type="button" class="btn btn-sm text-white px-3 mr-5"
+                    style="background-color: #3c5075;">Complete</button>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <button id="btn-bop-tab-add" type="button" class="btn btn-sm text-white px-4 mr-2"
+                    style="background-color: #3c5075;">Add</button>
+                <button id="btn-bop-tab-save" type="button" class="btn btn-sm text-white px-4 mr-5"
+                    style="background-color: #3c5075;">Save</button>
+                <button id="btn-bop-tab-copy" type="button" class="btn btn-sm text-white px-3 mr-2" style="background-color: #3c5075;">Copy
+                    BOP
+                    Trans</button>
+                <button id="btn-bop-tab-paste" type="button" class="btn btn-sm text-white px-3 mr-2" style="background-color: #3c5075;">Paste
+                    BOP
+                    Records</button>
+                <button id="btn-bop-tab-download" type="button" class="btn btn-sm text-white px-3"
+                    style="background-color: #3c5075;">Download</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered" style="font-size: 0.85rem; border: 1px solid #b8c9db;">
+                    <thead style="background-color: #dbe5f1;">
+                        <tr>
+                            <th style="border: 1px solid #b8c9db;">Type</th>
+                            <th style="border: 1px solid #b8c9db;">Center_No</th>
+                            <th style="border: 1px solid #b8c9db;">Process Description</th>
+                            <th style="border: 1px solid #b8c9db;">Operation No</th>
+                            <th style="border: 1px solid #b8c9db;">BOQ</th>
+                            <th style="border: 1px solid #b8c9db;">Run Time in Sec.</th>
+                            <th style="border: 1px solid #b8c9db;">Run Time in Min.</th>
+                            <th style="border: 1px solid #b8c9db;">Total Run Time</th>
+                            <th style="border: 1px solid #b8c9db;">Cycle Time</th>
+                            <th style="border: 1px solid #b8c9db;">MHR_Lower</th>
+                            <th style="border: 1px solid #b8c9db;">MHR_Higher</th>
+                            <th style="border: 1px solid #b8c9db;">Remark</th>
+                            <th style="border: 1px solid #b8c9db;">Seq.No</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bop-tab-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- BOP Tooling Tab Content -->
+        <div class="tab-pane fade" id="bop-tooling-content">
+            <div class="table-responsive mb-2">
+                <table class="table table-bordered mb-0"
+                    style="font-size: 0.85rem; border: 1px solid #b8c9db; border-collapse: collapse; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #dbe5f1;">
+                            <th style="width: 30%; font-weight: normal; padding: 4px 8px; border: 1px solid #b8c9db;">
+                                Tool
+                                Description</th>
+                            <th style="width: 10%; font-weight: normal; padding: 4px 8px; border: 1px solid #b8c9db;">
+                                Quantity</th>
+                            <th style="width: 10%; font-weight: normal; padding: 4px 8px; border: 1px solid #b8c9db;">
+                                Unit
+                                Cost</th>
+                            <th style="width: 10%; font-weight: normal; padding: 4px 8px; border: 1px solid #b8c9db;">
+                                Total
+                                Estimate</th>
+                            <th style="width: 40%; font-weight: normal; padding: 4px 8px; border: 1px solid #b8c9db;">
+                                Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 2px; vertical-align: top; border: 1px solid #b8c9db;">
+                                <input type="text" id="bop_tool_description" placeholder="Click to select tooling..."
+                                    autocomplete="off" class="form-control form-control-sm border-0 bg-transparent"
+                                    style="box-shadow: none; cursor: pointer;">
+                                <div id="bop_tooling_dropdown_box"
+                                    style="display: none; position: absolute; left: 0; width: 100%; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #b8c9db; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+                                    <table class="table table-sm table-hover m-0"
+                                        style="font-size: 0.8rem; cursor: pointer;">
+                                        <thead class="bg-light sticky-top">
+                                            <tr>
+                                                <th>Tool Description</th>
+                                                <th>Unit Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bop_tooling_dropdown_rows">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                            <td style="padding: 2px; vertical-align: top; border: 1px solid #b8c9db;">
+                                <input type="number" step="any" id="bop_tool_quantity"
+                                    class="form-control form-control-sm border-0 bg-transparent text-right"
+                                    style="box-shadow: none;">
+                            </td>
+                            <td style="padding: 2px; vertical-align: top; border: 1px solid #b8c9db;">
+                                <input type="text" id="bop_tool_unit_cost" readonly
+                                    class="form-control form-control-sm border-0 bg-light text-right"
+                                    style="box-shadow: none;">
+                            </td>
+                            <td style="padding: 2px; vertical-align: top; border: 1px solid #b8c9db;">
+                                <input type="text" id="bop_tool_total_estimate" readonly
+                                    class="form-control form-control-sm border-0 bg-light text-right"
+                                    style="box-shadow: none; font-weight: bold;">
+                            </td>
+                            <td style="padding: 2px; vertical-align: top; border: 1px solid #b8c9db;">
+                                <textarea id="bop_tool_remarks" class="form-control border-0 bg-transparent" rows="2"
+                                    style="box-shadow: none; resize: none;"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <div class="mb-2">
+                        <button id="btn-tooling-add" type="button" class="btn btn-sm text-white px-4 mr-2"
+                            style="background-color: #3c5075;">Add</button>
+                        <button id="btn-tooling-save" type="button" class="btn btn-sm text-white px-4"
+                            style="background-color: #3c5075;">Save</button>
+                    </div>
+                    <div>
+                        <button id="btn-tooling-download" type="button" class="btn btn-sm text-white px-3"
+                            style="background-color: #3c5075;">Download</button>
+                    </div>
+                </div>
+                <div style="margin-top: 5px;">
+                    <button id="btn-tooling-complete" type="button" class="btn btn-sm text-white px-3"
+                        style="background-color: #3c5075;">Complete</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered" style="font-size: 0.85rem; border: 1px solid #b8c9db;">
+                    <thead style="background-color: #dbe5f1;">
+                        <tr>
+                            <th style="border: 1px solid #b8c9db;">Tool Description</th>
+                            <th style="border: 1px solid #b8c9db;">Unit Cost</th>
+                            <th style="border: 1px solid #b8c9db;">Quantity</th>
+                            <th style="border: 1px solid #b8c9db;">Total Estimate</th>
+                            <th style="border: 1px solid #b8c9db;">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bop-tooling-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            // Back button click handler
+            document.getElementById('btn-back')?.addEventListener('click', function () {
+                window.history.back();
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const itemCreationEl = document.getElementById("item_creation_id");
+                const bopCreationEl = document.getElementById("bop_creation_id");
+                const tableIdEl = document.getElementById("table_id");
+
+                const step2BopEl = document.getElementById("step2_bop_creation");
+                const step2TableEl = document.getElementById("step2_table_id");
+                const processSelect = document.getElementById("cell_align_process");
+                // Unified layout action structures selection selectors matching your codebase setups
+                const bopFormElement = document.getElementById("bopForm") || document.querySelector("form");
+                const saveButtonElement = document.getElementById("btn-save");
+                const createButtonElement = document.getElementById("btn-create");
+                const editButtonElement = document.getElementById("btn-edit");
+                const deleteButtonElement = document.getElementById("btn-delete");
+
+                const editableFieldIds = [
+                    "drawing_no",
+                    "drawing_revision_no",
+                    "revision_date",
+                    "cell",
+                    "product_category",
+                    "entry_date",
+                    "action_status"
+                ];
+
+                function setFieldsEnabled(enabled) {
+                    editableFieldIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.disabled = !enabled;
+                        }
+                    });
+                }
+
+                function setViewMode(hasRecord) {
+                    if (hasRecord) {
+                        setFieldsEnabled(false);
+                        if (createButtonElement) createButtonElement.style.display = "none";
+                        if (editButtonElement) editButtonElement.style.display = "inline-block";
+                        if (saveButtonElement) saveButtonElement.style.display = "none";
+                        if (deleteButtonElement) deleteButtonElement.style.display = "inline-block";
+                    } else {
+                        setFieldsEnabled(true);
+                        if (createButtonElement) createButtonElement.style.display = "inline-block";
+                        if (editButtonElement) editButtonElement.style.display = "none";
+                        if (saveButtonElement) saveButtonElement.style.display = "none";
+                        if (deleteButtonElement) deleteButtonElement.style.display = "none";
+                    }
+                }
+
+                // Initial page load state: disable fields and hide all action buttons
+                setFieldsEnabled(false);
+                if (createButtonElement) createButtonElement.style.display = "none";
+                if (editButtonElement) editButtonElement.style.display = "none";
+                if (saveButtonElement) saveButtonElement.style.display = "none";
+                if (deleteButtonElement) deleteButtonElement.style.display = "none";
+
+                // Bootstrap tab activation logic handler loop fix
+                const tabLinks = document.querySelectorAll('#bopTabs .nav-link');
+                tabLinks.forEach(link => {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        tabLinks.forEach(l => l.classList.remove('active'));
+                        document.querySelectorAll('.tab-content .tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+
+                        this.classList.add('active');
+                        const targetId = this.getAttribute('href');
+                        const targetPane = document.querySelector(targetId);
+                        if (targetPane) {
+                            targetPane.classList.add('show', 'active');
+                        }
+                    });
+                });
+
+                function submitBOPForm(isNewCreation) {
+                    if (!itemCreationEl || !itemCreationEl.value.trim()) {
+                        alert("Action Blocked: Please load a valid Item Creation ID first.");
+                        return;
+                    }
+
+                    // Temporarily enable revision_date if disabled so its value is submitted
+                    const revDateEl = document.getElementById("revision_date");
+                    let revDateDisabled = false;
+                    if (revDateEl && revDateEl.disabled) {
+                        revDateEl.disabled = false;
+                        revDateDisabled = true;
+                    }
+
+                    const payloadData = new FormData(bopFormElement);
+                    if (revDateDisabled && revDateEl) {
+                        revDateEl.disabled = true;
+                    }
+
+                    const tokenValue = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+                    fetch("/BOP/save/", {
+                        method: "POST",
+                        body: payloadData,
+                        headers: {
+                            "X-CSRFToken": tokenValue
+                        }
+                    })
+                        .then(res => {
+                            if (!res.ok) {
+                                return res.json().then(err => { throw err; });
+                            }
+                            return res.json();
+                        })
+                        .then(data => {
+                            if (data.bop_creation_id && bopCreationEl) {
+                                bopCreationEl.value = data.bop_creation_id;
+                                const bopList = document.getElementById("bop_list");
+                                if (bopList) {
+                                    let optExists = false;
+                                    for (let i = 0; i < bopList.options.length; i++) {
+                                        if (bopList.options[i].value === data.bop_creation_id) { optExists = true; break; }
+                                    }
+                                    if (!optExists) {
+                                        const newOpt = document.createElement("option");
+                                        newOpt.value = data.bop_creation_id;
+                                        bopList.appendChild(newOpt);
+                                    }
+                                }
+                            }
+
+                            if (data.table_id && tableIdEl) {
+                                tableIdEl.value = data.table_id;
+                                const tableList = document.getElementById("table_list");
+                                if (tableList) {
+                                    let optExists = false;
+                                    for (let i = 0; i < tableList.options.length; i++) {
+                                        if (tableList.options[i].value == data.table_id) { optExists = true; break; }
+                                    }
+                                    if (!optExists) {
+                                        const newOpt = document.createElement("option");
+                                        newOpt.value = data.table_id;
+                                        tableList.appendChild(newOpt);
+                                    }
+                                }
+                            }
+
+                            const targetUpdates = {
+                                "table_id": data.table_id,
+                                "bop_creation_id": data.bop_creation_id,
+                                "last_ecn_no": data.last_ecn_no,
+                                "last_modified_date": data.last_modified_date,
+                                "action_status": data.action_status
+                            };
+
+                            for (const [id, value] of Object.entries(targetUpdates)) {
+                                const field = document.getElementById(id);
+                                if (field) field.value = value || "";
+                            }
+
+                            if (step2BopEl) {
+                                step2BopEl.value = data.bop_creation_id || "";
+                                step2BopEl.dispatchEvent(new Event("change"));
+                            }
+                            if (step2TableEl) step2TableEl.value = data.table_id || "";
+
+                            // Switch to View Mode (fields read-only)
+                            setViewMode(true);
+
+                            // Dynamic alert message based on creation status
+                            if (isNewCreation) {
+                                alert(`Success! New BOP Record successfully created.\nBOP Creation ID: ${data.bop_creation_id}`);
+                            } else {
+                                alert("Success: " + (data.message || "BOP details updated successfully."));
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Critical save failure:", err);
+                            alert("Save Failed: " + (err.error || "Please review logs."));
+                        });
+                }
+
+                // Register button click event listeners
+                if (createButtonElement) {
+                    createButtonElement.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        submitBOPForm(true);
+                    });
+                }
+
+                if (saveButtonElement) {
+                    saveButtonElement.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        submitBOPForm(false);
+                    });
+                }
+
+                if (editButtonElement) {
+                    editButtonElement.addEventListener("click", function () {
+                        // Enter Edit Mode: enable fields, hide edit button, show save button
+                        setFieldsEnabled(true);
+                        if (createButtonElement) createButtonElement.style.display = "none";
+                        if (editButtonElement) editButtonElement.style.display = "none";
+                        if (saveButtonElement) saveButtonElement.style.display = "inline-block";
+                        if (deleteButtonElement) deleteButtonElement.style.display = "inline-block";
+                    });
+                }
+
+                // --- BOM DETAILS (opens linked BOM Creation form) ---
+                const bomDetailsButton = document.getElementById("btn-bom-details");
+                if (bomDetailsButton) {
+                    bomDetailsButton.addEventListener("click", function () {
+                        const itemNo = itemCreationEl ? itemCreationEl.value.trim() : "";
+                        if (!itemNo) {
+                            alert("Action Blocked: Please load a valid Item Creation ID first.");
+                            return;
+                        }
+
+                        const bopId = bopCreationEl ? bopCreationEl.value.trim() : "";
+                        const params = new URLSearchParams({
+                            item_creation_id: itemNo,
+                        });
+                        if (bopId) {
+                            params.set("bop_creation_id", bopId);
+                        }
+
+                        fetch(`/BOP/resolve_bom_details/?${params.toString()}`)
+                            .then(res => {
+                                if (!res.ok) {
+                                    return res.json().then(err => { throw err; });
+                                }
+                                return res.json();
+                            })
+                            .then(data => {
+                                if (data.redirect_url) {
+                                    window.location.href = data.redirect_url;
+                                } else {
+                                    alert("Action Blocked: BOM Record not found for this Item Creation ID.");
+                                }
+                            })
+                            .catch(err => {
+                                alert(err.error || "Action Blocked: BOM Record not found for this Item Creation ID.");
+                            });
+                    });
+                }
+
+                // --- SEND APPROVAL ---
+                const sendApprovalButton = document.getElementById("btn-send-approval");
+                if (sendApprovalButton) {
+                    sendApprovalButton.addEventListener("click", function () {
+                        const itemNo = itemCreationEl ? itemCreationEl.value.trim() : "";
+                        if (!itemNo) {
+                            alert("Action Blocked: Please load a valid Item Creation ID first.");
+                            return;
+                        }
+
+                        const bopId = bopCreationEl ? bopCreationEl.value.trim() : "";
+                        if (!bopId) {
+                            alert("Action Blocked: No active BOP Record loaded to send for approval.");
+                            return;
+                        }
+
+                        const currentStatus = document.getElementById("action_status")?.value || "";
+                        if (currentStatus === "Approved") {
+                            alert("Action Blocked: Approved BOP records cannot be sent for approval.");
+                            return;
+                        }
+                        if (currentStatus === "Send for Approval") {
+                            alert("Action Blocked: BOP Record is already sent for approval.");
+                            return;
+                        }
+
+                        if (!confirm(`Send BOP Record ${bopId} for approval?`)) {
+                            return;
+                        }
+
+                        const tokenValue = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+                        const tableIdValue = tableIdEl ? tableIdEl.value : "";
+
+                        fetch("/BOP/send_approval/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": tokenValue
+                            },
+                            body: JSON.stringify({
+                                item_creation_id: itemNo,
+                                bop_creation_id: bopId,
+                                table_id: tableIdValue
+                            })
+                        })
+                            .then(res => {
+                                if (!res.ok) return res.json().then(err => { throw err; });
+                                return res.json();
+                            })
+                            .then(data => {
+                                const actionStatusEl = document.getElementById("action_status");
+                                const lastModifiedEl = document.getElementById("last_modified_date");
+                                const lastEcnEl = document.getElementById("last_ecn_no");
+
+                                if (actionStatusEl) actionStatusEl.value = data.action_status || "Send for Approval";
+                                if (lastModifiedEl) lastModifiedEl.value = data.last_modified_date || "";
+                                if (lastEcnEl) lastEcnEl.value = data.last_ecn_no || "";
+
+                                setViewMode(true);
+                                alert(data.message || "BOP Record sent for approval successfully.");
+                            })
+                            .catch(err => {
+                                alert(err.error || "Send Approval Failed: Please review logs.");
+                            });
+                    });
+                }
+
+                // --- FORM DELETE INTERCEPTOR LOOP ---
+                if (deleteButtonElement) {
+                    deleteButtonElement.addEventListener("click", function () {
+                        const bopId = bopCreationEl ? bopCreationEl.value : "";
+                        if (!bopId) {
+                            alert("Action Blocked: No active BOP Record loaded to delete.");
+                            return;
+                        }
+
+                        if (!confirm(`Are you sure you want to permanently delete BOP Record: ${bopId}?`)) {
+                            return;
+                        }
+
+                        const tokenValue = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+                        fetch("/BOP/delete/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": tokenValue
+                            },
+                            body: JSON.stringify({ "bop_creation_id": bopId })
+                        })
+                            .then(res => {
+                                if (!res.ok) return res.json().then(err => { throw err; });
+                                return res.json();
+                            })
+                            .then(data => {
+                                alert(data.message || `BOP Record ${bopId} has been successfully deleted.`);
+
+                                // Clear out the form inputs completely on successful removal
+                                if (itemCreationEl) itemCreationEl.value = "";
+                                itemCreationEl.dispatchEvent(new Event("change"));
+                            })
+                            .catch(err => {
+                                console.error("Critical delete failure:", err);
+                                alert("Delete Failed: " + (err.error || "Please review logs."));
+                            });
+                    });
+                }
+
+                // --- DEPENDENT ON ITEM NUMBER LOOP ---
+                if (itemCreationEl) {
+                    itemCreationEl.addEventListener("change", function () {
+                        const itemNo = this.value;
+                        if (!itemNo) {
+                            const fieldsToClear = [
+                                "cell", "product_category", "drawing_no", "drawing_revision_no", "revision_date",
+                                "part_set_no", "part_name", "project", "remark", "annual_volume_1",
+                                "annual_volume_2", "annual_volume_3", "annual_volume_4", "annual_volume_5",
+                                "bop_creation_id", "last_modified_date", "action_status", "table_id", "last_ecn_no",
+                                "cell_align_product_category", "cell_align_business", "cell_align_sop_date",
+                                "cell_align_process", "cell_align_mfg_location", "cell_align_cell", "cell_align_quantity"
+                            ];
+
+                            fieldsToClear.forEach(id => {
+                                const el = document.getElementById(id);
+                                if (el) el.value = "";
+                            });
+
+                            if (step2BopEl) step2BopEl.value = "";
+                            if (step2TableEl) step2TableEl.value = "";
+
+                            // Disable fields and hide all action buttons when no item is selected
+                            setFieldsEnabled(false);
+                            if (createButtonElement) createButtonElement.style.display = "none";
+                            if (editButtonElement) editButtonElement.style.display = "none";
+                            if (saveButtonElement) saveButtonElement.style.display = "none";
+                            if (deleteButtonElement) deleteButtonElement.style.display = "none";
+                            return;
+                        }
+
+                        fetch(`/BOP/get_bop_autofill_data/?item_creation_id=${encodeURIComponent(itemNo)}`)
+                            .then(res => {
+                                if (!res.ok) return res.json().then(errData => { throw new Error(errData.error || "Network error"); });
+                                return res.json();
+                            })
+                            .then(data => {
+                                const textFields = {
+                                    "customer_id": data.customer_id,
+                                    "customer_name": data.customer_name,
+                                    "customer_code": data.customer_code,
+                                    "drawing_no": data.drawing_no,
+                                    "drawing_revision_no": data.drawing_revision_no,
+                                    "part_set_no": data.part_set_no,
+                                    "part_name": data.part_name,
+                                    "project": data.project,
+                                    "remark": data.remark,
+                                    "annual_volume_1": data.annual_volume_1,
+                                    "annual_volume_2": data.annual_volume_2,
+                                    "annual_volume_3": data.annual_volume_3,
+                                    "annual_volume_4": data.annual_volume_4,
+                                    "annual_volume_5": data.annual_volume_5,
+                                    "cell_align_sop_date": data.sop_date,
+                                    "cell_align_business": data.cell_align_business,
+                                    "cell_align_mfg_location": data.manufacturing_location,
+                                    "cell_align_cell": data.cell_align_cell
+                                };
+
+                                for (const [id, value] of Object.entries(textFields)) {
+                                    const el = document.getElementById(id);
+                                    if (el) el.value = value || "";
+                                }
+
+                                const revDateEl = document.getElementById("revision_date");
+                                if (revDateEl) revDateEl.value = "";
+
+                                const selectFields = ["cell", "product_category", "cell_align_product_category"];
+                                selectFields.forEach(id => {
+                                    const el = document.getElementById(id);
+                                    if (!el) return;
+                                    el.value = "";
+                                    const val = data[id];
+                                    if (!val) return;
+                                    el.value = val;
+                                    if (el.value === "") {
+                                        const target = String(val).trim().toLowerCase();
+                                        for (let i = 0; i < el.options.length; i++) {
+                                            if (el.options[i].value.trim().toLowerCase() === target) {
+                                                el.selectedIndex = i;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
+
+                                if (data.bop_creation_id) {
+                                    // Put the form into VIEW MODE since BOP record exists
+                                    setViewMode(true);
+
+                                    if (bopCreationEl) {
+                                        bopCreationEl.value = data.bop_creation_id;
+                                        const bopList = document.getElementById("bop_list");
+                                        if (bopList) {
+                                            let optExists = false;
+                                            for (let i = 0; i < bopList.options.length; i++) {
+                                                if (bopList.options[i].value === data.bop_creation_id) { optExists = true; break; }
+                                            }
+                                            if (!optExists) {
+                                                const newOpt = document.createElement("option");
+                                                newOpt.value = data.bop_creation_id;
+                                                bopList.appendChild(newOpt);
+                                            }
+                                        }
+                                    }
+
+                                    if (tableIdEl) {
+                                        tableIdEl.value = data.table_id || "";
+                                        if (data.table_id) {
+                                            const tableList = document.getElementById("table_list");
+                                            if (tableList) {
+                                                let optExists = false;
+                                                for (let i = 0; i < tableList.options.length; i++) {
+                                                    if (tableList.options[i].value == data.table_id) { optExists = true; break; }
+                                                }
+                                                if (!optExists) {
+                                                    const newOpt = document.createElement("option");
+                                                    newOpt.value = data.table_id;
+                                                    tableList.appendChild(newOpt);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (document.getElementById("last_modified_date")) document.getElementById("last_modified_date").value = data.last_modified_date || "";
+                                    if (document.getElementById("action_status")) document.getElementById("action_status").value = data.action_status || "";
+                                    if (document.getElementById("last_ecn_no")) document.getElementById("last_ecn_no").value = data.last_ecn_no || "0";
+                                    if (revDateEl && data.revision_date) revDateEl.value = data.revision_date;
+
+                                    if (step2BopEl) {
+                                        step2BopEl.value = data.bop_creation_id;
+                                        step2BopEl.dispatchEvent(new Event("change"));
+                                    }
+                                    if (step2TableEl) step2TableEl.value = data.table_id || "";
+                                } else {
+                                    // Put the form into CREATE MODE since no BOP record exists
+                                    setViewMode(false);
+
+                                    if (bopCreationEl) bopCreationEl.value = "";
+                                    if (tableIdEl) tableIdEl.value = "";
+                                    if (document.getElementById("last_modified_date")) document.getElementById("last_modified_date").value = "";
+                                    if (document.getElementById("action_status")) document.getElementById("action_status").value = "";
+                                    if (document.getElementById("last_ecn_no")) document.getElementById("last_ecn_no").value = "0";
+                                    if (revDateEl) revDateEl.value = new Date().toISOString().split('T')[0];
+
+                                    if (step2BopEl) step2BopEl.value = "";
+                                    if (step2TableEl) step2TableEl.value = "";
+                                }
+                            })
+                            .catch(err => console.error("Autofill fetch issue:", err));
+                    });
+                }
+
+                // --- PROCESS SELECTION AUTOFILL HANDLER ---
+                if (processSelect) {
+                    processSelect.addEventListener("change", function () {
+                        const selectedOption = this.options[this.selectedIndex];
+
+                        if (selectedOption && this.value !== "") {
+                            const mfgInput = document.getElementById("cell_align_mfg_location");
+                            const cellInput = document.getElementById("cell_align_cell");
+                            if (mfgInput) mfgInput.value = selectedOption.getAttribute("data-location") || "";
+                            if (cellInput) cellInput.value = selectedOption.getAttribute("data-cell") || "";
+                        } else {
+                            if (document.getElementById("cell_align_mfg_location")) document.getElementById("cell_align_mfg_location").value = "";
+                            if (document.getElementById("cell_align_cell")) document.getElementById("cell_align_cell").value = "";
+                            if (document.getElementById("cell_align_quantity")) document.getElementById("cell_align_quantity").value = "";
+                        }
+                    });
+                }
+
+                if (bopCreationEl) {
+                    bopCreationEl.addEventListener("change", function () {
+                        const bopId = this.value;
+                        if (step2BopEl) step2BopEl.value = bopId || "";
+
+                        if (!bopId) {
+                            document.getElementById("last_modified_date").value = "";
+                            document.getElementById("action_status").value = "";
+                            document.getElementById("table_id").value = "";
+                            document.getElementById("last_ecn_no").value = "0";
+                            if (step2TableEl) step2TableEl.value = "";
+                            setViewMode(false); // No active record loaded, back to Create mode
+                            return;
+                        }
+
+                        fetch(`/BOP/get_bop_details/?bop_creation_id=${encodeURIComponent(bopId)}`)
+                            .then(res => { if (!res.ok) throw new Error("Network issue"); return res.json(); })
+                            .then(data => {
+                                if (data.item_creation_id && itemCreationEl && itemCreationEl.value != data.item_creation_id) {
+                                    itemCreationEl.value = data.item_creation_id;
+                                    itemCreationEl.dispatchEvent(new Event("change"));
+                                } else {
+                                    document.getElementById("last_modified_date").value = data.last_modified_date || "";
+                                    document.getElementById("last_ecn_no").value = data.last_ecn_no || "0";
+
+                                    const revDateEl = document.getElementById("revision_date");
+                                    if (revDateEl && data.revision_date) revDateEl.value = data.revision_date;
+
+                                    const selectFields = ["action_status", "table_id"];
+                                    selectFields.forEach(id => {
+                                        const el = document.getElementById(id);
+                                        if (!el) return;
+                                        el.value = "";
+                                        const val = data[id];
+                                        if (val !== undefined && val !== null) {
+                                            el.value = val;
+                                        }
+                                    });
+
+                                    if (step2TableEl) step2TableEl.value = data.table_id || "";
+
+                                    // Load existing BOP record into View Mode
+                                    setViewMode(true);
+                                }
+                            })
+                            .catch(err => console.error("Error fetching details:", err));
+                    });
+                }
+
+                if (tableIdEl) {
+                    tableIdEl.addEventListener("change", function () {
+                        if (step2TableEl) step2TableEl.value = this.value || "";
+                    });
+                }
+
+                // --- CUSTOM PROCESS DESCRIPTION SEARCHABLE POPUP TABLE LOGIC ---
+                const searchInput = document.getElementById("bop_tab_desc_search");
+                const toggleBtn = document.getElementById("toggle_bop_desc_dropdown");
+                const popupDiv = document.getElementById("bop_desc_popup");
+                const tableBody = document.getElementById("bop_desc_table_body");
+                const realSelect = document.getElementById("bop_tab_desc");
+
+                let _popupDataLoaded = false;
+                let _popupDataCache = [];
+
+                function loadPopupDataIfNeeded(callback) {
+                    if (_popupDataLoaded) {
+                        if (callback) callback();
+                        return;
+                    }
+                    fetch('/BOP/get_bop_tab_descriptions/')
+                        .then(res => res.json())
+                        .then(data => {
+                            const items = data.descriptions || [];
+                            _popupDataCache = items;
+                            _popupDataLoaded = true;
+
+                            if (tableBody) {
+                                let rowsHtml = '';
+                                items.forEach(item => {
+                                    const no = item.no || '';
+                                    const name = item.name || '';
+                                    const categorisation = item.categorisation || '';
+                                    const mhr_year = item.mhr_year || '';
+                                    const mhr_lower = item.mhr_lower || '';
+                                    const mhr_higher = item.mhr_higher || '';
+                                    const costperqnty = item.costperquantity || item.costperqnty || '';
+                                    rowsHtml += `<tr class="bop-desc-row" style="cursor: pointer;"
+                            data-costcenter_no="${no}"
+                            data-description="${name.replace(/"/g, '&quot;')}"
+                            data-categorisation="${categorisation}"
+                            data-mhr_year="${mhr_year}"
+                            data-mhr_lower="${mhr_lower}"
+                            data-mhr_higher="${mhr_higher}"
+                            data-costperqnty="${costperqnty}">
+                            <td style="padding: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${name}</td>
+                            <td style="padding: 4px;">${no}</td>
+                            <td style="padding: 4px;">${mhr_lower}</td>
+                            <td style="padding: 4px;">${mhr_higher}</td>
+                            <td style="padding: 4px;">${mhr_year}</td>
+                            <td style="padding: 4px;">${categorisation}</td>
+                            <td style="padding: 4px;">${costperqnty}</td>
+                        </tr>`;
+                                });
+                                tableBody.innerHTML = rowsHtml;
+                            }
+
+                            if (realSelect) {
+                                let optionsHtml = '<option value="">-- Select Process Description --</option>';
+                                items.forEach(item => {
+                                    const no = item.no || '';
+                                    const name = item.name || '';
+                                    const categorisation = item.categorisation || '';
+                                    const mhr_year = item.mhr_year || '';
+                                    const mhr_lower = item.mhr_lower || '';
+                                    const mhr_higher = item.mhr_higher || '';
+                                    const costperqnty = item.costperquantity || item.costperqnty || '';
+                                    optionsHtml += `<option value="${no}"
+                            data-costcenter_no="${no}"
+                            data-description="${name.replace(/"/g, '&quot;')}"
+                            data-categorisation="${categorisation}"
+                            data-mhr_year="${mhr_year}"
+                            data-mhr_lower="${mhr_lower}"
+                            data-mhr_higher="${mhr_higher}"
+                            data-costperqnty="${costperqnty}">${name}</option>`;
+                                });
+                                realSelect.innerHTML = optionsHtml;
+                            }
+
+                            if (callback) callback();
+                        })
+                        .catch(err => {
+                            console.error("Error loading process descriptions:", err);
+                            if (callback) callback();
+                        });
+                }
+
+                function showPopup() {
+                    if (popupDiv) {
+                        loadPopupDataIfNeeded(function () {
+                            popupDiv.style.display = "block";
+                            filterPopup();
+                        });
+                    }
+                }
+
+                function hidePopup() {
+                    if (popupDiv) popupDiv.style.display = "none";
+                }
+
+                function filterPopup() {
+                    if (!searchInput || !tableBody) return;
+                    const query = searchInput.value.toLowerCase().trim();
+                    const rows = tableBody.getElementsByClassName("bop-desc-row");
+                    for (let row of rows) {
+                        const name = row.getAttribute("data-description").toLowerCase();
+                        const no = row.getAttribute("data-costcenter_no").toLowerCase();
+                        if (name.includes(query) || no.includes(query)) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                }
+
+                if (searchInput) {
+                    searchInput.addEventListener("focus", showPopup);
+                    searchInput.addEventListener("input", filterPopup);
+                }
+
+                if (toggleBtn) {
+                    toggleBtn.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        if (popupDiv) {
+                            if (popupDiv.style.display === "block") {
+                                hidePopup();
+                            } else {
+                                showPopup();
+                            }
+                        }
+                    });
+                }
+
+                if (tableBody) {
+                    tableBody.addEventListener("click", function (e) {
+                        const row = e.target.closest(".bop-desc-row");
+                        if (!row) return;
+
+                        const costCenterNo = row.getAttribute("data-costcenter_no") || "";
+                        const description = row.getAttribute("data-description") || "";
+                        const categorisation = row.getAttribute("data-categorisation") || "";
+                        const mhrYear = row.getAttribute("data-mhr_year") || "";
+                        const mhrLower = row.getAttribute("data-mhr_lower") || "";
+                        const mhrHigher = row.getAttribute("data-mhr_higher") || "";
+                        const costPerQnty = row.getAttribute("data-costperqnty") || "";
+
+                        if (searchInput) searchInput.value = description;
+
+                        if (realSelect) {
+                            realSelect.value = costCenterNo;
+                        }
+
+                        Array.from(tableBody.getElementsByClassName("bop-desc-row")).forEach(r => r.classList.remove("selected"));
+                        row.classList.add("selected");
+
+                        if (formFields.noInput) formFields.noInput.value = costCenterNo;
+                        if (formFields.operation_no) formFields.operation_no.value = costCenterNo;
+                        if (formFields.categorisation) formFields.categorisation.value = categorisation;
+                        if (formFields.mhr_year) formFields.mhr_year.value = mhrYear;
+                        if (formFields.mhr_lower) formFields.mhr_lower.value = mhrLower;
+                        if (formFields.mhr_higher) formFields.mhr_higher.value = mhrHigher;
+                        if (formFields.costperqnty) formFields.costperqnty.value = costPerQnty;
+                        if (formFields.remark) formFields.remark.value = description;
+
+                        if (costCenterNo) {
+                            const selectedType = typeDropdown ? typeDropdown.value : "";
+                            fetch(`/BOP/get_bop_tab_autofill_data/?cost_center_no=${encodeURIComponent(costCenterNo)}&type=${encodeURIComponent(selectedType)}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (formFields.run_time_sec) formFields.run_time_sec.value = data.run_time_sec || "";
+                                    if (formFields.run_time_min) formFields.run_time_min.value = data.run_time_min || "";
+                                    if (formFields.boq) formFields.boq.value = data.boq || "";
+                                    if (formFields.total_run_time) formFields.total_run_time.value = data.total_run_time || "";
+                                    if (formFields.cycle_time) formFields.cycle_time.value = data.cycle_time || "";
+
+                                    if (data.type && typeDropdown && !typeDropdown.value) {
+                                        typeDropdown.value = data.type;
+                                    }
+                                })
+                                .catch(err => console.warn("Background auto sync notice:", err));
+                        }
+
+                        hidePopup();
+                    });
+                }
+
+                document.addEventListener("click", function (e) {
+                    if (!e.target.closest("#bop_tab_desc_search") && !e.target.closest("#toggle_bop_desc_dropdown") && !e.target.closest("#bop_desc_popup")) {
+                        hidePopup();
+                    }
+                });
+
+                if (realSelect) {
+                    realSelect.addEventListener("change", function () {
+                        loadPopupDataIfNeeded(function () {
+                            const selectedOpt = realSelect.options[realSelect.selectedIndex];
+                            if (selectedOpt && realSelect.value !== "") {
+                                if (searchInput) searchInput.value = selectedOpt.text;
+                                if (tableBody) {
+                                    Array.from(tableBody.getElementsByClassName("bop-desc-row")).forEach(r => {
+                                        if (r.getAttribute("data-costcenter_no") === realSelect.value) {
+                                            r.classList.add("selected");
+                                        } else {
+                                            r.classList.remove("selected");
+                                        }
+                                    });
+                                }
+                            } else {
+                                if (searchInput) searchInput.value = "";
+                                if (tableBody) {
+                                    Array.from(tableBody.getElementsByClassName("bop-desc-row")).forEach(r => r.classList.remove("selected"));
+                                }
+                            }
+                        });
+                    });
+                }
+
+                const typeDropdown = document.getElementById("bop_tab_type");
+                const descDropdown = document.getElementById("bop_tab_desc");
+
+                const formFields = {
+                    noInput: document.getElementById("bop_tab_no"),
+                    operation_no: document.getElementById("bop_operation_no"),
+                    categorisation: document.getElementById("bop_categorisation"),
+                    run_time_sec: document.getElementById("bop_run_time_sec"),
+                    run_time_min: document.getElementById("bop_run_time_min"),
+                    boq: document.getElementById("bop_boq"),
+                    total_run_time: document.getElementById("bop_total_run_time"),
+                    cycle_time: document.getElementById("bop_cycle_time"),
+                    mhr_year: document.getElementById("bop_mhr_year"),
+                    mhr_lower: document.getElementById("bop_mhr_lower"),
+                    mhr_higher: document.getElementById("bop_mhr_higher"),
+                    remark: document.getElementById("bop_remark"),
+                    costperqnty: document.getElementById("bop_costperqnty")
+                };
+
+                if (descDropdown) {
+                    descDropdown.addEventListener("change", function () {
+                        const selectedOption = this.options[this.selectedIndex];
+
+                        if (!selectedOption || this.value === "") {
+                            Object.values(formFields).forEach(f => { if (f) f.value = ""; });
+                            return;
+                        }
+
+                        const costCenterNo = selectedOption.getAttribute("data-costcenter_no") || "";
+                        const description = selectedOption.getAttribute("data-description") || "";
+                        const categorisation = selectedOption.getAttribute("data-categorisation") || "";
+                        const mhrYear = selectedOption.getAttribute("data-mhr_year") || "";
+                        const mhrLower = selectedOption.getAttribute("data-mhr_lower") || "";
+                        const mhrHigher = selectedOption.getAttribute("data-mhr_higher") || "";
+                        const costPerQnty = selectedOption.getAttribute("data-costperqnty") || "";
+
+                        if (formFields.noInput) formFields.noInput.value = costCenterNo;
+                        if (formFields.operation_no) formFields.operation_no.value = costCenterNo;
+                        if (formFields.categorisation) formFields.categorisation.value = categorisation;
+                        if (formFields.mhr_year) formFields.mhr_year.value = mhrYear;
+                        if (formFields.mhr_lower) formFields.mhr_lower.value = mhrLower;
+                        if (formFields.mhr_higher) formFields.mhr_higher.value = mhrHigher;
+                        if (formFields.costperqnty) formFields.costperqnty.value = costPerQnty;
+                        if (formFields.remark) formFields.remark.value = description;
+
+                        if (costCenterNo) {
+                            const selectedType = typeDropdown ? typeDropdown.value : "";
+                            fetch(`/BOP/get_bop_tab_autofill_data/?cost_center_no=${encodeURIComponent(costCenterNo)}&type=${encodeURIComponent(selectedType)}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (formFields.run_time_sec) formFields.run_time_sec.value = data.run_time_sec || "";
+                                    if (formFields.run_time_min) formFields.run_time_min.value = data.run_time_min || "";
+                                    if (formFields.boq) formFields.boq.value = data.boq || "";
+                                    if (formFields.total_run_time) formFields.total_run_time.value = data.total_run_time || "";
+                                    if (formFields.cycle_time) formFields.cycle_time.value = data.cycle_time || "";
+
+                                    if (data.type && typeDropdown && !typeDropdown.value) {
+                                        typeDropdown.value = data.type;
+                                    }
+                                })
+                                .catch(err => console.warn("Background auto sync notice:", err));
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const toolDescInput = document.getElementById("bop_tool_description");
+                const unitCostInput = document.getElementById("bop_tool_unit_cost");
+                const quantityInput = document.getElementById("bop_tool_quantity");
+                const totalEstimateInput = document.getElementById("bop_tool_total_estimate");
+
+                if (!toolDescInput) return;
+
+                let dropdownBox = document.getElementById("bop_tooling_global_dropdown");
+                if (!dropdownBox) {
+                    dropdownBox = document.createElement("div");
+                    dropdownBox.id = "bop_tooling_global_dropdown";
+                    dropdownBox.style.position = "absolute";
+                    dropdownBox.style.zIndex = "99999";
+                    dropdownBox.style.backgroundColor = "#ffffff";
+                    dropdownBox.style.border = "1px solid #b8c9db";
+                    dropdownBox.style.maxHeight = "220px";
+                    dropdownBox.style.overflowY = "auto";
+                    dropdownBox.style.boxShadow = "0px 6px 12px rgba(0,0,0,0.175)";
+                    dropdownBox.style.display = "none";
+                    document.body.appendChild(dropdownBox);
+                }
+
+                function positionDropdown() {
+                    const rect = toolDescInput.getBoundingClientRect();
+                    dropdownBox.style.top = (window.scrollY + rect.bottom) + "px";
+                    dropdownBox.style.left = (window.scrollX + rect.left) + "px";
+                    dropdownBox.style.width = rect.width + "px";
+                }
+
+                toolDescInput.addEventListener("click", function (e) {
+                    e.stopPropagation();
+
+                    fetch('/BOP/get_bop_tooling_options/')
+                        .then(response => {
+                            if (!response.ok) throw new Error("HTTP error");
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (!data.results || data.results.length === 0) {
+                                dropdownBox.style.display = "none";
+                                return;
+                            }
+
+                            let tableHtml = `
+                <table class="table table-sm table-bordered m-0" style="font-size: 0.8rem; cursor: pointer; background: white;">
+                    <thead style="background-color: #f1f5f9; position: sticky; top: 0; z-index: 2;">
+                        <tr>
+                            <th style="padding: 4px 8px; font-weight: 600;">Tool Description</th>
+                            <th style="padding: 4px 8px; font-weight: 600; width: 30%;" class="text-right">Unit Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+                            data.results.forEach(item => {
+                                tableHtml += `
+                    <tr class="bop-dropdown-row" data-desc="${encodeURIComponent(item.tool_description)}" data-cost="${item.unit_cost}">
+                        <td style="padding: 5px 8px; white-space: normal; word-break: break-word;">${item.tool_description}</td>
+                        <td style="padding: 5px 8px;" class="text-right">${parseFloat(item.unit_cost).toFixed(2)}</td>
+                    </tr>
+                `;
+                            });
+
+                            tableHtml += `</tbody></table>`;
+                            dropdownBox.innerHTML = tableHtml;
+
+                            positionDropdown();
+                            dropdownBox.style.display = "block";
+
+                            dropdownBox.querySelectorAll(".bop-dropdown-row").forEach(row => {
+                                row.addEventListener("mouseenter", function () { this.style.backgroundColor = "#e9ecef"; });
+                                row.addEventListener("mouseleave", function () { this.style.backgroundColor = "transparent"; });
+
+                                row.addEventListener("click", function (event) {
+                                    event.stopPropagation();
+                                    const selectedDesc = decodeURIComponent(this.getAttribute("data-desc"));
+                                    const selectedCost = this.getAttribute("data-cost");
+
+                                    toolDescInput.value = selectedDesc;
+                                    if (unitCostInput) {
+                                        unitCostInput.value = parseFloat(selectedCost).toFixed(2);
+                                    }
+
+                                    calculateProduct();
+                                    dropdownBox.style.display = "none";
+                                });
+                            });
+                        })
+                        .catch(err => console.error("Error loading dropdown data profile options:", err));
+                });
+
+                document.addEventListener("click", function (e) {
+                    if (!toolDescInput.contains(e.target) && !dropdownBox.contains(e.target)) {
+                        dropdownBox.style.display = "none";
+                    }
+                });
+
+                window.addEventListener("resize", function () {
+                    if (dropdownBox.style.display === "block") positionDropdown();
+                });
+
+                function calculateProduct() {
+                    if (!unitCostInput || !quantityInput || !totalEstimateInput) return;
+                    const cost = parseFloat(unitCostInput.value) || 0;
+                    const quantity = parseFloat(quantityInput.value) || 0;
+                    const total = cost * quantity;
+
+                    totalEstimateInput.value = total > 0 ? total.toFixed(2) : "0.00";
+                }
+
+                if (quantityInput) {
+                    quantityInput.addEventListener("input", calculateProduct);
+
+                    quantityInput.addEventListener("keydown", function (e) {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            calculateProduct();
+                            if (totalEstimateInput) totalEstimateInput.focus();
+                        }
+                    });
+                }
+
+                if (unitCostInput) {
+                    unitCostInput.addEventListener("input", calculateProduct);
+                }
+            });
+
+            // ================================================================
+            // STEP 2: SUBFORM CRUD HANDLERS
+            // ================================================================
+            document.addEventListener("DOMContentLoaded", function () {
+                const csrfToken = () => document.querySelector('[name=csrfmiddlewaretoken]')?.value || "";
+                const getBopId = () => document.getElementById("step2_bop_creation")?.value.trim() || "";
+                const getItemId = () => document.getElementById("item_creation_id")?.value.trim() || "";
+                const getTableId = () => document.getElementById("step2_table_id")?.value.trim() || "";
+
+                // ── CELL ALIGNMENT ──────────────────────────────────────────
+
+                let _cellEditId = null;
+
+                function loadCellAlignmentRows(bopId) {
+                    if (!bopId) return;
+                    fetch(`/BOP/cell_alignment/load/?bopcreation_id=${encodeURIComponent(bopId)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            const tbody = document.getElementById("cell-alignment-table-body");
+                            if (!tbody) return;
+                            tbody.innerHTML = "";
+                            (data.rows || []).forEach(row => {
+                                const tr = document.createElement("tr");
+                                tr.setAttribute("data-id", row.id);
+                                tr.innerHTML = `
+                                    <td>${row.product_category}</td>
+                                    <td>${row.process}</td>
+                                    <td>${row.manufacturing_location}</td>
+                                    <td>${row.cell}</td>
+                                    <td>${row.quantity}</td>
+                                    <td>${row.remarks}</td>
+                                    <td><button type="button" class="btn btn-xs btn-danger py-0 px-1 cell-del-btn" data-id="${row.id}">Del</button></td>`;
+                                tbody.appendChild(tr);
+                            });
+                            tbody.querySelectorAll(".cell-del-btn").forEach(btn => {
+                                btn.addEventListener("click", function () {
+                                    if (!confirm("Delete this Cell Alignment record?")) return;
+                                    fetch("/BOP/cell_alignment/delete/", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken() },
+                                        body: JSON.stringify({ id: this.getAttribute("data-id") })
+                                    }).then(() => loadCellAlignmentRows(getBopId()));
+                                });
+                            });
+                        });
+                }
+
+                document.getElementById("btn-cell-add")?.addEventListener("click", function () {
+                    _cellEditId = null;
+                    ["cell_align_product_category","cell_align_business","cell_align_sop_date",
+                     "cell_align_process","cell_align_mfg_location","cell_align_cell",
+                     "cell_align_quantity","cell_align_remarks"].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = "";
+                    });
+                });
+
+                document.getElementById("btn-cell-save")?.addEventListener("click", function () {
+                    const bopId = getBopId();
+                    if (!bopId) { alert("Please load a BOP record first (Step 1)."); return; }
+                    const payload = {
+                        id: _cellEditId || "",
+                        bopcreation_id: bopId,
+                        itemcreation_id: getItemId(),
+                        table_id: getTableId(),
+                        product_category: document.getElementById("cell_align_product_category")?.value || "",
+                        process: document.getElementById("cell_align_process")?.value || "",
+                        manufacturing_location: document.getElementById("cell_align_mfg_location")?.value || "",
+                        cell: document.getElementById("cell_align_cell")?.value || "",
+                        quantity: document.getElementById("cell_align_quantity")?.value || "",
+                        remarks: document.getElementById("cell_align_remarks")?.value || "",
+                    };
+                    fetch("/BOP/cell_alignment/save/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken() },
+                        body: JSON.stringify(payload)
+                    }).then(r => r.json()).then(data => {
+                        if (data.error) { alert("Error: " + data.error); return; }
+                        _cellEditId = null;
+                        loadCellAlignmentRows(bopId);
+                    }).catch(e => alert("Save failed: " + e));
+                });
+
+                // ── BOP TAB ─────────────────────────────────────────────────
+
+                let _bopTabEditId = null;
+
+                function loadBopTabRows(bopId) {
+                    if (!bopId) return;
+                    const tableId = getTableId();
+                    let url = `/BOP/tab/load/?bopcreation_id=${encodeURIComponent(bopId)}`;
+                    if (tableId) url += `&table_id=${encodeURIComponent(tableId)}`;
+                    fetch(url).then(r => r.json()).then(data => {
+                        const tbl = document.getElementById("bop-tab-table-body");
+                        if (!tbl) return;
+                        tbl.innerHTML = "";
+                        (data.rows || []).forEach(row => {
+                            const tr = document.createElement("tr");
+                            tr.setAttribute("data-id", row.id);
+                            tr.innerHTML = `
+                                <td>${row.type}</td>
+                                <td>${row.costcenter_no}</td>
+                                <td>${row.description}</td>
+                                <td>${row.operation_no}</td>
+                                <td>${row.boq}</td>
+                                <td>${row.run_time_sec}</td>
+                                <td>${row.run_time_min}</td>
+                                <td>${row.total_run_time}</td>
+                                <td>${row.cycle_time}</td>
+                                <td>${row.mhr_lower}</td>
+                                <td>${row.mhr_higher}</td>
+                                <td>${row.remark}</td>
+                                <td>${row.seq_no || ""}</td>`;
+                            tr.style.cursor = "pointer";
+                            tr.addEventListener("click", function () {
+                                _bopTabEditId = row.id;
+                                document.getElementById("bop_tab_type").value = row.type || "";
+                                document.getElementById("bop_tab_no").value = row.costcenter_no || "";
+                                document.getElementById("bop_tab_desc_search").value = row.description || "";
+                                document.getElementById("bop_operation_no").value = row.operation_no || "";
+                                document.getElementById("bop_boq").value = row.boq || "";
+                                document.getElementById("bop_run_time_sec").value = row.run_time_sec || "";
+                                document.getElementById("bop_run_time_min").value = row.run_time_min || "";
+                                document.getElementById("bop_total_run_time").value = row.total_run_time || "";
+                                document.getElementById("bop_cycle_time").value = row.cycle_time || "";
+                                document.getElementById("bop_mhr_lower").value = row.mhr_lower || "";
+                                document.getElementById("bop_mhr_higher").value = row.mhr_higher || "";
+                                document.getElementById("bop_remark").value = row.remark || "";
+                            });
+                            tbl.appendChild(tr);
+                        });
+                    });
+                }
+
+                document.getElementById("btn-bop-tab-add")?.addEventListener("click", function () {
+                    _bopTabEditId = null;
+                    ["bop_tab_type","bop_tab_no","bop_tab_desc_search","bop_operation_no",
+                     "bop_boq","bop_run_time_sec","bop_run_time_min","bop_total_run_time",
+                     "bop_cycle_time","bop_mhr_lower","bop_mhr_higher","bop_remark",
+                     "bop_categorisation","bop_mhr_year","bop_costperqnty"].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = "";
+                    });
+                });
+
+                document.getElementById("btn-bop-tab-save")?.addEventListener("click", function () {
+                    const bopId = getBopId();
+                    if (!bopId) { alert("Please load a BOP record first (Step 1)."); return; }
+                    const payload = {
+                        id: _bopTabEditId || "",
+                        bopcreation_id: bopId,
+                        itemcreation_id: getItemId(),
+                        table_id: getTableId(),
+                        type: document.getElementById("bop_tab_type")?.value || "",
+                        costcenter_no: document.getElementById("bop_tab_no")?.value || "",
+                        description: document.getElementById("bop_tab_desc_search")?.value || "",
+                        operation_no: document.getElementById("bop_operation_no")?.value || "",
+                        boq: document.getElementById("bop_boq")?.value || "",
+                        run_time_sec: document.getElementById("bop_run_time_sec")?.value || "",
+                        run_time_min: document.getElementById("bop_run_time_min")?.value || "",
+                        total_run_time: document.getElementById("bop_total_run_time")?.value || "",
+                        cycle_time: document.getElementById("bop_cycle_time")?.value || "",
+                        mhr_lower: document.getElementById("bop_mhr_lower")?.value || "",
+                        mhr_higher: document.getElementById("bop_mhr_higher")?.value || "",
+                        mhr_year: document.getElementById("bop_mhr_year")?.value || "",
+                        remark: document.getElementById("bop_remark")?.value || "",
+                        categorisation: document.getElementById("bop_categorisation")?.value || "",
+                        costperqnty: document.getElementById("bop_costperqnty")?.value || "",
+                    };
+                    fetch("/BOP/tab/save/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken() },
+                        body: JSON.stringify(payload)
+                    }).then(r => r.json()).then(data => {
+                        if (data.error) { alert("Error: " + data.error); return; }
+                        _bopTabEditId = null;
+                        loadBopTabRows(bopId);
+                    }).catch(e => alert("Save failed: " + e));
+                });
+
+                // ── BOP TOOLING ─────────────────────────────────────────────
+
+                let _toolingEditId = null;
+
+                function loadBopTollingRows(bopId) {
+                    if (!bopId) return;
+                    fetch(`/BOP/tolling/load/?bopcreation_id=${encodeURIComponent(bopId)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            const tbl = document.getElementById("bop-tooling-table-body");
+                            if (!tbl) return;
+                            tbl.innerHTML = "";
+                            (data.rows || []).forEach(row => {
+                                const tr = document.createElement("tr");
+                                tr.setAttribute("data-id", row.id);
+                                tr.innerHTML = `
+                                    <td>${row.tool_description}</td>
+                                    <td>${row.unit_cost}</td>
+                                    <td>${row.qty_required}</td>
+                                    <td>${row.total_estimate}</td>
+                                    <td>${row.remarks}</td>`;
+                                tr.style.cursor = "pointer";
+                                tr.addEventListener("click", function () {
+                                    _toolingEditId = row.id;
+                                    document.getElementById("bop_tool_description").value = row.tool_description || "";
+                                    document.getElementById("bop_tool_unit_cost").value = row.unit_cost || "";
+                                    document.getElementById("bop_tool_quantity").value = row.qty_required || "";
+                                    document.getElementById("bop_tool_total_estimate").value = row.total_estimate || "";
+                                    document.getElementById("bop_tool_remarks").value = row.remarks || "";
+                                });
+                                tbl.appendChild(tr);
+                            });
+                        });
+                }
+
+                document.getElementById("btn-tooling-add")?.addEventListener("click", function () {
+                    _toolingEditId = null;
+                    ["bop_tool_description","bop_tool_unit_cost","bop_tool_quantity",
+                     "bop_tool_total_estimate","bop_tool_remarks"].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = "";
+                    });
+                });
+
+                document.getElementById("btn-tooling-save")?.addEventListener("click", function () {
+                    const bopId = getBopId();
+                    if (!bopId) { alert("Please load a BOP record first (Step 1)."); return; }
+                    const payload = {
+                        id: _toolingEditId || "",
+                        bopcreation_id: bopId,
+                        itemcreation_id: getItemId(),
+                        table_id: getTableId(),
+                        tool_description: document.getElementById("bop_tool_description")?.value || "",
+                        unit_cost: document.getElementById("bop_tool_unit_cost")?.value || "",
+                        qty_required: document.getElementById("bop_tool_quantity")?.value || "",
+                        total_estimate: document.getElementById("bop_tool_total_estimate")?.value || "",
+                        remarks: document.getElementById("bop_tool_remarks")?.value || "",
+                    };
+                    fetch("/BOP/tolling/save/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken() },
+                        body: JSON.stringify(payload)
+                    }).then(r => r.json()).then(data => {
+                        if (data.error) { alert("Error: " + data.error); return; }
+                        _toolingEditId = null;
+                        loadBopTollingRows(bopId);
+                    }).catch(e => alert("Save failed: " + e));
+                });
+
+                // ── AUTO-LOAD ALL SUBFORM ROWS WHEN BOP ID IS SET ───────────
+                // Watch step2_bop_creation (set by item_creation_id change or bop_creation_id change)
+                const step2BopObs = document.getElementById("step2_bop_creation");
+                if (step2BopObs) {
+                    const observer = new MutationObserver(() => {
+                        const bopId = step2BopObs.value;
+                        if (bopId) {
+                            loadCellAlignmentRows(bopId);
+                            loadBopTabRows(bopId);
+                            loadBopTollingRows(bopId);
+                        }
+                    });
+                    observer.observe(step2BopObs, { attributes: true, attributeFilter: ["value"] });
+
+                    // Also fire on manual input
+                    step2BopObs.addEventListener("change", function () {
+                        const bopId = this.value;
+                        if (bopId) {
+                            loadCellAlignmentRows(bopId);
+                            loadBopTabRows(bopId);
+                            loadBopTollingRows(bopId);
+                        }
+                    });
+                }
+            });
+        </script>
+        {% endblock %}

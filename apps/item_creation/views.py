@@ -116,7 +116,18 @@ def get_item_details(request):
                 if hasattr(item.lastModifiedDate, "strftime"):
                     last_modified = item.lastModifiedDate.strftime("%Y-%m-%d")
                 else:
-                    last_modified = str(item.lastModifiedDate)
+                    date_str = str(item.lastModifiedDate).strip()
+                    parsed_date = None
+                    for fmt in ('%Y-%m-%d', '%d-%m-%Y', '%m/%d/%Y', '%d/%m/%Y', '%Y-%m-%d %H:%M:%S', '%d-%m-%Y %H:%M:%S'):
+                        try:
+                            parsed_date = datetime.datetime.strptime(date_str, fmt)
+                            break
+                        except ValueError:
+                            continue
+                    if parsed_date:
+                        last_modified = parsed_date.strftime("%Y-%m-%d")
+                    else:
+                        last_modified = date_str
             except Exception:
                 last_modified = ""
 
