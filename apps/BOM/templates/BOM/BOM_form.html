@@ -7,95 +7,142 @@
             <h2 class="mb-0 mr-2" style="color: #d11252; font-weight: bold;">FlowNexis</h2>
             <h3 class="mb-0 text-secondary" style="font-size: 1.5rem;">BOM Creation</h3>
         </div>
-        <button class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></button>
+        <button class="btn btn-outline-secondary btn-sm px-4" onclick="window.history.back();"
+            type="button"><i><u>Back</u></i></button>
     </div>
 
     <hr class="my-2">
 
     <div class="px-2">
         <h6 class="font-weight-bold">Step 1 : <span class="text-secondary font-weight-normal">Create BOM</span></h6>
-        
+
         <form method="post" id="bom-form" onsubmit="return false;">
             {% csrf_token %}
             <div class="row small">
                 <div class="col-md-5">
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Customer Name</label>
-                        <div class="col-sm-8"><input type="text" id="customer_name" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="customer_name" class="form-control form-control-sm"
+                                readonly></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Item Creation Id</label>
-                        <div class="col-sm-8"><select id="item_creation_id" class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8"><select id="item_creation_id" class="form-control form-control-sm">
+                                <option></option>
+                            </select></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Description</label>
-                        <div class="col-sm-8"><input type="text" id="description" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="description" class="form-control form-control-sm">
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary text-muted">UOM_Code</label>
-                        <div class="col-sm-8"><input type="text" id="uom_code" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="uom_code" class="form-control form-control-sm">
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Fixture_No</label>
-                        <div class="col-sm-8"><input type="text" id="fixture_no" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="fixture_no" class="form-control form-control-sm">
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">No_Of_MEFT</label>
-                        <div class="col-sm-8"><input type="text" id="no_of_meft" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="no_of_meft" class="form-control form-control-sm">
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Action Status</label>
-                        <div class="col-sm-8"><select id="action_status" class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8">
+                            <select id="action_status" class="form-control form-control-sm">
+                                <option value=""></option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Sent for Approval">Sent for Approval</option>
+                                <option value="ECN">ECN</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-5">
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Customer ID</label>
-                        <div class="col-sm-8"><input type="text" id="customer_id" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="customer_id" class="form-control form-control-sm"
+                                readonly></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
-                        <label class="col-sm-4 text-secondary bg-light border pr-1">Last ECN No</label>
-                        <div class="col-sm-8"><input type="text" id="last_ecn_no" class="form-control form-control-sm bg-secondary opacity-50"></div>
+                        <label class="col-sm-4 text-secondary">Last ECN No</label>
+                        <div class="col-sm-8"><input type="text" id="last_ecn_no" class="form-control form-control-sm"
+                                readonly></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">No_Of_Parts</label>
-                        <div class="col-sm-8"><input type="text" id="no_of_parts" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="no_of_parts" class="form-control form-control-sm">
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Last_Date_Modified</label>
-                        <div class="col-sm-8"><input type="text" id="last_date_modified" class="form-control form-control-sm bg-light"></div>
+                        <div class="col-sm-8"><input type="text" id="last_date_modified"
+                                class="form-control form-control-sm"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">BOM Creation ID</label>
                         <div class="col-sm-8">
-                            <select id="bom_creation_id" class="form-control form-control-sm bg-light">
-                                <option value=""></option>
+                            <input type="text" id="bom_creation_id" list="bom-id-list"
+                                class="form-control form-control-sm" autocomplete="off" placeholder="Search or type...">
+                            <datalist id="bom-id-list">
                                 {% for h in headers %}
                                 <option value="{{ h.bom_creation_id }}">{{ h.bom_creation_id }}</option>
                                 {% endfor %}
-                            </select>
+                            </datalist>
                         </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Table_Id</label>
-                        <div class="col-sm-8"><select id="table_id" class="form-control form-control-sm bg-light"><option></option></select></div>
+                        <div class="col-sm-8">
+                            <input type="text" id="table_id" list="table-id-list" class="form-control form-control-sm"
+                                autocomplete="off" placeholder="Search or type...">
+                            <datalist id="table-id-list">
+                                {% for h in headers %}
+                                {% if h.table_id %}
+                                <option value="{{ h.table_id }}">{{ h.table_id }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </datalist>
+                        </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Create_Date</label>
-                        <div class="col-sm-8"><input type="text" id="create_date" class="form-control form-control-sm bg-light" value="14-Mar-26"></div>
+                        <div class="col-sm-8"><input type="text" id="create_date" class="form-control form-control-sm">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-2">
-                <button type="button" id="btn-create" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Create</button>
-                <button type="button" id="btn-edit" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Edit</button>
-                <button type="button" id="btn-save" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
-                <button type="button" id="btn-delete" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
-                <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1" style="background-color: #2a6ebb;"><u>S</u>endApproval</button>
-                <button type="button" id="btn-ecn" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb">ECN</button>
+            <div class="mt-2 d-flex align-items-center flex-wrap">
+                <button type="button" id="btn-create" class="btn btn-sm text-white px-3 mr-1 mb-1"
+                    style="background-color: #2a6ebb;">Create</button>
+                <button type="button" id="btn-edit" class="btn btn-sm text-white px-4 mr-1 mb-1"
+                    style="background-color: #2a6ebb;">Edit</button>
+                <button type="button" id="btn-save" class="btn btn-sm text-white px-4 mr-1 mb-1"
+                    style="background-color: #2a6ebb;">Save</button>
+                <button type="button" id="btn-delete" class="btn btn-sm text-white px-3 mr-1 mb-1"
+                    style="background-color: #2a6ebb;">Delete</button>
+                {% if header and header.action_status == "Sent for approval" or header.action_status == "Approved" %}
+                <button type="button" id="btn-send-approval" class="btn btn-sm btn-secondary px-2 mr-1 mb-1"
+                    disabled="disabled" title="Record is locked in approval state"><u>S</u>endApproval (Locked)</button>
+                {% else %}
+                <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1 mb-1"
+                    style="background-color: #2a6ebb;"><u>S</u>endApproval</button>
+                {% endif %}
+                <button type="button" id="btn-ecn" class="btn btn-sm text-white px-4 mr-1 mb-1"
+                    style="background-color: #2a6ebb">ECN</button>
                 <span id="step1-msg" class="text-success ml-2 font-weight-bold"></span>
+                <span id="record-lock-badge" class="badge badge-warning text-dark ml-2"
+                    style="display: {% if header and header.action_status == 'Sent for approval' or header.action_status == 'Approved' %}inline-block{% else %}none{% endif %};">🔒
+                    Record Locked</span>
             </div>
         </form>
     </div>
@@ -103,15 +150,20 @@
     <hr class="my-3" style="border-top: 2px solid #666;">
 
     <div class="px-2">
-        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material List</span></h6>
-        
+        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material
+                List</span></h6>
+
         <div class="d-flex align-items-center mb-2 small">
             <span class="mr-4">BOM Creation : <strong id="lbl-bom-creation"></strong></span>
             <span class="mr-5">Table ID : <strong id="lbl-table-id"></strong></span>
-            <button type="button" id="btn-copy-table" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Table</button>
-            <button type="button" id="btn-new-part" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">New Part</button>
-            <button type="button" id="btn-copy-trans" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Copy BOM Trans</button>
-            <button type="button" id="btn-paste-trans" class="btn btn-sm text-white mr-1" style="background-color: #2a6ebb;">Paste BOM Trans</button>
+            <button type="button" id="btn-copy-table" class="btn btn-sm text-white mr-1"
+                style="background-color: #2a6ebb;">Copy BOM Table</button>
+            <button type="button" id="btn-new-part" class="btn btn-sm text-white mr-1"
+                style="background-color: #2a6ebb;">New Part</button>
+            <button type="button" id="btn-copy-trans" class="btn btn-sm text-white mr-1"
+                style="background-color: #2a6ebb;">Copy BOM Trans</button>
+            <button type="button" id="btn-paste-trans" class="btn btn-sm text-white mr-1"
+                style="background-color: #2a6ebb;">Paste BOM Trans</button>
         </div>
 
         <div class="table-responsive">
@@ -130,25 +182,49 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><select id="part_entry_type" class="form-control form-control-sm border-0"><option></option></select></td>
-                        <td><select id="part_number" class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td>
+                            <select id="part_entry_type" class="form-control form-control-sm border-0">
+                                <option value=""></option>
+                                <option value="Item">Item</option>
+                                <option value="Production BOM">Production BOM</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="part_number" class="form-control form-control-sm border-0">
+                                <option value=""></option>
+                            </select>
+                        </td>
                         <td><input type="text" id="part_quantity" class="form-control form-control-sm border-0"></td>
-                        <td><input type="text" id="part_description" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" id="part_uom_code" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" id="part_categorisation" class="form-control form-control-sm border-0" disabled></td>
-                        <td><input type="text" id="part_routing_link_code" class="form-control form-control-sm border-0" disabled></td>
-                        <td><select id="part_status" class="form-control form-control-sm border-0"><option></option></select></td>
+                        <td><input type="text" id="part_description" class="form-control form-control-sm border-0"></td>
+                        <td><input type="text" id="part_uom_code" class="form-control form-control-sm border-0"></td>
+                        <td><input type="text" id="part_categorisation" class="form-control form-control-sm border-0">
+                        </td>
+                        <td><input type="text" id="part_routing_link_code"
+                                class="form-control form-control-sm border-0"></td>
+                        <td>
+                            <select id="part_status" class="form-control form-control-sm border-0">
+                                <option value=""></option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Pending for Approval">Pending for Approval</option>
+                            </select>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="mb-3">
-            <button type="button" id="btn-add" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Add</button>
-            <button type="button" id="btn-save-part" class="btn btn-sm text-white px-4 mr-1" style="background-color: #2a6ebb;">Save</button>
-            <button type="button" id="btn-delete-part" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Delete</button>
-            <button type="button" id="btn-complete" class="btn btn-sm text-white px-3 mr-1" style="background-color: #2a6ebb;">Complete</button>
-            <button type="button" id="btn-download" class="btn btn-sm text-white px-3" style="background-color: #2a6ebb;">Download</button>
+            <button type="button" id="btn-add" class="btn btn-sm text-white px-4 mr-1"
+                style="background-color: #2a6ebb;">Add</button>
+            <button type="button" id="btn-save-part" class="btn btn-sm text-white px-4 mr-1"
+                style="background-color: #2a6ebb;">Save</button>
+            <button type="button" id="btn-delete-part" class="btn btn-sm text-white px-3 mr-1"
+                style="background-color: #2a6ebb;">Delete</button>
+            <button type="button" id="btn-complete" class="btn btn-sm text-white px-3 mr-1"
+                style="background-color: #2a6ebb;">Complete</button>
+            <button type="button" id="btn-download" class="btn btn-sm text-white px-3"
+                style="background-color: #2a6ebb;">Download</button>
             <span id="step2-msg" class="text-success ml-2 font-weight-bold"></span>
         </div>
 
@@ -176,15 +252,379 @@
     </div>
 </div>
 
+<!-- ============================================================
+     Modal: Production BOM Group Part Selection
+     Triggered when entry_type == "Production BOM" and a matching
+     master record is found via /BOM/validate_production_bom_part/
+     ============================================================ -->
+<!-- ============================================================
+     Modal: Production BOM Group Part Selection
+     Triggered when entry_type == "Production BOM" and a matching
+     master record is found via /BOM/validate_production_bom_part/
+     ============================================================ -->
+<div class="modal fade" id="frm_BOM_ProdItem_GrpPart_Selected" tabindex="-1" role="dialog"
+    aria-labelledby="prodBomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"
+            style="border-radius: 4px; border: 1px solid #999; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
+
+            <!-- Header -->
+            <div class="modal-header py-1 px-3" style="background-color: #f2f2f5; border-bottom: 1px solid #ccc;">
+                <h6 class="modal-title font-weight-normal small" id="prodBomModalLabel" style="color: #333;">
+                    <i class="far fa-window-restore mr-2" style="color: #555;"></i>BOMProdItem_GrpPartSelected
+                </h6>
+                <button type="button" class="close py-1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 1.1rem;">&times;</span>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-3" style="background-color: #fcfcfc;">
+                <div class="mb-3 small">
+                    <div class="d-flex align-items-center mb-1">
+                        <span style="width: 140px; font-weight: bold; color: #333;">Group Part No</span>
+                        <span class="mr-2">:</span>
+                        <span id="modal_grp_part_no_val" class="font-weight-bold text-dark"></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span style="width: 140px; font-weight: bold; color: #333;">Group Part Name</span>
+                        <span class="mr-2">:</span>
+                        <span id="modal_grp_part_desc_val" class="text-dark"></span>
+                    </div>
+                </div>
+
+                <div class="table-responsive border"
+                    style="max-height: 250px; overflow-y: auto; background-color: #fff;">
+                    <table class="table table-sm table-bordered mb-0" style="font-size: 0.82rem;">
+                        <thead style="background-color: #dbe8f5; color: #000;">
+                            <tr>
+                                <th style="width: 8%;">level</th>
+                                <th style="width: 16%;">part_no</th>
+                                <th>Part Description</th>
+                                <th style="width: 12%;">UOM</th>
+                                <th style="width: 18%;">Categorisation</th>
+                                <th style="width: 15%;">Part_Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal_prod_bom_items_body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-1">
+                    <span class="font-italic text-dark small font-weight-bold" style="font-size: 0.88rem;">Do you want
+                        to proceed with above part selected items ?</span>
+                    <div>
+                        <button type="button" id="btn_accept" class="btn btn-sm px-3 mr-2"
+                            style="background-color: #dce6f2; border: 1px solid #8fa9c4; color: #000; font-weight: 500;">
+                            Accept
+                        </button>
+                        <button type="button" id="btn_decline" class="btn btn-sm px-3"
+                            style="background-color: #dce6f2; border: 1px solid #8fa9c4; color: #000; font-weight: 500;">
+                            Decline
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     Modal: BOM_PartDetails_Master (New Part creation)
+     Mirrors Access frm_BOM_PartDetails_Master
+     ============================================================ -->
+<div class="modal fade" id="modalPartDetailsMaster" tabindex="-1" role="dialog" aria-labelledby="partDetailsMasterLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 580px;">
+        <div class="modal-content"
+            style="border-radius: 4px; border: 1px solid #999; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
+
+            <!-- Header -->
+            <div class="modal-header py-1 px-3" style="background-color: #f2f2f5; border-bottom: 1px solid #ccc;">
+                <h6 class="modal-title font-weight-normal small" id="partDetailsMasterLabel" style="color: #333;">
+                    <i class="far fa-window-restore mr-2" style="color: #555;"></i>BOM_PartDetails_Master
+                </h6>
+                <button type="button" class="close py-1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 1.1rem;">&times;</span>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-3" style="background-color: #fcfcfc;">
+                <h5 class="font-weight-bold mb-3"
+                    style="color: #333; border-bottom: 1px solid #aaa; padding-bottom: 6px;">
+                    BOM_PartDetails_Master
+                </h5>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part No</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="pdm_part_no" class="form-control form-control-sm"
+                            style="background-color: #fff;">
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part Description</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="pdm_part_description" class="form-control form-control-sm"
+                            style="background-color: #fff;">
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Base Unit of Measure</label>
+                    <div class="col-sm-7">
+                        <select id="pdm_base_unit_of_measure" class="form-control form-control-sm">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Customer</label>
+                    <div class="col-sm-7">
+                        <select id="pdm_customer" class="form-control form-control-sm">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Classification</label>
+                    <div class="col-sm-7">
+                        <select id="pdm_classification" class="form-control form-control-sm">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Cost Price</label>
+                    <div class="col-sm-7">
+                        <input type="number" id="pdm_cost_price" class="form-control form-control-sm" value="0" min="0"
+                            step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Settle Price</label>
+                    <div class="col-sm-7">
+                        <input type="number" id="pdm_settle_price" class="form-control form-control-sm" value="0"
+                            min="0" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-2 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Categorisation</label>
+                    <div class="col-sm-7">
+                        <select id="pdm_categorisation" class="form-control form-control-sm">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row no-gutters mb-3 small">
+                    <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part_Status</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="pdm_part_status" class="form-control form-control-sm"
+                            value="Sent for approval" readonly style="background-color: #f5f5f5;">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" id="btn_pdm_create" class="btn btn-sm px-4"
+                        style="background-color: #dce6f2; border: 1px solid #8fa9c4; color: #000; font-weight: 500;">
+                        Create
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const ajaxUrl = "{% url 'bom_ajax_action' %}";
-        
-        function showMsg(elementId, msg) {
-            const el = document.getElementById(elementId);
-            el.textContent = msg;
-            setTimeout(() => el.textContent = "", 3000);
+        const autofillUrl = "{% url 'bom_get_autofill_data' %}";
+        const partDataUrl = "{% url 'bom_get_part_data' %}";
+
+        function showMsg(msg) {
+            alert("Success: " + msg);
         }
+
+        // Set Create Date to today
+        const todayStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-');
+        document.getElementById("create_date").value = todayStr;
+        document.getElementById("table_id").value = "0"; // initially 0
+
+        // --- Central helper: disable/enable the Delete button ---
+        function setBtnDeleteDisabled(isDisabled) {
+            const btn = document.getElementById("btn-delete");
+            if (!btn) return;
+            if (isDisabled) {
+                btn.disabled = true;
+                btn.style.opacity = "0.45";
+                btn.style.cursor = "not-allowed";
+                btn.title = "Delete is not available when no BOM Creation ID is loaded.";
+            } else {
+                btn.disabled = false;
+                btn.style.opacity = "";
+                btn.style.cursor = "";
+                btn.title = "";
+            }
+        }
+        setBtnDeleteDisabled(true); // initially disabled
+
+        // --- Helper: fuzzy-match a status string to a <select> option ---
+        function setSelectByText(selectEl, rawValue) {
+            if (!rawValue) return;
+            let lower = rawValue.toLowerCase();
+
+            if (lower === "send_approval" || lower === "sent_approval") {
+                lower = "sent for approval";
+            }
+
+            let matched = false;
+            for (let opt of selectEl.options) {
+                if (opt.value.toLowerCase() === lower || opt.text.toLowerCase() === lower) {
+                    selectEl.value = opt.value;
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) selectEl.value = "";
+        }
+
+        // --- Core autofill: called whenever an Item Creation ID is chosen ---
+        function loadItemECNData(itemNo) {
+            // Clear fields if no item is selected
+            if (!itemNo) {
+                ["description", "uom_code", "fixture_no", "customer_name", "customer_id",
+                    "last_ecn_no", "no_of_meft", "no_of_parts",
+                    "bom_creation_id", "table_id", "last_date_modified"].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = "";
+                    });
+                document.getElementById("table_id").value = "0"; // initially 0
+                document.getElementById("lbl-bom-creation").textContent = "";
+                document.getElementById("lbl-table-id").textContent = "";
+                document.getElementById("bom-trans-body").innerHTML = "";
+                setSelectByText(document.getElementById("action_status"), "");
+                setBtnCreateDisabled(false); // No item selected — enable Create
+                setBtnDeleteDisabled(true);  // Disable delete button
+
+                // Unlock fields if cleared
+                document.getElementById("item_creation_id").disabled = false;
+                document.getElementById("description").readOnly = false;
+                document.getElementById("uom_code").readOnly = false;
+                document.getElementById("bom_creation_id").readOnly = false;
+                return;
+            }
+
+            fetch(`${autofillUrl}?item_no=${encodeURIComponent(itemNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    const ecn = data.ecn_data || {};
+                    const bom = data.bom_data || {};
+
+                    // ── ECN / ItemCard static fields ──
+                    document.getElementById("fixture_no").value = ecn.fixture_no || "";
+                    document.getElementById("last_ecn_no").value = ecn.last_ecn_no || "";
+
+                    // Customer info (populate if not already locked in by deep-link)
+                    if (ecn.customer_name)
+                        document.getElementById("customer_name").value = ecn.customer_name;
+                    if (ecn.customer_id)
+                        document.getElementById("customer_id").value = ecn.customer_id;
+
+                    // ── Description & UOM — BOM header takes priority over ECN ──
+                    document.getElementById("description").value = bom.description || ecn.description || "";
+                    document.getElementById("uom_code").value = bom.uom_code || ecn.uom_code || "";
+
+                    // ── Live transaction counts — prefer BOM counts if BOM exists ──
+                    document.getElementById("no_of_meft").value =
+                        (bom.bom_creation_id && bom.no_of_meft !== undefined) ? bom.no_of_meft :
+                            (ecn.no_of_meft !== undefined ? ecn.no_of_meft : "0");
+                    document.getElementById("no_of_parts").value =
+                        (bom.bom_creation_id && bom.no_of_parts !== undefined) ? bom.no_of_parts :
+                            (ecn.no_of_parts !== undefined ? ecn.no_of_parts : "0");
+
+                    // ── Action status — fuzzy-match dropdown ──
+                    const rawStatus = bom.action_status || ecn.status || "Pending";
+                    setSelectByText(document.getElementById("action_status"), rawStatus);
+
+                    // Lock fields when ITEM ID is selected
+                    // document.getElementById("item_creation_id").disabled = true;
+                    document.getElementById("description").readOnly = true;
+                    document.getElementById("uom_code").readOnly = true;
+
+                    // ── BOM header fields ──
+                    if (bom.bom_creation_id) {
+                        document.getElementById("bom_creation_id").value = bom.bom_creation_id;
+                        document.getElementById("lbl-bom-creation").textContent = bom.bom_creation_id;
+                        document.getElementById("table_id").value = bom.table_id || "0";
+                        document.getElementById("lbl-table-id").textContent = bom.table_id || "0";
+                        document.getElementById("last_date_modified").value = bom.last_date_modified || todayStr;
+                        setBtnCreateDisabled(true);  // Item already has a BOM — block Create
+                        setBtnDeleteDisabled(false); // Enable delete button
+                        document.getElementById("bom_creation_id").readOnly = true; // Lock BOM ID
+                        loadParts();
+                    } else {
+                        // No saved BOM yet — clear BOM fields, ready for Create
+                        document.getElementById("bom_creation_id").value = "";
+                        document.getElementById("lbl-bom-creation").textContent = "";
+                        document.getElementById("table_id").value = "0"; // initially 0
+                        document.getElementById("lbl-table-id").textContent = "";
+                        document.getElementById("last_date_modified").value = bom.last_date_modified || todayStr;
+                        document.getElementById("bom-trans-body").innerHTML = "";
+                        setBtnCreateDisabled(false); // No BOM yet — allow Create
+                        setBtnDeleteDisabled(true);  // Disable delete button
+                        document.getElementById("bom_creation_id").readOnly = false; // Unlock BOM ID
+                    }
+                })
+                .catch(err => console.error("loadItemECNData error:", err));
+        }
+
+        // --- Populate Item Creation ID dropdown from Customer ID ---
+        function loadCustomerItems(customerId, selectedItem = "") {
+            if (!customerId) return;
+            fetch(`${autofillUrl}?customer_id=${encodeURIComponent(customerId)}`)
+                .then(r => r.json())
+                .then(data => {
+                    const itemSelect = document.getElementById("item_creation_id");
+                    itemSelect.innerHTML = "<option value=''></option>";
+                    (data.items || []).forEach(item => {
+                        const label = item.no + (item.description ? " — " + item.description : "");
+                        const opt = new Option(label, item.no);
+                        opt.dataset.desc = item.description || "";
+                        opt.dataset.uom = item.base_unit_of_measure || "";
+                        opt.dataset.fixture = item.fixture || "";
+                        itemSelect.add(opt);
+                    });
+                    if (selectedItem) {
+                        itemSelect.value = selectedItem;
+                        // Trigger autofill if a pre-selection was made
+                        if (itemSelect.value) loadItemECNData(itemSelect.value);
+                    }
+                })
+                .catch(err => console.error("loadCustomerItems error:", err));
+        }
+
+        // Customer ID change → reload item dropdown
+        document.getElementById("customer_id").addEventListener("change", function () {
+            loadCustomerItems(this.value);
+            document.getElementById("create_date").value = todayStr;
+        });
+
+        // Item Creation ID change → full autofill
+        document.getElementById("item_creation_id").addEventListener("change", function () {
+            loadItemECNData(this.value);
+        });
 
         function getHeaderData() {
             return {
@@ -205,38 +645,109 @@
             };
         }
 
+        // --- Fetch BOM details when bom_creation_id is changed (matches BOP bopCreationEl listener) ---
+        const bomCreationEl = document.getElementById("bom_creation_id");
+        if (bomCreationEl) {
+            bomCreationEl.addEventListener("change", function () {
+                const bomId = this.value;
+
+                if (!bomId) {
+                    document.getElementById("last_date_modified").value = "";
+                    document.getElementById("action_status").value = "";
+                    document.getElementById("table_id").value = "0"; // initially 0
+                    document.getElementById("last_ecn_no").value = "0";
+                    setViewMode(false); // No active record loaded, back to Create mode
+                    setBtnDeleteDisabled(true); // Disable delete button
+                    document.getElementById("bom_creation_id").readOnly = false;
+                    return;
+                }
+
+                fetch(`/BOM/get_bom_details/?bom_creation_id=${encodeURIComponent(bomId)}`)
+                    .then(res => { if (!res.ok) throw new Error("Network issue"); return res.json(); })
+                    .then(data => {
+                        const itemCreationEl = document.getElementById("item_creation_id");
+                        if (data.item_creation_id && itemCreationEl && itemCreationEl.value != data.item_creation_id) {
+                            itemCreationEl.value = data.item_creation_id;
+                            itemCreationEl.dispatchEvent(new Event("change"));
+                        } else {
+                            // Only update these fields if we are not triggering a full item ECN reload
+                            document.getElementById("last_date_modified").value = data.last_date_modified || "";
+                            document.getElementById("last_ecn_no").value = data.last_ecn_no || "0";
+                            document.getElementById("table_id").value = data.table_id || "0";
+                            document.getElementById("lbl-table-id").textContent = data.table_id || "0";
+                            setSelectByText(document.getElementById("action_status"), data.action_status || "");
+
+                            // Load existing BOM record into View Mode
+                            setViewMode(true);
+                            setBtnDeleteDisabled(false); // Enable delete button
+
+                            // BOM ID is selected -> lock bom id, unlock description and uom code
+                            document.getElementById("bom_creation_id").readOnly = true;
+                            document.getElementById("description").readOnly = false;
+                            document.getElementById("uom_code").readOnly = false;
+
+                            loadParts();
+                        }
+                    })
+                    .catch(err => console.error("Error fetching BOM details:", err));
+            });
+        }
+
+
         function setHeaderData(data) {
+            // Scalar fields
             document.getElementById("customer_name").value = data.customer_name || "";
-            document.getElementById("item_creation_id").value = data.item_creation_id || "";
+            document.getElementById("customer_id").value = data.customer_id || "";
             document.getElementById("description").value = data.description || "";
             document.getElementById("uom_code").value = data.uom_code || "";
             document.getElementById("fixture_no").value = data.fixture_no || "";
-            document.getElementById("no_of_meft").value = data.no_of_meft || "";
-            document.getElementById("action_status").value = data.action_status || "";
-            document.getElementById("customer_id").value = data.customer_id || "";
+            document.getElementById("no_of_meft").value = data.no_of_meft || "0";
+            document.getElementById("no_of_parts").value = data.no_of_parts || "0";
             document.getElementById("last_ecn_no").value = data.last_ecn_no || "";
-            document.getElementById("no_of_parts").value = data.no_of_parts || "";
             document.getElementById("last_date_modified").value = data.last_date_modified || "";
-            
-            let bomSelect = document.getElementById("bom_creation_id");
-            if(data.bom_creation_id && ![...bomSelect.options].some(o => o.value === data.bom_creation_id)) {
-                let opt = new Option(data.bom_creation_id, data.bom_creation_id);
-                bomSelect.add(opt);
-            }
-            bomSelect.value = data.bom_creation_id || "";
-            
-            document.getElementById("table_id").value = data.table_id || "";
-            document.getElementById("create_date").value = data.create_date || "";
-            
+            document.getElementById("bom_creation_id").value = data.bom_creation_id || "";
+            document.getElementById("table_id").value = data.table_id || "0";
+            document.getElementById("create_date").value = data.create_date || todayStr;
             document.getElementById("lbl-bom-creation").textContent = data.bom_creation_id || "";
-            document.getElementById("lbl-table-id").textContent = data.table_id || "";
-            
+            document.getElementById("lbl-table-id").textContent = data.table_id || "0";
+
+            if (data.bom_creation_id) {
+                setBtnDeleteDisabled(false);
+                document.getElementById("bom_creation_id").readOnly = true;
+            } else {
+                setBtnDeleteDisabled(true);
+                document.getElementById("bom_creation_id").readOnly = false;
+            }
+
+            // Action status — use the same fuzzy-match so any raw value works
+            setSelectByText(document.getElementById("action_status"), data.action_status || "");
+
+            // Item Creation ID dropdown
+            const custId = data.customer_id || "";
+            const itemCreationId = data.item_creation_id || "";
+            if (custId) {
+                // loadCustomerItems will call loadItemECNData after items are loaded
+                loadCustomerItems(custId, itemCreationId);
+            } else if (itemCreationId) {
+                document.getElementById("item_creation_id").value = itemCreationId;
+                // Don't re-call loadItemECNData — setHeaderData already populated everything
+            }
+
             loadParts();
         }
 
         function clearHeaderData() {
             setHeaderData({});
+            document.getElementById("table_id").value = "0";
+            document.getElementById("lbl-table-id").textContent = "";
             document.getElementById("bom-trans-body").innerHTML = "";
+            setBtnDeleteDisabled(true);
+
+            // Unlock fields
+            document.getElementById("item_creation_id").disabled = false;
+            document.getElementById("description").readOnly = false;
+            document.getElementById("uom_code").readOnly = false;
+            document.getElementById("bom_creation_id").readOnly = false;
         }
 
         function sendAjax(action, data, onSuccess) {
@@ -246,74 +757,387 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             })
-            .then(r => r.json())
-            .then(res => {
-                if (res.status === "success") {
-                    onSuccess(res);
-                } else {
-                    alert("Error: " + res.message);
-                }
-            })
-            .catch(e => alert("Request failed"));
+                .then(r => {
+                    const isJson = r.headers.get("content-type")?.includes("application/json");
+                    if (!r.ok) {
+                        if (isJson) {
+                            return r.json().then(err => { throw new Error(err.message || "Request failed with status " + r.status); });
+                        }
+                        throw new Error("Request failed with status " + r.status);
+                    }
+                    return r.json();
+                })
+                .then(res => {
+                    if (res.status === "success" || res.status === undefined) {
+                        onSuccess(res);
+                    } else {
+                        alert("Error: " + (res.message || "Unknown error"));
+                    }
+                })
+                .catch(e => alert("Error: " + e.message));
         }
 
-        // Step 1 Actions
-        document.getElementById("btn-create").addEventListener("click", () => {
-            sendAjax("create", getHeaderData(), (res) => {
-                showMsg("step1-msg", "Done");
+        // --- Central helper: disable/enable the Create button ---
+        function setBtnCreateDisabled(isDisabled) {
+            const btn = document.getElementById("btn-create");
+            if (!btn) return;
+            if (isDisabled) {
+                btn.disabled = true;
+                btn.style.opacity = "0.45";
+                btn.style.cursor = "not-allowed";
+                btn.title = "This Item ID already has an active BOM. Only 1 BOM per Item ID is allowed.";
+            } else {
+                btn.disabled = false;
+                btn.style.opacity = "";
+                btn.style.cursor = "";
+                btn.title = "";
+            }
+        }
+
+        // Step 1 Actions — all buttons always visible; only Create is conditionally disabled
+        function setViewMode(isView) {
+            const fields = ["description", "uom_code"];
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.readOnly = isView;
+                }
             });
+        }
+
+        document.getElementById("btn-create").addEventListener("click", () => {
+            const itemId = document.getElementById("item_creation_id").value;
+            if (!itemId) {
+                alert("Please select an Item Creation ID before creating a BOM record.");
+                return;
+            }
+
+            const bomId = document.getElementById("bom_creation_id").value.trim();
+            if (!bomId) {
+                alert("Please enter a BOM Creation ID before creating a BOM record.");
+                document.getElementById("bom_creation_id").focus();
+                return;
+            }
+
+            // Collect current form data — do NOT clear or overwrite any user-typed fields
+            const data = getHeaderData();
+            // bom_creation_id comes from the field as-is (user-typed, never auto-generated)
+
+            fetch('/BOM/save/', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
+                .then(res => {
+                    // Populate server-confirmed fields
+                    if (res.bom_creation_id) {
+                        document.getElementById("bom_creation_id").value = res.bom_creation_id;
+                        document.getElementById("lbl-bom-creation").textContent = res.bom_creation_id;
+                    }
+                    if (res.table_id) {
+                        document.getElementById("table_id").value = res.table_id;
+                        document.getElementById("lbl-table-id").textContent = res.table_id;
+                    }
+                    if (res.action_status) {
+                        setSelectByText(document.getElementById("action_status"), res.action_status);
+                    }
+                    if (res.last_date_modified) {
+                        document.getElementById("last_date_modified").value = res.last_date_modified;
+                    }
+                    showMsg(res.message || "BOM record created successfully!");
+                    setBtnCreateDisabled(true); // Record now exists — lock Create
+                    setBtnDeleteDisabled(false); // Make Delete clickable
+                    setViewMode(true);
+                })
+                .catch(err => alert("Create Failed: " + (err.error || err.message || "Unknown error")));
         });
 
         document.getElementById("btn-edit").addEventListener("click", () => {
-            const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            sendAjax("edit", { bom_creation_id: bom_id }, (res) => {
-                setHeaderData(res.data);
-                showMsg("step1-msg", "Loaded");
-            });
+            const actionStatus = document.getElementById("action_status").value || "";
+            if (actionStatus.toLowerCase() === "approved") {
+                alert("Action Blocked: Approved BOM records cannot be edited.");
+                return;
+            }
+            setViewMode(false);
         });
 
         document.getElementById("btn-save").addEventListener("click", () => {
-            const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            sendAjax("save", getHeaderData(), (res) => {
-                showMsg("step1-msg", "Done");
-            });
+            const data = getHeaderData();
+            fetch('/BOM/save/', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
+                .then(res => {
+                    if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
+                    if (res.bom_creation_id) {
+                        document.getElementById("bom_creation_id").value = res.bom_creation_id;
+                        document.getElementById("lbl-bom-creation").textContent = res.bom_creation_id;
+                    }
+                    if (res.table_id) {
+                        document.getElementById("table_id").value = res.table_id;
+                        document.getElementById("lbl-table-id").textContent = res.table_id;
+                    }
+                    if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
+                    showMsg(res.message || "BOM configuration saved successfully!");
+                    setViewMode(true);
+                })
+                .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
         });
 
         document.getElementById("btn-delete").addEventListener("click", () => {
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            if(confirm("Are you sure you want to delete this BOM?")) {
-                sendAjax("delete", { bom_creation_id: bom_id }, (res) => {
+            if (!bom_id) return alert("Action Blocked: No active BOM Record loaded to delete.");
+            if (!confirm(`Are you sure you want to permanently delete BOM Record: ${bom_id}?`)) return;
+
+            fetch('/BOM/delete/', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bom_creation_id: bom_id })
+            })
+                .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
+                .then(res => {
                     clearHeaderData();
-                    showMsg("step1-msg", "Done");
-                });
-            }
+                    setBtnCreateDisabled(false); // BOM deleted — allow creating a new one
+                    showMsg(res.message || "BOM record deleted successfully!");
+                    const itemEl = document.getElementById("item_creation_id");
+                    if (itemEl) itemEl.dispatchEvent(new Event("change"));
+                })
+                .catch(err => alert("Delete Failed: " + (err.error || err.message || "Unknown error")));
         });
 
-        document.getElementById("btn-send-approval").addEventListener("click", () => {
-            const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            sendAjax("send_approval", { bom_creation_id: bom_id }, (res) => {
-                showMsg("step1-msg", "Done");
-                document.getElementById("action_status").value = "SEND_APPROVAL";
+        const sendApprovalBtn = document.getElementById("btn-send-approval");
+        if (sendApprovalBtn) {
+            sendApprovalBtn.addEventListener("click", () => {
+                const bom_id = document.getElementById("bom_creation_id").value;
+                if (!bom_id) return alert("Select BOM Creation ID first");
+                fetch('/BOM/send_approval/', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ bom_creation_id: bom_id })
+                })
+                    .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
+                    .then(res => {
+                        showMsg(res.message || "BOM record sent for approval successfully!");
+                        if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
+                        if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
+
+                        // Dynamically toggle lock badge and disable send approval button
+                        const badge = document.getElementById("record-lock-badge");
+                        if (badge) badge.style.display = "inline-block";
+
+                        sendApprovalBtn.disabled = true;
+                        sendApprovalBtn.classList.remove("text-white");
+                        sendApprovalBtn.classList.add("btn-secondary");
+                        sendApprovalBtn.innerText = "SendApproval (Locked)";
+                    })
+                    .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
             });
-        });
+        }
 
         document.getElementById("btn-ecn").addEventListener("click", () => {
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            sendAjax("ecn", { bom_creation_id: bom_id }, (res) => {
-                showMsg("step1-msg", "Done");
-                document.getElementById("action_status").value = "ECN";
-            });
+            if (!bom_id) return alert("Select BOM Creation ID first");
+            if (!confirm(`Transition BOM Record ${bom_id} to ECN mode to edit and revision it?`)) return;
+            fetch('/BOM/ecn/', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bom_creation_id: bom_id })
+            })
+                .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
+                .then(res => {
+                    showMsg(res.message || "BOM record transitioned to ECN successfully!");
+                    if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
+                    if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
+                    setViewMode(false);
+                })
+                .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
         });
+
+        // Step 2 Part Selection State & Dynamic Mode Controls
+        let editingPartId = null;
+
+        function toggleEditPartMode(isEditing) {
+            const btnAdd = document.getElementById("btn-add");
+            const btnSave = document.getElementById("btn-save-part");
+            const btnDelete = document.getElementById("btn-delete-part");
+
+            if (isEditing) {
+                btnAdd.disabled = true;
+                if (btnSave) btnSave.disabled = false;
+                if (btnDelete) btnDelete.disabled = false;
+            } else {
+                editingPartId = null;
+                btnAdd.disabled = false;
+                if (btnSave) btnSave.disabled = true;
+                if (btnDelete) btnDelete.disabled = true;
+            }
+        }
+
+        // Initialize button states
+        toggleEditPartMode(false);
+
+        // ── New Part button: open BOM_PartDetails_Master modal ──
+        // (mirrors Access frm_BOM_PartDetails_Master)
+        const btnNewPart = document.getElementById("btn-new-part");
+        if (btnNewPart) {
+            btnNewPart.addEventListener("click", function () {
+                // 1. Clear modal fields & reset defaults
+                document.getElementById("pdm_part_no").value = "";
+                document.getElementById("pdm_part_description").value = "";
+                document.getElementById("pdm_base_unit_of_measure").value = "";
+                document.getElementById("pdm_customer").value = "";
+                document.getElementById("pdm_classification").value = "";
+                document.getElementById("pdm_cost_price").value = "0";
+                document.getElementById("pdm_settle_price").value = "0";
+                document.getElementById("pdm_categorisation").value = "";
+                document.getElementById("pdm_part_status").value = "Sent for approval";
+
+                // 2. Fetch dropdown options from server
+                fetch("/BOM/ajax/part_master_dropdowns/")
+                    .then(r => r.json())
+                    .then(data => {
+                        function fillSelect(selId, items) {
+                            const sel = document.getElementById(selId);
+                            sel.innerHTML = "<option value=''></option>";
+                            (items || []).forEach(v => {
+                                const opt = document.createElement("option");
+                                opt.value = v;
+                                opt.textContent = v;
+                                sel.appendChild(opt);
+                            });
+                        }
+                        fillSelect("pdm_base_unit_of_measure", data.base_units);
+                        fillSelect("pdm_customer", data.customers);
+                        fillSelect("pdm_classification", data.classifications);
+                        fillSelect("pdm_categorisation", data.categorisations);
+                    })
+                    .catch(err => console.error("Error loading part master dropdowns:", err));
+
+                // 3. Show the modal
+                $('#modalPartDetailsMaster').modal('show');
+            });
+        }
+
+        // ── Part Details Master modal: Create button ──
+        const btnPdmCreate = document.getElementById("btn_pdm_create");
+        if (btnPdmCreate) {
+            btnPdmCreate.addEventListener("click", function () {
+                const payload = {
+                    part_no: document.getElementById("pdm_part_no").value.trim(),
+                    part_description: document.getElementById("pdm_part_description").value.trim(),
+                    base_unit_of_measure: document.getElementById("pdm_base_unit_of_measure").value,
+                    customer: document.getElementById("pdm_customer").value,
+                    classification: document.getElementById("pdm_classification").value,
+                    cost_price: document.getElementById("pdm_cost_price").value || 0,
+                    settle_price: document.getElementById("pdm_settle_price").value || 0,
+                    categorisation: document.getElementById("pdm_categorisation").value,
+                    part_status: document.getElementById("pdm_part_status").value || "Sent for approval"
+                };
+
+                fetch("/BOM/ajax/create_part_master/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                    .then(r => r.json().then(res => ({ ok: r.ok, data: res })))
+                    .then(({ ok, data }) => {
+                        if (!ok || data.status === "error") {
+                            alert(data.message || "Error creating part");
+                            return;
+                        }
+
+                        alert("Records saved!");
+
+                        // Clear fields (same as VBA post-save)
+                        document.getElementById("pdm_part_no").value = "";
+                        document.getElementById("pdm_part_description").value = "";
+                        document.getElementById("pdm_base_unit_of_measure").value = "";
+                        document.getElementById("pdm_customer").value = "";
+                        document.getElementById("pdm_classification").value = "";
+                        document.getElementById("pdm_cost_price").value = "0";
+                        document.getElementById("pdm_settle_price").value = "0";
+                        document.getElementById("pdm_categorisation").value = "";
+                        document.getElementById("pdm_part_status").value = "Sent for approval";
+
+                        // Close the modal
+                        $('#modalPartDetailsMaster').modal('hide');
+
+                        // Refresh the Step 2 Part Number dropdown so the newly created part appears
+                        const currentEntryType = document.getElementById("part_entry_type").value;
+                        if (currentEntryType) {
+                            loadPartNumbersDropdown(currentEntryType, "");
+                        }
+                    })
+                    .catch(err => alert("Create failed: " + err.message));
+            });
+        }
+
+        // Dynamically load part_status options from DB
+        (function loadPartStatusOptions() {
+            fetch("/BOM/ajax/part_statuses/")
+                .then(r => r.json())
+                .then(data => {
+                    const sel = document.getElementById("part_status");
+                    const currentVal = sel.value;
+                    sel.innerHTML = "<option value=''></option>";
+                    (data.statuses || []).forEach(s => {
+                        const opt = document.createElement("option");
+                        opt.value = s;
+                        opt.textContent = s;
+                        sel.appendChild(opt);
+                    });
+                    if (currentVal) sel.value = currentVal;
+                })
+                .catch(() => { }); // silently fall back to hardcoded options in HTML
+        })();
+
+        function loadPartNumbersDropdown(entryType, selectedValue, callback) {
+            const partSelect = document.getElementById("part_number");
+            partSelect.innerHTML = "<option value=''></option>";
+            if (!entryType) {
+                if (callback) callback();
+                return;
+            }
+            fetch(`${partDataUrl}?entry_type=${encodeURIComponent(entryType)}`)
+                .then(r => r.json())
+                .then(data => {
+                    let htmlStr = "<option value=''></option>";
+
+                    (data.parts || []).forEach(part => {
+                        const val = part.part_no || part.grp_part_no || "";
+                        const desc = part.part_description || part.description || part.grp_part_description || "";
+
+                        const safeVal = val.replace(/"/g, '&quot;');
+                        const safeDesc = desc.replace(/"/g, '&quot;');
+                        const uom = (part.uom_code || part.base_unit_of_measure || "").replace(/"/g, '&quot;');
+                        const cat = (part.categorisation || "").replace(/"/g, '&quot;');
+                        const status = (part.part_status || "").replace(/"/g, '&quot;');
+
+                        const display = val + (desc ? " — " + desc : "") + (uom ? " — " + uom : "") + (cat ? " — " + cat : "");
+
+                        htmlStr += `<option value="${safeVal}" data-desc="${safeDesc}" data-uom="${uom}" data-categorisation="${cat}" data-part-status="${status}">${display}</option>`;
+                    });
+
+                    partSelect.innerHTML = htmlStr;
+
+                    if (selectedValue) {
+                        partSelect.value = selectedValue;
+                    }
+                    if (callback) callback();
+                })
+                .catch(err => {
+                    console.error("loadParts list error:", err);
+                    if (callback) callback();
+                });
+        }
 
         // Step 2 Add Part
         function loadParts() {
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return;
+            if (!bom_id) return;
             sendAjax("get_parts", { bom_creation_id: bom_id }, (res) => {
                 const tbody = document.getElementById("bom-trans-body");
                 tbody.innerHTML = "";
@@ -330,54 +1154,292 @@
                         <td>${p.categorisation || ''}</td>
                         <td>${p.routing_link_code || ''}</td>
                         <td>${p.start_date || ''}</td>
-                        <td><button type="button" class="btn btn-sm btn-danger py-0 px-2 btn-del-part" data-id="${p.id}">X</button></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary py-0 px-2 btn-edit-part mr-1" data-id="${p.id}" data-entry-type="${p.entry_type || ''}" data-part-number="${p.part_number || ''}" data-quantity="${p.quantity || ''}" data-description="${p.description || ''}" data-uom-code="${p.uom_code || ''}" data-categorisation="${p.categorisation || ''}" data-routing-link-code="${p.routing_link_code || ''}" data-part-status="${p.part_status || ''}">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger py-0 px-2 btn-del-part" data-id="${p.id}">X</button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });
-                
+
+                // Use server-computed counts
+                document.getElementById("no_of_parts").value = (res.no_of_parts !== undefined) ? res.no_of_parts : res.data.length;
+                document.getElementById("no_of_meft").value = (res.no_of_meft !== undefined) ? res.no_of_meft : "";
+
+                // Attach delete button event listeners
                 document.querySelectorAll(".btn-del-part").forEach(btn => {
-                    btn.addEventListener("click", function() {
+                    btn.addEventListener("click", function () {
                         const pid = this.getAttribute("data-id");
-                        sendAjax("delete_part", { part_id: pid }, (r) => {
-                            showMsg("step2-msg", "Done");
-                            loadParts();
-                        });
+                        if (confirm("Are you sure you want to delete this part?")) {
+                            sendAjax("delete_part", { part_id: pid }, (r) => {
+                                showMsg("Part deleted successfully!");
+                                loadParts();
+                            });
+                        }
+                    });
+                });
+
+                // Attach edit button event listeners
+                document.querySelectorAll(".btn-edit-part").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        editingPartId = this.getAttribute("data-id");
+                        const entryType = this.getAttribute("data-entry-type");
+                        const partNum = this.getAttribute("data-part-number");
+
+                        document.getElementById("part_entry_type").value = entryType;
+                        document.getElementById("part_quantity").value = this.getAttribute("data-quantity");
+                        document.getElementById("part_description").value = this.getAttribute("data-description");
+                        document.getElementById("part_uom_code").value = this.getAttribute("data-uom-code");
+                        document.getElementById("part_categorisation").value = this.getAttribute("data-categorisation");
+                        document.getElementById("part_routing_link_code").value = this.getAttribute("data-routing-link-code");
+                        document.getElementById("part_status").value = this.getAttribute("data-part-status");
+
+                        // Load part dropdown options and select current part number
+                        loadPartNumbersDropdown(entryType, partNum);
+
+                        // Transition buttons state
+                        toggleEditPartMode(true);
                     });
                 });
             });
         }
 
         document.getElementById("btn-add").addEventListener("click", () => {
+            const item_creation_id = document.getElementById("item_creation_id").value;
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            
+            const table_id = document.getElementById("table_id").value;
+            const entry_type = document.getElementById("part_entry_type").value;
+            const part_number = document.getElementById("part_number").value;
+            const quantity = document.getElementById("part_quantity").value;
+
+            if (!item_creation_id) {
+                alert("BOM Item Creation Id is empty. Please check and try again.");
+                return;
+            }
+            if (!bom_id) {
+                alert("BOM Creation ID is empty. Please check and try again.");
+                return;
+            }
+            if (!table_id) {
+                alert("Table Id is empty, Please check and try again.");
+                return;
+            }
+            if (!entry_type) {
+                alert("Please select BOM part entry type and try again.");
+                return;
+            }
+            if (!part_number) {
+                alert("Please select part number from drop down list and try again.");
+                return;
+            }
+            if (!quantity) {
+                alert("Please enter quantity and try again.");
+                return;
+            }
+
+            let uom_code = document.getElementById("part_uom_code").value;
+            let categorisation = document.getElementById("part_categorisation").value;
+            let routing_link_code = document.getElementById("part_routing_link_code").value;
+
+            if (entry_type.toLowerCase() === "item") {
+                if (!uom_code) {
+                    alert("Part unit of measure code is empty. Please check and try again.");
+                    return;
+                }
+                if (!categorisation) {
+                    categorisation = "NA";
+                }
+                if (!routing_link_code) {
+                    routing_link_code = "0";
+                } else {
+                    if (isNaN(routing_link_code) || routing_link_code.trim() === "") {
+                        alert("Routing link code should be in numeric format");
+                        return;
+                    }
+                }
+            }
+
             const pData = {
                 bom_creation_id: bom_id,
-                entry_type: document.getElementById("part_entry_type").value,
-                part_number: document.getElementById("part_number").value,
-                quantity: document.getElementById("part_quantity").value,
+                item_creation_id: item_creation_id,
+                parent_item_code: item_creation_id,
+                component_item_id: part_number,
+                entry_type: entry_type,
+                part_number: part_number,
+                quantity: quantity,
                 description: document.getElementById("part_description").value,
-                uom_code: document.getElementById("part_uom_code").value,
-                categorisation: document.getElementById("part_categorisation").value,
-                routing_link_code: document.getElementById("part_routing_link_code").value,
-                part_status: document.getElementById("part_status").value
+                uom_code: uom_code,
+                categorisation: categorisation,
+                routing_link_code: routing_link_code,
+                part_status: document.getElementById("part_status").value,
+                table_id: table_id
             };
-            
+
             sendAjax("add_part", pData, (res) => {
-                showMsg("step2-msg", "Done");
+                showMsg("Part added successfully!");
                 loadParts();
+
+                // Clear fields after adding
+                document.getElementById("part_entry_type").value = "";
+                document.getElementById("part_number").innerHTML = "<option></option>";
+                document.getElementById("part_quantity").value = "";
+                document.getElementById("part_description").value = "";
+                document.getElementById("part_uom_code").value = "";
+                document.getElementById("part_categorisation").value = "";
+                document.getElementById("part_routing_link_code").value = "";
+                document.getElementById("part_status").value = "";
             });
+        });
+
+        // Save part event handler
+        const savePartBtn = document.getElementById("btn-save-part");
+        if (savePartBtn) {
+            savePartBtn.addEventListener("click", () => {
+                if (!editingPartId) return;
+                const bom_id = document.getElementById("bom_creation_id").value;
+                const entry_type = document.getElementById("part_entry_type").value;
+                const part_number = document.getElementById("part_number").value;
+                const quantity = document.getElementById("part_quantity").value;
+                const description = document.getElementById("part_description").value;
+                const uom_code = document.getElementById("part_uom_code").value;
+                const categorisation = document.getElementById("part_categorisation").value;
+                const routing_link_code = document.getElementById("part_routing_link_code").value;
+                const part_status = document.getElementById("part_status").value;
+
+                if (!part_number) return alert("Select part number first");
+                if (!quantity) return alert("Enter quantity");
+
+                const pData = {
+                    part_id: editingPartId,
+                    bom_creation_id: bom_id,
+                    entry_type: entry_type,
+                    part_number: part_number,
+                    quantity: quantity,
+                    description: description,
+                    uom_code: uom_code,
+                    categorisation: categorisation,
+                    routing_link_code: routing_link_code,
+                    part_status: part_status
+                };
+
+                sendAjax("update_part", pData, (res) => {
+                    showMsg("Part updated successfully!");
+                    loadParts();
+
+                    // Clear fields and revert form mode
+                    document.getElementById("part_entry_type").value = "";
+                    document.getElementById("part_number").innerHTML = "<option></option>";
+                    document.getElementById("part_quantity").value = "";
+                    document.getElementById("part_description").value = "";
+                    document.getElementById("part_uom_code").value = "";
+                    document.getElementById("part_categorisation").value = "";
+                    document.getElementById("part_routing_link_code").value = "";
+                    document.getElementById("part_status").value = "";
+
+                    toggleEditPartMode(false);
+                });
+            });
+        }
+
+        // Delete part event handler in edit mode
+        const deletePartBtn = document.getElementById("btn-delete-part");
+        if (deletePartBtn) {
+            deletePartBtn.addEventListener("click", () => {
+                if (!editingPartId) return;
+                if (!confirm("Are you sure you want to delete this part record?")) return;
+
+                sendAjax("delete_part", { part_id: editingPartId }, (res) => {
+                    showMsg("Part deleted successfully!");
+                    loadParts();
+
+                    // Clear fields and revert form mode
+                    document.getElementById("part_entry_type").value = "";
+                    document.getElementById("part_number").innerHTML = "<option></option>";
+                    document.getElementById("part_quantity").value = "";
+                    document.getElementById("part_description").value = "";
+                    document.getElementById("part_uom_code").value = "";
+                    document.getElementById("part_categorisation").value = "";
+                    document.getElementById("part_routing_link_code").value = "";
+                    document.getElementById("part_status").value = "";
+
+                    toggleEditPartMode(false);
+                });
+            });
+        }
+
+        // Entry Type change → load parts list into Part Number dropdown
+        document.getElementById("part_entry_type").addEventListener("change", function () {
+            const entryType = this.value;
+            const partSelect = document.getElementById("part_number");
+            partSelect.innerHTML = "<option value=''></option>";
+
+            // Clear autofill part fields
+            ["part_description", "part_uom_code", "part_categorisation", "part_routing_link_code"].forEach(id => {
+                document.getElementById(id).value = "";
+            });
+
+            loadPartNumbersDropdown(entryType, "");
+        });
+
+        // Part Number change → autofill description, UOM, categorisation, and lock fields
+        document.getElementById("part_number").addEventListener("change", function () {
+            const entryType = document.getElementById("part_entry_type").value;
+            const partNo = this.value;
+            const selOpt = this.options[this.selectedIndex];
+
+            if (!partNo) {
+                document.getElementById("part_description").value = "";
+                document.getElementById("part_uom_code").value = "";
+                document.getElementById("part_categorisation").value = "";
+                document.getElementById("part_status").value = "";
+
+                document.getElementById("part_description").readOnly = false;
+                document.getElementById("part_uom_code").readOnly = false;
+                document.getElementById("part_categorisation").readOnly = false;
+                document.getElementById("part_routing_link_code").readOnly = false;
+                return;
+            }
+
+            const setAndLockFields = (desc, uom, cat, status) => {
+                document.getElementById("part_description").value = desc || "";
+                document.getElementById("part_uom_code").value = uom || "";
+                document.getElementById("part_categorisation").value = cat || "";
+                setSelectByText(document.getElementById("part_status"), status || "");
+
+                document.getElementById("part_description").readOnly = true;
+                document.getElementById("part_uom_code").readOnly = true;
+                document.getElementById("part_categorisation").readOnly = true;
+                document.getElementById("part_routing_link_code").readOnly = true;
+            };
+
+            // Fast path: use dataset if already populated by the load step
+            if (selOpt && (selOpt.dataset.desc || selOpt.dataset.uom || selOpt.dataset.partStatus)) {
+                setAndLockFields(selOpt.dataset.desc, selOpt.dataset.uom, selOpt.dataset.categorisation, selOpt.dataset.partStatus);
+                return;
+            }
+
+            // Slow path: round-trip to server
+            if (entryType && partNo) {
+                fetch(`${partDataUrl}?entry_type=${encodeURIComponent(entryType)}&part_no=${encodeURIComponent(partNo)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.error) {
+                            setAndLockFields(data.description, data.uom_code, data.categorisation, data.part_status);
+                        }
+                    })
+                    .catch(err => console.error("loadPart detail error:", err));
+            }
         });
 
         // Other Step 2 Actions
         document.getElementById("btn-complete").addEventListener("click", () => {
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
+            if (!bom_id) return alert("Select BOM Creation ID first");
             sendAjax("complete", { bom_creation_id: bom_id }, (res) => {
-                showMsg("step2-msg", "Done");
+                showMsg("BOM record marked as Complete!");
             });
         });
-        
+
         // Deep-link from BOP "BOM Details" (Access DoCmd.OpenForm equivalent)
         const deepLinkParams = new URLSearchParams(window.location.search);
         const linkedBomId = deepLinkParams.get("bom_creation_id");
@@ -385,25 +1447,26 @@
         const linkedCustomerId = deepLinkParams.get("customer_id");
         const linkedCustomerName = deepLinkParams.get("customer_name");
 
-        if (linkedCustomerId) {
-            document.getElementById("customer_id").value = linkedCustomerId;
-        }
-        if (linkedCustomerName) {
-            document.getElementById("customer_name").value = linkedCustomerName;
-        }
-        if (linkedItemId) {
-            const itemSelect = document.getElementById("item_creation_id");
-            if (![...itemSelect.options].some(o => o.value === linkedItemId)) {
-                itemSelect.add(new Option(linkedItemId, linkedItemId));
+        let initialCustomerId = linkedCustomerId;
+        let initialCustomerName = linkedCustomerName;
+
+        {% if active_customer %}
+        if (!initialCustomerId) initialCustomerId = "{{ active_customer.id|escapejs }}";
+        if (!initialCustomerName) initialCustomerName = "{{ active_customer.name|escapejs }}";
+        {% endif %}
+
+        if (initialCustomerId) {
+            document.getElementById("customer_id").value = initialCustomerId;
+            loadCustomerItems(initialCustomerId, linkedItemId);
+            if (linkedItemId) {
+                loadItemECNData(linkedItemId);
             }
-            itemSelect.value = linkedItemId;
+        }
+        if (initialCustomerName) {
+            document.getElementById("customer_name").value = initialCustomerName;
         }
         if (linkedBomId) {
-            const bomSelect = document.getElementById("bom_creation_id");
-            if (![...bomSelect.options].some(o => o.value === linkedBomId)) {
-                bomSelect.add(new Option(linkedBomId, linkedBomId));
-            }
-            bomSelect.value = linkedBomId;
+            document.getElementById("bom_creation_id").value = linkedBomId;
             document.getElementById("lbl-bom-creation").textContent = linkedBomId;
             sendAjax("edit", { bom_creation_id: linkedBomId }, (res) => {
                 if (res.data) {
@@ -415,31 +1478,254 @@
         document.getElementById("btn-download").addEventListener("click", (e) => {
             e.preventDefault();
             const bom_id = document.getElementById("bom_creation_id").value;
-            if(!bom_id) return alert("Select BOM Creation ID first");
-            
+            if (!bom_id) return alert("Select BOM Creation ID first");
+
             fetch(ajaxUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'download', bom_creation_id: bom_id })
             })
-            .then(response => {
-                if(!response.ok) throw new Error("Network response was not ok");
-                return response.blob();
-            })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = "bom_" + bom_id + ".csv";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-                showMsg("step2-msg", "Done");
-            })
-            .catch(err => alert("Download failed"));
+                .then(response => {
+                    if (!response.ok) throw new Error("Network response was not ok");
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "bom_" + bom_id + ".csv";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    showMsg("step2-msg", "Done");
+                })
+                .catch(err => alert("Download failed"));
         });
 
-    });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Production BOM Validation: fire when part_number changes AND
+        // entry_type is "Production BOM"
+        // ─────────────────────────────────────────────────────────────────────
+        const partNumberSel = document.getElementById("part_number");
+        const partEntryTypeSel = document.getElementById("part_entry_type");
+
+        function maybeValidateProductionBOM() {
+            const entryType = partEntryTypeSel ? partEntryTypeSel.value : "";
+            const partNumber = partNumberSel ? partNumberSel.value : "";
+
+            if (entryType !== "Production BOM" || !partNumber) return;
+
+            fetch(`/BOM/validate_production_bom_part/?entry_type=${encodeURIComponent(entryType)}&part_number=${encodeURIComponent(partNumber)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.show_modal) {
+                        const grpNo = data.grp_part_no || partNumber;
+                        const grpDesc = data.grp_part_description || "";
+                        const items = data.items || [];
+
+                        const grpNoEl = document.getElementById("modal_grp_part_no_val");
+                        const grpDescEl = document.getElementById("modal_grp_part_desc_val");
+                        if (grpNoEl) grpNoEl.textContent = grpNo;
+                        if (grpDescEl) grpDescEl.textContent = grpDesc;
+
+                        // Fill line-item fields in the main form with group header values
+                        document.getElementById("part_description").value = grpDesc;
+                        if (items.length > 0) {
+                            document.getElementById("part_uom_code").value = items[0].uom || "";
+                            document.getElementById("part_categorisation").value = items[0].categorisation || "Local BOC";
+                            setSelectByText(document.getElementById("part_status"), items[0].part_status || "Approved");
+                        }
+
+                        // Populate modal table
+                        const tbody = document.getElementById("modal_prod_bom_items_body");
+                        if (tbody) {
+                            tbody.innerHTML = "";
+                            items.forEach(item => {
+                                const tr = document.createElement("tr");
+                                tr.innerHTML = `
+                                    <td class="text-center">${item.level || 1}</td>
+                                    <td>${item.part_no || ''}</td>
+                                    <td>${item.description || ''}</td>
+                                    <td>${item.uom || ''}</td>
+                                    <td>${item.categorisation || ''}</td>
+                                    <td>${item.part_status || ''}</td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        }
+
+                        // Store grp info for use by Accept
+                        partNumberSel.dataset.pendingGrpNo = grpNo;
+                        partNumberSel.dataset.pendingGrpDesc = grpDesc;
+
+                        // Show modal
+                        $("#frm_BOM_ProdItem_GrpPart_Selected").modal("show");
+                    }
+                })
+                .catch(err => console.error("validate_production_bom_part error:", err));
+        }
+
+        if (partNumberSel) partNumberSel.addEventListener("change", maybeValidateProductionBOM);
+        if (partEntryTypeSel) partEntryTypeSel.addEventListener("change", function () {
+            const et = this.value;
+            if (et) {
+                loadPartNumbersDropdown(et, "", null);
+            } else {
+                document.getElementById("part_number").innerHTML = "<option value=''></option>";
+            }
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Modal Accept: keep all populated values, commit grp data
+        // ─────────────────────────────────────────────────────────────────────
+        document.getElementById("btn_accept").addEventListener("click", function () {
+            const grpNo = partNumberSel.dataset.pendingGrpNo || "";
+            const grpDesc = partNumberSel.dataset.pendingGrpDesc || "";
+
+            partNumberSel.dataset.acceptedGrpNo = grpNo;
+            partNumberSel.dataset.acceptedGrpDesc = grpDesc;
+
+            // Close modal — values in the form remain untouched
+            $("#frm_BOM_ProdItem_GrpPart_Selected").modal("hide");
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Modal Decline: reset all line-item fields
+        // ─────────────────────────────────────────────────────────────────────
+        document.getElementById("btn_decline").addEventListener("click", function () {
+            if (partEntryTypeSel) partEntryTypeSel.value = "";
+            if (partNumberSel) {
+                partNumberSel.innerHTML = "<option value=''></option>";
+                delete partNumberSel.dataset.pendingGrpNo;
+                delete partNumberSel.dataset.pendingGrpDesc;
+                delete partNumberSel.dataset.acceptedGrpNo;
+                delete partNumberSel.dataset.acceptedGrpDesc;
+            }
+            ["part_quantity", "part_description", "part_uom_code",
+                "part_categorisation", "part_routing_link_code"].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = "";
+                });
+            const partStatusSel = document.getElementById("part_status");
+            if (partStatusSel) partStatusSel.value = "";
+
+            $("#frm_BOM_ProdItem_GrpPart_Selected").modal("hide");
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Copy BOM Table: copy rendered table to clipboard in TSV format
+        // ─────────────────────────────────────────────────────────────────────
+        const btnCopyTable = document.getElementById("btn-copy-table");
+        if (btnCopyTable) {
+            btnCopyTable.addEventListener("click", function () {
+                const tbody = document.getElementById("bom-trans-body");
+                if (!tbody) return;
+                const table = tbody.closest("table");
+                if (!table) return;
+
+                let tsvData = "";
+                const rows = table.querySelectorAll("tr");
+
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll("th, td");
+                    const rowData = [];
+                    // Exclude the last cell (Action column)
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        let text = cells[i].innerText || cells[i].textContent;
+                        text = text.replace(/[\n\t\r]+/g, " ").trim(); // Sanitize
+                        rowData.push(text);
+                    }
+                    if (rowData.length > 0) {
+                        tsvData += rowData.join("\t") + "\n";
+                    }
+                });
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(tsvData).then(() => {
+                        alert("BOM Table copied to clipboard! You can now paste it into Excel.");
+                    }).catch(err => {
+                        console.error("Clipboard copy failed", err);
+                        alert("Failed to copy BOM table.");
+                    });
+                } else {
+                    alert("Clipboard API not supported in this browser.");
+                }
+            });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Copy BOM Trans: save active BOM transactions to session
+        // ─────────────────────────────────────────────────────────────────────
+        const btnCopyTrans = document.getElementById("btn-copy-trans");
+        if (btnCopyTrans) {
+            btnCopyTrans.addEventListener("click", function () {
+                const currentBomId = document.getElementById("bom_creation_id").value.trim();
+                
+                if (!currentBomId) {
+                    alert("Please select or load a BOM Creation ID first.");
+                    return;
+                }
+
+                fetch("/BOM/copy_bom_trans/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ""
+                    },
+                    body: JSON.stringify({
+                        bom_id: currentBomId
+                    })
+                })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === "success") {
+                            alert("✔ " + res.message);
+                        } else {
+                            alert("Error: " + (res.message || "Unknown error"));
+                        }
+                    })
+                    .catch(err => alert("Copy failed: " + err.message));
+            });
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Paste BOM Trans: read transactions from session and save to active BOM
+        // ─────────────────────────────────────────────────────────────────────
+        const btnPasteTrans = document.getElementById("btn-paste-trans");
+        if (btnPasteTrans) {
+            btnPasteTrans.addEventListener("click", function () {
+                const currentBomId = document.getElementById("bom_creation_id").value.trim();
+                
+                if (!currentBomId) {
+                    alert("Please select or load a Target BOM Creation ID first.");
+                    return;
+                }
+
+                fetch("/BOM/paste_bom_trans/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ""
+                    },
+                    body: JSON.stringify({
+                        target_bom_id: currentBomId
+                    })
+                })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === "success") {
+                            alert("✔ " + res.message);
+                            loadParts(); // reload the grid
+                        } else {
+                            alert("Error: " + (res.message || "Unknown error"));
+                        }
+                    })
+                    .catch(err => alert("Paste failed: " + err.message));
+            });
+        }
+
+    }); // end DOMContentLoaded
 </script>
 {% endblock %}

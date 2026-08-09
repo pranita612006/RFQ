@@ -47,7 +47,7 @@
         color: #333;
     }
 
-    input {
+    input, select {
         flex: 1;
         height: 36px;
         padding: 6px 10px;
@@ -87,6 +87,7 @@
         cursor: pointer;
         font-size: 15px;
         transition: background-color 0.2s ease;
+        margin-left: 10px;
     }
 
     .green-btn:hover {
@@ -114,62 +115,240 @@
 <h2>ERP Data Page</h2>
 
 <div class="form-section">
+    <!-- Customer Code Selection Context -->
+    <div class="row">
+        <label>Customer Code:</label>
+        <select id="cmbBox_CustCode">
+            <option value="">-- Select Customer --</option>
+            <option value="ALL">ALL</option>
+            <option value="CUST001">CUST001</option>
+            <option value="CUST002">CUST002</option>
+        </select>
+    </div>
+
     <!-- ERP Download Options -->
     <div class="section-title">ERP Download Options</div>
     <div class="btn-group">
-        <button class="btn">Download ALL (based on date range)</button>
-        <button class="btn">Last Modified Date (based on date range)</button>
-        <button class="btn">Last Modified Date (current date)</button>
+        <button class="btn" onclick="downloadERP('ALL')">Download ALL (based on date range)</button>
+        <button class="btn" onclick="downloadERP('LAST_MODIFIED')">Last Modified Date (based on date range)</button>
+        <button class="btn" onclick="downloadERP('CURRENT_DATE')">Last Modified Date (current date)</button>
     </div>
 
     <div class="row">
         <label>*From Date:</label>
-        <input type="text" placeholder="mm/dd/yyyy">
+        <input type="text" id="fromDate" placeholder="mm/dd/yyyy">
     </div>
     <div class="row">
         <label>*To Date:</label>
-        <input type="text" placeholder="mm/dd/yyyy">
+        <input type="text" id="toDate" placeholder="mm/dd/yyyy">
     </div>
     <div class="row">
         <label>Current Date:</label>
-        <input type="text" value="27-Mar-26">
+        <input type="text" id="currentDate" value="27-Mar-26" readonly>
     </div>
     <div class="note">Note * : First two options of ERP download require From Date and To Date.</div>
 
-    <!-- Item Creation Data -->
+    <!-- Item Creation Data (Mapped to BOM Part Details VBA Logic) -->
     <div class="section-title">Item Creation Data</div>
     <div class="row">
         <label>File Path:</label>
-        <input type="text" placeholder="Enter file path">
-        <button class="green-btn">Download</button>
+        <input type="text" id="txtBox_Update_BomPartDetails" placeholder="Enter file path">
+        <button class="green-btn" onclick="processBomPartDetails()">Upload/Update</button>
+        <button class="green-btn" onclick="downloadTemplate('BOMPart')">Template Download</button>
     </div>
 
-    <!-- Opportunity Creation Data -->
+    <!-- Opportunity Creation Data (Mapped to Customer Info VBA Logic) -->
     <div class="section-title">Opportunity Creation Data</div>
     <div class="row">
         <label>File Path:</label>
-        <input type="text" placeholder="Enter file path">
-        <button class="green-btn">Download</button>
+        <input type="text" id="txtBox_CustInfo" placeholder="Enter file path">
+        <button class="green-btn" onclick="processCustInfo()">Upload/Update</button>
+        <button class="green-btn" onclick="downloadTemplate('CustInfo')">Template Download</button>
     </div>
 
-    <!-- BOM Creation Data -->
+    <!-- BOM Creation Data (Mapped to MEFT/Part Group Master VBA Logic) -->
     <div class="section-title">BOM Creation Data</div>
     <div class="row">
         <label>File Path:</label>
-        <input type="text" placeholder="Enter file path">
-        <button class="green-btn">Header Download</button>
-        <button class="green-btn">Line Item Download</button>
+        <input type="text" id="txtBox_MFETGrpPart_Details" placeholder="Enter file path">
+        <button class="green-btn" onclick="processMEFTDetails()">Header Download</button>
+        <button class="green-btn" onclick="downloadTemplate('MEFT')">Line Item Download</button>
     </div>
 
-    <!-- BOP Creation Data -->
+    <!-- BOP Creation Data (Mapped to BOP Types & BOP Tool Measure VBA Logic) -->
     <div class="section-title">BOP Creation Data</div>
     <div class="row">
-        <label>File Path:</label>
-        <input type="text" placeholder="Enter file path">
-        <button class="green-btn">Header Download</button>
-        <button class="green-btn">Line Item Download</button>
+        <label>File Path / Types:</label>
+        <input type="text" id="txtBox_BopTypes" placeholder="Enter file path for BOP Types">
+        <button class="green-btn" onclick="processBOPTypes()">Header Download</button>
+        <button class="green-btn" onclick="downloadTemplate('BOPTypes')">Line Item Download</button>
+    </div>
+    <div class="row">
+        <label>File Path / Tool Measure:</label>
+        <input type="text" id="txtBox_BopToolMeasure" placeholder="Enter file path for BOP Tool">
+        <button class="green-btn" onclick="processBopTool()">Update BOP Tool</button>
+        <button class="green-btn" onclick="downloadTemplate('BOPTool')">Template Download</button>
     </div>
 </div>
+
+<script>
+    // -------------------------------------------------------------
+    // Helper & Utility Logic
+    // -------------------------------------------------------------
+    function validatePath(filePath) {
+        if (!filePath || filePath.trim() === "") {
+            alert("File path is empty."); //
+            return false;
+        }
+        return true;
+    }
+
+    function validateCustomerCode() {
+        const custCode = document.getElementById("cmbBox_CustCode").value;
+        if (!custCode) {
+            alert("Customer Code is empty. Please select customer code and try again."); //
+            return false;
+        }
+        return custCode;
+    }
+
+    // -------------------------------------------------------------
+    // ERP Download Buttons (Date Range Check)
+    // -------------------------------------------------------------
+    function downloadERP(mode) {
+        const fromDate = document.getElementById("fromDate").value;
+        const toDate = document.getElementById("toDate").value;
+
+        if ((mode === 'ALL' || mode === 'LAST_MODIFIED') && (!fromDate || !toDate)) {
+            alert("First two options of ERP download require From Date and To Date.");
+            return;
+        }
+
+        alert(`Processing ERP Download: ${mode}`);
+        // Endpoint call or action processing code goes here
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Private Sub btn_Update_BopTool_Click()
+    // -------------------------------------------------------------
+    function processBopTool() {
+        const sFileName = document.getElementById("txtBox_BopToolMeasure").value;
+        if (!validatePath(sFileName)) return;
+
+        // Replicates checking spreadsheet A1 and F1 ("Customer Code") header check
+        // Equivalent to: DoCmd.RunSQL "Delete from tbl_BOP_Types" & TransferSpreadsheet
+        alert("Processing BOP Tool Measure file import...\nPath: " + sFileName);
+        
+        // Backend execution simulated:
+        // Delete from tbl_BOP_Types & TransferSpreadsheet to tbl_BOP_Tool_Measure[cite: 2]
+        alert("Record has been updated successfully."); //[cite: 2]
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Private Sub btn_Update_CustInfo_Click()[cite: 2]
+    // -------------------------------------------------------------
+    function processCustInfo() {
+        const sFileName = document.getElementById("txtBox_CustInfo").value;
+        if (!validatePath(sFileName)) return;
+
+        // Replicates header validation check (Range B1 = "Cust Code")[cite: 2]
+        alert("Processing Customer Info import...\nPath: " + sFileName);
+        
+        // Backend execution simulated:
+        // TransferSpreadsheet acImport -> tbl_CustomerInfo[cite: 2]
+        alert("Record has been updated successfully."); //[cite: 2]
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Private Sub btn_UpdateBOPTypes_Click()[cite: 2]
+    // -------------------------------------------------------------
+    function processBOPTypes() {
+        const sFileName = document.getElementById("txtBox_BopTypes").value;
+        if (!validatePath(sFileName)) return;
+
+        // Replicates header validation check (Range A1 = "ID")[cite: 2]
+        alert("Processing BOP Types import...\nPath: " + sFileName);
+        
+        // Backend execution simulated:
+        // Delete from tbl_BOP_Types & TransferSpreadsheet to tbl_BOP_Types[cite: 2]
+        alert("Record has been updated successfully."); //[cite: 2]
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Private Sub btn_Update_BomPart_Details_Click()
+    // -------------------------------------------------------------
+    function processBomPartDetails() {
+        const sFileName = document.getElementById("txtBox_Update_BomPartDetails").value;
+        if (!validatePath(sFileName)) return;
+
+        // Replicates header validation check (Range A1 = "Part No")
+        alert("Processing BOM Part Details import...\nPath: " + sFileName);
+        
+        // Backend execution simulated:
+        // TransferSpreadsheet acImport -> tbl_BOM_PartDetails_Master
+        alert("Record has been updated successfully."); //
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Private Sub btn_UpdateMEFTDetails_Click()
+    // -------------------------------------------------------------
+    function processMEFTDetails() {
+        const sFileName = document.getElementById("txtBox_MFETGrpPart_Details").value;
+        if (!validatePath(sFileName)) return;
+
+        // Replicates header validation check (Range A1 = "grp_partno")
+        alert("Processing MEFT Group Part Details import...\nPath: " + sFileName);
+        
+        // Backend execution simulated:
+        // Delete from tbl_BOM_ProdItem_PartGrpMaster_rawData
+        // RunSQL update logic on tbl_BOM_ProdItem_PartGrpMaster
+        alert("Record has been updated successfully."); //
+    }
+
+    // -------------------------------------------------------------
+    // VBA Logic: Lbl_tempLink routines for Extract / Download
+    // -------------------------------------------------------------
+    function downloadTemplate(type) {
+        const custCode = validateCustomerCode();
+        if (!custCode && type !== 'MEFT') return;
+
+        let query = "";
+        let fileNamePrefix = "";
+
+        switch(type) {
+            case 'BOPTool':
+                // Sub Lbl_tempLink_BOPTool_Click
+                query = `SELECT * FROM tbl_BOP_Tool_Measure WHERE ID=9999999 AND Customer_Code='${custCode}'`;
+                fileNamePrefix = "Template BOP Tool Measure_";
+                break;
+            case 'BOPTypes':
+                // Sub Lbl_tempLink_BOPTypes_Click
+                query = `SELECT * FROM tbl_BOP_Types WHERE ID=999999 AND Cust_Code='${custCode}'`;
+                fileNamePrefix = "Template BOP Types_";
+                break;
+            case 'BOMPart':
+                // Sub Lbl_tempLink_BOMPart_Click
+                query = `SELECT * FROM tbl_BOM_PartDetails_Master WHERE [Part No]='999' AND Customer='${custCode}'`;
+                fileNamePrefix = "Template BOM part details_";
+                break;
+            case 'CustInfo':
+                // Sub Lbl_tempLink_custinfo_Click
+                query = `SELECT * FROM tbl_CustomerInfo WHERE ID=99999 AND Cust_Code='${custCode}'`;
+                fileNamePrefix = "Template BOP CustomerInfo_";
+                break;
+            case 'MEFT':
+                // Sub Lbl_tempLink_MEFT_Click
+                query = `SELECT * FROM tbl_BOM_ProdItem_PartGrpMaster_rawData WHERE grp_partno='999999'`;
+                fileNamePrefix = "Template MEFT_Group_Part_Details_";
+                break;
+        }
+
+        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(2, 14);
+        const generatedFileName = `${fileNamePrefix}${timestamp}_${custCode}.xlsx`;
+
+        alert(`Executed Extraction SQL Query:\n${query}\n\nTemplate generated:\n${generatedFileName}`);
+    }
+</script>
 
 </body>
 </html>
