@@ -11,6 +11,7 @@ urlpatterns = [
     path("BOM/get_bom_details/", views.get_bom_details, name="get_bom_details"),
     path("BOM/send_approval/", views.send_bom_approval, name="send_bom_approval"),
     path("BOM/ecn/", views.ecn_bom, name="ecn_bom"),
+    path("BOM/generate_next_table_id/", views.generate_next_table_id, name="generate_next_table_id"),
     
     # Step 2 parts and autofill
     path("BOM/ajax/action/", views.bom_ajax_action, name="bom_ajax_action"),

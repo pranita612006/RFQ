@@ -156,3 +156,75 @@ class BomProdItemPartGrpMasterRawData(models.Model):
     class Meta:
         managed = False
         db_table = 'tbl_bom_proditem_partgrpmaster_rawdata'
+
+
+class BOMHeaderECN(models.Model):
+    """Unmanaged archive model for ECN BOM header snapshots.
+
+    Each row represents a point-in-time copy of a BOMHeader taken at the
+    moment an Engineering Change Notice (ECN) is created.
+
+    Maps to the existing DB table: tbl_bomcreation_ecn
+    Column names are stored as all-lowercase (PostgreSQL default for unquoted identifiers).
+    ecn_id and itemcreation_ecn are INTEGER in the DB — the view stores the
+    numeric revision count (0 = original, 1, 2 …) and formats the
+    human-readable label ("ECN:Original" / "ECN:N") only in the JSON response.
+    """
+    # ECN stamp columns (integers in the actual DB)
+    ecn_id = models.IntegerField(primary_key=True, db_column='ecn_id')
+    item_creation_ecn = models.IntegerField(db_column='itemcreation_ecn', null=True, blank=True)
+    # Core header fields — db_column matches the actual lowercase column names
+    customer_id = models.CharField(max_length=50, db_column='customer_id', null=True, blank=True)
+    item_creation_id = models.CharField(max_length=50, db_column='itemcreation_id', null=True, blank=True)
+    bom_row_id = models.IntegerField(db_column='bom_rowid', null=True, blank=True)
+    bom_creation_id = models.CharField(max_length=50, db_column='bomcreation_id', null=True, blank=True)
+    description = models.TextField(db_column='description', null=True, blank=True)
+    description_2 = models.TextField(db_column='description_2', null=True, blank=True)
+    search_name = models.CharField(max_length=100, db_column='search_name', null=True, blank=True)
+    uom_code = models.CharField(max_length=50, db_column='unit_of_measure_code', null=True, blank=True)
+    low_level_code = models.IntegerField(db_column='Low-Level Code', null=True, blank=True)
+    create_date = models.DateField(db_column='creation_date', null=True, blank=True)
+    last_date_modified = models.DateField(db_column='last_date_modified', null=True, blank=True)
+    action_status = models.CharField(max_length=100, db_column='status', null=True, blank=True)
+    version_number = models.IntegerField(db_column='version_number', null=True, blank=True)
+    series = models.CharField(max_length=50, db_column='series', null=True, blank=True)
+    table_id = models.CharField(max_length=50, db_column='table_id', null=True, blank=True)
+
+    class Meta:
+        db_table = 'tbl_bomcreation_ecn'
+        managed = False
+
+    def __str__(self):
+        return f"{self.bom_creation_id} [ECN:{self.ecn_id}]"
+
+
+class BOMTransactionECN(models.Model):
+    """Unmanaged archive model for ECN BOM line-item snapshots.
+
+    Maps to the existing DB table: tbl_bomcreation_partselection_ecn
+    All column names are lowercase (PostgreSQL default).
+    ecn_id is INTEGER in the DB — matches the numeric count stored by ecn_bom.
+    """
+    id = models.IntegerField(primary_key=True, db_column='id')
+    ecn_id = models.IntegerField(db_column='ecn_id', null=True, blank=True)
+    item_creation_ecn = models.IntegerField(db_column='itemcreation_ecn', null=True, blank=True)
+    bom_creation_id = models.CharField(max_length=100, db_column='bomcreation_id', null=True, blank=True)
+    entry_type = models.CharField(max_length=50, db_column='entry_type', null=True, blank=True)
+    part_number = models.CharField(max_length=100, db_column='part_number', null=True, blank=True)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, db_column='quantity', null=True, blank=True, default=0)
+    description = models.CharField(max_length=255, db_column='description', null=True, blank=True)
+    uom_code = models.CharField(max_length=50, db_column='unit_of_measure_code', null=True, blank=True)
+    categorisation = models.CharField(max_length=100, db_column='categorisation', null=True, blank=True)
+    routing_link_code = models.CharField(max_length=100, db_column='routing_link_code', null=True, blank=True)
+    part_status = models.CharField(max_length=50, db_column='part_status', null=True, blank=True)
+    grp_part_no = models.CharField(max_length=100, db_column='grp_part_number', null=True, blank=True)
+    grp_part_descp = models.CharField(max_length=255, db_column='grp_part_description', null=True, blank=True)
+    start_date = models.CharField(max_length=50, db_column='start_date', null=True, blank=True)
+    table_id = models.CharField(max_length=100, db_column='table_id', null=True, blank=True)
+
+    class Meta:
+        db_table = 'tbl_bomcreation_partselection_ecn'
+        managed = False
+
+    def __str__(self):
+        return f"{self.part_number} [ECN:{self.ecn_id}]"

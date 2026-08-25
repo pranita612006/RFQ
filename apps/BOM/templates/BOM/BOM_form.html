@@ -59,8 +59,7 @@
                                 <option value="Approved">Approved</option>
                                 <option value="Rejected">Rejected</option>
                                 <option value="Sent for Approval">Sent for Approval</option>
-                                <option value="ECN">ECN</option>
-                                <option value="Completed">Completed</option>
+                                <option value="ECN Created">ECN Created</option>
                             </select>
                         </div>
                     </div>
@@ -75,7 +74,7 @@
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Last ECN No</label>
                         <div class="col-sm-8"><input type="text" id="last_ecn_no" class="form-control form-control-sm"
-                                readonly></div>
+                                readonly><input type="hidden" id="ecn_number_field" value="0"></div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">No_Of_Parts</label>
@@ -102,15 +101,21 @@
                     <div class="form-group row no-gutters mb-1">
                         <label class="col-sm-4 text-secondary">Table_Id</label>
                         <div class="col-sm-8">
-                            <input type="text" id="table_id" list="table-id-list" class="form-control form-control-sm"
-                                autocomplete="off" placeholder="Search or type...">
-                            <datalist id="table-id-list">
-                                {% for h in headers %}
-                                {% if h.table_id %}
-                                <option value="{{ h.table_id }}">{{ h.table_id }}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </datalist>
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="table_id" list="table-id-list" class="form-control form-control-sm"
+                                    autocomplete="off" placeholder="Search or type...">
+                                <datalist id="table-id-list">
+                                    {% for h in headers %}
+                                    {% if h.table_id %}
+                                    <option value="{{ h.table_id }}">{{ h.table_id }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </datalist>
+                                <div class="input-group-append">
+                                    <button type="button" id="btn-new-table-id" class="btn btn-sm text-white"
+                                        style="background-color: #2a6ebb;" title="Generate next Table ID">New</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row no-gutters mb-1">
@@ -120,6 +125,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hidden field: set to 1 when ECN button is clicked, reset to 0 after save -->
+            <input type="hidden" id="ecn_triggered" value="0">
 
             <div class="mt-2 d-flex align-items-center flex-wrap">
                 <button type="button" id="btn-create" class="btn btn-sm text-white px-3 mr-1 mb-1"
@@ -505,7 +513,7 @@
             // Clear fields if no item is selected
             if (!itemNo) {
                 ["description", "uom_code", "fixture_no", "customer_name", "customer_id",
-                    "last_ecn_no", "no_of_meft", "no_of_parts",
+                    "last_ecn_no", "ecn_number_field", "no_of_meft", "no_of_parts",
                     "bom_creation_id", "table_id", "last_date_modified"].forEach(id => {
                         const el = document.getElementById(id);
                         if (el) el.value = "";
@@ -534,7 +542,10 @@
 
                     // ── ECN / ItemCard static fields ──
                     document.getElementById("fixture_no").value = ecn.fixture_no || "";
-                    document.getElementById("last_ecn_no").value = ecn.last_ecn_no || "";
+                    const val_ecn = bom.last_ecn_no || ecn.last_ecn_no || "0";
+                    document.getElementById("last_ecn_no").value = val_ecn;
+                    const ecnField = document.getElementById("ecn_number_field");
+                    if (ecnField) ecnField.value = val_ecn;
 
                     // Customer info (populate if not already locked in by deep-link)
                     if (ecn.customer_name)
@@ -626,6 +637,79 @@
             loadItemECNData(this.value);
         });
 
+        // ── "New" button: generate the next sequential Table ID ───────────────
+        document.getElementById("btn-new-table-id").addEventListener("click", function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = "...";
+
+            fetch("{% url 'generate_next_table_id' %}", {
+                headers: { "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value }
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status !== "success") {
+                        alert("Error generating Table ID: " + (data.error || "Unknown error"));
+                        return;
+                    }
+                    const newId = String(data.next_table_id);
+
+                    // Set Table ID input and label
+                    document.getElementById("table_id").value = newId;
+                    document.getElementById("lbl-table-id").textContent = newId;
+
+                    // Clear Step 2 grid so the user can add fresh line items
+                    document.getElementById("bom-trans-body").innerHTML = "";
+
+                    // Reset Step 1 fields that belong to a specific revision
+                    // (keep BOM Creation ID, Item, Customer, Description intact)
+                    document.getElementById("action_status").value = "";
+                    document.getElementById("last_date_modified").value = todayStr;
+                    document.getElementById("last_ecn_no").value = "0";
+                    if (document.getElementById("ecn_number_field"))
+                        document.getElementById("ecn_number_field").value = "0";
+
+                    // Ensure Create mode is active so the record can be saved as new
+                    setBtnCreateDisabled(false);
+                    setViewMode(false);
+                })
+                .catch(err => {
+                    console.error("generate_next_table_id error:", err);
+                    alert("Network error generating Table ID.");
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = "New";
+                });
+        });
+
+        // ── Table ID change → load the matching BOM header + parts ────────────
+        document.getElementById("table_id").addEventListener("change", function () {
+            const selectedTableId = this.value.trim();
+            if (!selectedTableId) return;
+
+            // Find the BOM Creation ID whose table_id matches the selection
+            const bomCreationId = document.getElementById("bom_creation_id").value.trim();
+            if (!bomCreationId) return; // Nothing to look up without a BOM ID
+
+            // Re-fetch details from the server; get_bom_details will also
+            // return the correct table_id so labels stay in sync.
+            fetch(`/BOM/get_bom_details/?bom_creation_id=${encodeURIComponent(bomCreationId)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { console.warn("get_bom_details:", data.error); return; }
+
+                    // Only update table-specific visual indicators
+                    document.getElementById("table_id").value = data.table_id || selectedTableId;
+                    document.getElementById("lbl-table-id").textContent = data.table_id || selectedTableId;
+                    document.getElementById("last_date_modified").value = data.last_date_modified || "";
+                    document.getElementById("action_status").value = data.action_status || "";
+
+                    loadParts();
+                })
+                .catch(err => console.error("table_id change load error:", err));
+        });
+
         function getHeaderData() {
             return {
                 customer_name: document.getElementById("customer_name").value,
@@ -641,7 +725,8 @@
                 last_date_modified: document.getElementById("last_date_modified").value,
                 bom_creation_id: document.getElementById("bom_creation_id").value,
                 table_id: document.getElementById("table_id").value,
-                create_date: document.getElementById("create_date").value
+                create_date: document.getElementById("create_date").value,
+                ecn_triggered: document.getElementById("ecn_triggered").value
             };
         }
 
@@ -871,6 +956,7 @@
             })
                 .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
                 .then(res => {
+                    console.log("[SAVE RESPONSE]", res);  // DEBUG: check browser console (F12)
                     if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
                     if (res.bom_creation_id) {
                         document.getElementById("bom_creation_id").value = res.bom_creation_id;
@@ -881,7 +967,20 @@
                         document.getElementById("lbl-table-id").textContent = res.table_id;
                     }
                     if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
-                    showMsg(res.message || "BOM configuration saved successfully!");
+                    
+                    // Always reset the ECN trigger after save
+                    document.getElementById("ecn_triggered").value = "0";
+
+                    if (res.ecn_id !== undefined && res.ecn_id !== null) {
+                        const lastEcnEl = document.getElementById("last_ecn_no");
+                        if (lastEcnEl) lastEcnEl.value = res.ecn_id;
+                        const ecnField = document.getElementById("ecn_number_field");
+                        if (ecnField) ecnField.value = res.ecn_id;
+                        showMsg((res.message || "BOM configuration saved successfully!") + " — ECN: " + res.ecn_id);
+                    } else {
+                        showMsg(res.message || "BOM configuration saved successfully!");
+                    }
+                    
                     setViewMode(true);
                 })
                 .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
@@ -938,22 +1037,35 @@
         }
 
         document.getElementById("btn-ecn").addEventListener("click", () => {
-            const bom_id = document.getElementById("bom_creation_id").value;
-            if (!bom_id) return alert("Select BOM Creation ID first");
-            if (!confirm(`Transition BOM Record ${bom_id} to ECN mode to edit and revision it?`)) return;
-            fetch('/BOM/ecn/', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ bom_creation_id: bom_id })
-            })
-                .then(r => r.json().then(res => { if (!r.ok) throw res; return res; }))
-                .then(res => {
-                    showMsg(res.message || "BOM record transitioned to ECN successfully!");
-                    if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
-                    if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
-                    setViewMode(false);
-                })
-                .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
+            const bom_id = document.getElementById("bom_creation_id").value.trim();
+            if (!bom_id) return alert("Select BOM Creation ID first.");
+            
+            if (!confirm(`Unlock BOM Record '${bom_id}' for ECN modifications?\n\nThe ECN number will increment when you click Save.`)) return;
+
+            // Signal to the Save handler that an ECN archive is required
+            document.getElementById("ecn_triggered").value = "1";
+
+            // Unlock the form for editing
+            setViewMode(false);
+            
+            // Set action status to ECN Created on the UI
+            setSelectByText(document.getElementById("action_status"), "ECN Created");
+            
+            // Hide the lock badge
+            const badge = document.getElementById("record-lock-badge");
+            if (badge) badge.style.display = "none";
+            
+            // Make Send Approval available
+            const sendApprovalBtn = document.getElementById("btn-send-approval");
+            if (sendApprovalBtn) {
+                sendApprovalBtn.disabled = false;
+                sendApprovalBtn.classList.remove("btn-secondary");
+                sendApprovalBtn.classList.add("text-white");
+                sendApprovalBtn.style.backgroundColor = "#2a6ebb";
+                sendApprovalBtn.innerText = "SendApproval";
+            }
+            
+            showMsg("Record unlocked for ECN. Make your changes to Description and UOM, then click Save.");
         });
 
         // Step 2 Part Selection State & Dynamic Mode Controls

@@ -81,6 +81,9 @@ INSTALLED_APPS = [
     "apps.BlanketSales",
     "apps.ApproveRec",
     "apps.Report",
+    "apps.user_management",
+    "apps.upload_data",
+    "apps.erp_data",
 ]
 
 MIDDLEWARE = [

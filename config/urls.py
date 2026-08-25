@@ -36,4 +36,7 @@ urlpatterns = [
     path("", include("apps.BlanketSales.urls")),
     path("", include("apps.ApproveRec.urls")),
     path("", include("apps.Report.urls")),
+    path("user-management/", include("apps.user_management.urls")),
+    path("upload-data/", include("apps.upload_data.urls")),
+    path("erp-data/", include("apps.erp_data.urls")),
 ]

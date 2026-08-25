@@ -1,0 +1,358 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Management</title>
+
+<style>
+    body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:0; }
+
+    /* Page Header */
+    h2 { background:#2a6ebb; color:white; padding:16px 24px; font-size:22px; margin:0; }
+
+    /* Tabs */
+    .tabs { display:flex; gap:20px; padding:15px 30px; background:#fff; border-bottom:1px solid #ddd; }
+    .tabs button { font-weight:bold; color:#333; background:none; border:none; cursor:pointer; font-size:15px; }
+    .tabs button.active { color:#2a6ebb; border-bottom:2px solid #2a6ebb; }
+    .tabs button:hover { color:#2a6ebb; }
+
+    /* Form Section */
+    .form-section { background:#fff; border:1px solid #ddd; border-radius:8px; padding:30px; max-width:900px; margin:30px auto; box-shadow:0 3px 8px rgba(0,0,0,0.1); }
+
+    .row { display:flex; align-items:center; margin-bottom:20px; }
+    label { width:200px; font-weight:bold; font-size:15px; color:#333; }
+    input, select { flex:1; height:36px; padding:6px 10px; font-size:15px; border:1px solid #ccc; border-radius:5px; }
+
+    .btn { background:#2a6ebb; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; margin-right:10px; }
+    .btn:hover { background:#1f4f8a; }
+
+    .green-btn { background:#28a745; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; }
+    .green-btn:hover { background:#218838; }
+
+    .red-btn { background:#dc3545; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; }
+    .red-btn:hover { background:#b52a37; }
+
+    .section-title { font-size:18px; font-weight:bold; margin:25px 0 15px; color:#2a6ebb; }
+
+    /* Alert messages */
+    .alert-container { max-width: 900px; margin: 15px auto; }
+    .alert { padding: 12px; margin-bottom: 10px; border-radius: 4px; font-weight: bold; }
+    .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    /* Table styling */
+    .permissions-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .permissions-table th, .permissions-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .permissions-table th { background-color: #f2f2f2; }
+</style>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.form-section').forEach(section => section.style.display = 'none');
+        document.getElementById(tabId).style.display = 'block';
+        document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-tab="'+tabId+'"]').classList.add('active');
+        
+        // Save current tab in localStorage
+        localStorage.setItem('user_mgmt_active_tab', tabId);
+    }
+
+    // Auto-restore tab + selected user after form redirect
+    document.addEventListener("DOMContentLoaded", function() {
+        const savedTab = localStorage.getItem('user_mgmt_active_tab') || 'add';
+        showTab(savedTab);
+        
+        // Restore last selected user in Update tab
+        const savedUser = localStorage.getItem('user_mgmt_selected_user');
+        if (savedUser) {
+            const sel = document.getElementById("update_user_select");
+            if (sel) {
+                sel.value = savedUser;
+                if (sel.value === savedUser) {
+                    loadUserDetails(savedUser);
+                }
+            }
+        }
+    });
+
+    function saveSelectedUser(username) {
+        if (username) {
+            localStorage.setItem('user_mgmt_selected_user', username);
+        }
+    }
+
+    function confirmDelete() {
+        const select = document.getElementById("delete_user_select");
+        if (!select.value) {
+            alert("Please select a user to delete.");
+            return false;
+        }
+        return confirm("Are you sure you want to delete/deactivate user: " + select.value + "?");
+    }
+
+    function loadUserDetails(username) {
+        if (!username) {
+            // Clear fields if empty
+            document.getElementById("update_username").value = "";
+            document.getElementById("update_fullname").value = "";
+            document.getElementById("update_designation").value = "";
+            document.getElementById("update_email").value = "";
+            document.getElementById("update_is_admin").value = "No";
+            document.getElementById("update_user_type").value = "Standard User";
+            
+            document.getElementById("access_username").value = "";
+            document.getElementById("permissions_body").innerHTML = "<tr><td colspan='3'>No permissions to show. Select a user first.</td></tr>";
+            return;
+        }
+
+        fetch("/user-management/get/" + encodeURIComponent(username) + "/")
+            .then(res => res.json())
+            .then(data => {
+                // Populate Profile fields
+                document.getElementById("update_username").value = data.username;
+                document.getElementById("update_fullname").value = data.fullname;
+                document.getElementById("update_email").value = data.email;
+                document.getElementById("update_user_type").value = data.user_type;
+
+                // Normalize is_admin: DB may contain 'True'/'False' or 'Yes'/'No'
+                const rawAdmin = (data.is_admin || '').toLowerCase();
+                const adminVal = (rawAdmin === 'true' || rawAdmin === 'yes') ? 'Yes' : 'No';
+                document.getElementById("update_is_admin").value = adminVal;
+
+                // Handle designation — if value not in dropdown, add it dynamically
+                const desgSelect = document.getElementById("update_designation");
+                const desgVal = data.designation || '';
+                const existingOpt = Array.from(desgSelect.options).find(o => o.value === desgVal);
+                if (!existingOpt && desgVal) {
+                    const newOpt = document.createElement("option");
+                    newOpt.value = desgVal;
+                    newOpt.textContent = desgVal;
+                    desgSelect.appendChild(newOpt);
+                }
+                desgSelect.value = desgVal;
+
+                // Update hidden access_username field for grant form
+                document.getElementById("access_username").value = data.username;
+
+                // Populate Permissions table
+                const tbody = document.getElementById("permissions_body");
+                tbody.innerHTML = "";
+                if (!data.access_rights || data.access_rights.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='3'>No permissions granted yet.</td></tr>";
+                } else {
+                    data.access_rights.forEach(right => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${right.access_to}</td>
+                            <td>${right.access_type}</td>
+                            <td>${right.last_modified}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            })
+            .catch(err => console.error("Error loading user details:", err));
+    }
+</script>
+</head>
+
+<body>
+
+<h2>User Management</h2>
+
+<!-- Flash messages -->
+{% if messages %}
+<div class="alert-container">
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Tabs -->
+<div class="tabs">
+    <button data-tab="add" class="active" onclick="showTab('add')">Add New</button>
+    <button data-tab="delete" onclick="showTab('delete')">Delete</button>
+    <button data-tab="update" onclick="showTab('update')">Update</button>
+</div>
+
+<!-- Add New User -->
+<div id="add" class="form-section" style="display:block;">
+    <div class="section-title">Add New User</div>
+    <form action="{% url 'add_user' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <label>User Name:</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="row">
+            <label>Full Name:</label>
+            <input type="text" name="fullname" required>
+        </div>
+        <div class="row">
+            <label>Designation:</label>
+            <select name="designation" required>
+                <option value="">Select Designation</option>
+                {% for desg in designations %}
+                <option value="{{ desg }}">{{ desg }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <label>Email Id:</label>
+            <input type="email" name="email" required>
+        </div>
+        <div class="row">
+            <label>Is Admin:</label>
+            <select name="is_admin">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>User Type:</label>
+            <select name="user_type">
+                <option value="Standard User">Standard User</option>
+                <option value="Admin User">Admin User</option>
+            </select>
+        </div>
+        <div class="btn-group" style="margin-left: 200px;">
+            <button type="submit" class="green-btn">Add</button>
+            <button type="reset" class="btn">Reset</button>
+        </div>
+    </form>
+</div>
+
+<!-- Delete User -->
+<div id="delete" class="form-section" style="display:none;">
+    <div class="section-title">Delete User</div>
+    <p>Select a user to permanently delete.</p>
+    <form action="{% url 'delete_user' %}" method="POST" onsubmit="return confirmDelete();">
+        {% csrf_token %}
+        <div class="row">
+            <label>User Name:</label>
+            <select name="username" id="delete_user_select" required>
+                <option value="">Select User</option>
+                {% for user in active_users %}
+                <option value="{{ user.emp_username }}">{{ user.emp_username }} ({{ user.emp_name }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="btn-group" style="margin-left: 200px; margin-top: 15px;">
+            <button type="submit" class="red-btn">Delete</button>
+        </div>
+    </form>
+</div>
+
+<!-- Update User -->
+<div id="update" class="form-section" style="display:none;">
+    <div class="section-title">Update User Details</div>
+    
+    <div class="row">
+        <label>Select User to Edit:</label>
+        <select id="update_user_select" onchange="saveSelectedUser(this.value); loadUserDetails(this.value);">
+            <option value="">Select User</option>
+            {% for user in active_users %}
+            <option value="{{ user.emp_username }}">{{ user.emp_username }} ({{ user.emp_name }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #ddd; margin: 25px 0;">
+
+    <form action="{% url 'update_user' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <label>User Name:</label>
+            <input type="text" name="username" id="update_username" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+        </div>
+        <div class="row">
+            <label>Full Name:</label>
+            <input type="text" name="fullname" id="update_fullname" required>
+        </div>
+        <div class="row">
+            <label>Designation:</label>
+            <select name="designation" id="update_designation" required>
+                <option value="">Select Designation</option>
+                {% for desg in designations %}
+                <option value="{{ desg }}">{{ desg }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <label>Email Id:</label>
+            <input type="email" name="email" id="update_email" required>
+        </div>
+        <div class="row">
+            <label>Is Admin:</label>
+            <select name="is_admin" id="update_is_admin">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>User Type:</label>
+            <select name="user_type" id="update_user_type">
+                <option value="Standard User">Standard User</option>
+                <option value="Admin User">Admin User</option>
+            </select>
+        </div>
+        <div class="btn-group" style="margin-left: 200px;">
+            <button type="submit" class="green-btn">Update Details</button>
+        </div>
+    </form>
+
+    <hr style="border: 0; border-top: 1px solid #ddd; margin: 30px 0;">
+
+    <div class="section-title">Grant / Edit Access Rights</div>
+    <form action="{% url 'add_user_access' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="access_username" required>
+        
+        <div class="row">
+            <label>Access To:</label>
+            <select name="access_to" required>
+                <option value="">Select Module</option>
+                {% for choice in module_choices %}
+                <option value="{{ choice }}">{{ choice }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <label>Access Type:</label>
+            <select name="access_type" required>
+                <option value="">Select Access Type</option>
+                <option value="Read/Write">Read/Write</option>
+                <option value="Read">Read</option>
+            </select>
+        </div>
+        
+        <div class="btn-group" style="margin-left: 200px;">
+            <button type="submit" class="green-btn">Save Permissions</button>
+        </div>
+    </form>
+
+    <div class="section-title" style="margin-top: 30px;">Current Access Permissions</div>
+    <table class="permissions-table">
+        <thead>
+            <tr>
+                <th>Module (Access To)</th>
+                <th>Access Type</th>
+                <th>Last Modified Date</th>
+            </tr>
+        </thead>
+        <tbody id="permissions_body">
+            <tr>
+                <td colspan="3">No permissions to show. Select a user first.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+{% endblock %}

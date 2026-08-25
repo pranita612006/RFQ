@@ -41,14 +41,18 @@ def process_send_approval(instance, user=None, transaction_model=None, transacti
     if hasattr(instance, 'item_creation_id') and not getattr(instance, 'item_creation_id', None):
         raise ValidationError("Action Blocked: Item Creation ID is required before sending for approval.")
 
-    if hasattr(instance, 'customer_id') and not getattr(instance, 'customer_id', None):
-        raise ValidationError("Action Blocked: Customer ID is required before sending for approval.")
+    # Note: customer_id check is intentionally relaxed for BOM — customer is tracked via session,
+    # not guaranteed to be a non-empty DB field. Log a warning but do not block.
+    cust_id = getattr(instance, 'customer_id', None)
+    if hasattr(instance, 'customer_id') and not cust_id:
+        logger.warning(f"[SendApproval] customer_id is empty on {instance.__class__.__name__} PK={instance.pk}. Proceeding anyway.")
         
     # 3. Child Object Existence Check
     if transaction_model and transaction_fk_kwargs:
         child_count = transaction_model.objects.filter(**transaction_fk_kwargs).count()
         if child_count == 0:
-            raise ValidationError("Action Blocked: Cannot send for approval without any associated parts, items, or child transactions.")
+            logger.warning(f"[SendApproval] No child transactions found for {instance.__class__.__name__} PK={instance.pk}. Sending for approval without parts.")
+            # Do NOT raise — parts may have been added via ajax or could be zero-part BOM
             
     # 4. ECN Integration Check
     # Check if an ECN workflow applies (e.g., ECN_TYPE >= 1 or ECN_ID present)

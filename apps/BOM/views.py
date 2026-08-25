@@ -4,7 +4,7 @@ from datetime import date, datetime
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Max, Count, Q
 from django.db.models.functions import Cast
 from django.db.models import IntegerField as DjIntegerField
@@ -12,6 +12,7 @@ from .models import (
     BOMHeader, BOMTransaction, ItemCardECN,
     BOMProdItemPartGrpMaster, BOMPartDetailsMaster,
     BomProdItemPartGrpMasterRawData, BOMProdItemPartGrpMasterDetail,
+    BOMHeaderECN, BOMTransactionECN,
 )
 from config.decorators import require_active_customer
 
@@ -501,6 +502,16 @@ def bom_get_autofill_data(request):
                 bom_cid = bom_header.bom_creation_id or ''
                 meft_count  = BOMTransaction.objects.filter(bom_creation_id=bom_cid, entry_type='MEFT').count() if bom_cid else 0
                 parts_count = BOMTransaction.objects.filter(bom_creation_id=bom_cid).count() if bom_cid else 0
+
+                # Compute the current ECN number from the BOM ECN archive table.
+                latest_ecn = BOMHeaderECN.objects.filter(
+                    bom_creation_id=bom_cid
+                ).aggregate(m=Max('ecn_id'))['m']
+                if latest_ecn is None:
+                    bom_last_ecn_no = '0'
+                else:
+                    bom_last_ecn_no = str(latest_ecn)
+
                 bom_data = {
                     "bom_creation_id":    bom_cid,
                     "table_id":           bom_header.table_id or str(bom_header.id),
@@ -510,6 +521,7 @@ def bom_get_autofill_data(request):
                     "uom_code":           bom_header.uom_code or ecn_data["uom_code"],
                     "no_of_meft":         str(meft_count),
                     "no_of_parts":        str(parts_count),
+                    "last_ecn_no":        bom_last_ecn_no,
                 }
             else:
                 # No saved BOM yet — check ECN status for a better default
@@ -523,6 +535,7 @@ def bom_get_autofill_data(request):
                     "uom_code":           ecn_data["uom_code"],
                     "no_of_meft":         '0',
                     "no_of_parts":        '0',
+                    "last_ecn_no":        '0',
                 }
 
             return JsonResponse({"ecn_data": ecn_data, "bom_data": bom_data})
@@ -671,6 +684,7 @@ def save_bom_form(request):
 
         is_new = bom_record is None
         today = date.today()
+        ecn_id_label = None  # Will be set if this save triggers an ECN archive
 
         if is_new:
             # --- Guard: only 1 BOM per Item Creation ID ---
@@ -724,10 +738,88 @@ def save_bom_form(request):
             bom_record.create_date = today
         else:
             # EDIT
-            if bom_record.action_status == "Approved":
-                return JsonResponse({"error": "Action Blocked: Approved BOM records cannot be edited."}, status=400)
-
             form_status = data.get("action_status", "").strip()
+            prev_status = bom_record.action_status or ""
+
+            # ECN transition: triggered by the explicit ecn_triggered flag set by the ECN button.
+            # This works regardless of what prev_status is (solves repeated ECN cycles).
+            is_ecn_transition = (data.get("ecn_triggered", "0") == "1")
+
+            # DEBUG — visible in Django runserver console
+            print(f"[ECN DEBUG] form_status={repr(form_status)} prev_status={repr(prev_status)} ecn_triggered={data.get('ecn_triggered')} is_ecn_transition={is_ecn_transition}")
+
+            # Block editing of Approved records UNLESS it's an ECN transition
+            if prev_status == "Approved" and not is_ecn_transition:
+                return JsonResponse({"error": "Action Blocked: Approved BOM records cannot be edited."}, status=400)
+            if is_ecn_transition:
+                # 1. Archive the current (old) state!
+                from django.db.models import Max
+                from django.db import connection
+                
+                # Make sure the ECN transaction table exists
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS tbl_bomcreation_partselection_ecn (
+                        id INTEGER PRIMARY KEY, ecn_id INTEGER, itemcreation_ecn INTEGER, bomcreation_id VARCHAR(100),
+                        entry_type VARCHAR(50), part_number VARCHAR(100), quantity NUMERIC(10, 2) DEFAULT 0,
+                        description VARCHAR(255), unit_of_measure_code VARCHAR(50), categorisation VARCHAR(100),
+                        routing_link_code VARCHAR(100), part_status VARCHAR(50), grp_part_number VARCHAR(100),
+                        grp_part_description VARCHAR(255), start_date VARCHAR(50), table_id VARCHAR(100)
+                    );
+                    """)
+
+                # Fetch the latest ecn_id for this specific bom_creation_id
+                latest_ecn = BOMHeaderECN.objects.filter(bom_creation_id=bom_record.bom_creation_id).aggregate(m=Max('ecn_id'))['m']
+                if latest_ecn is None:
+                    latest_ecn = 0
+                
+                new_ecn_id = latest_ecn + 1
+
+                def _to_int(val):
+                    try: return int(val) if val not in (None, "") else None
+                    except (ValueError, TypeError): return None
+
+                BOMHeaderECN.objects.create(
+                    ecn_id=new_ecn_id,
+                    item_creation_ecn=new_ecn_id,
+                    customer_id=bom_record.customer_id,
+                    item_creation_id=bom_record.item_creation_id,
+                    bom_creation_id=bom_record.bom_creation_id,
+                    bom_row_id=bom_record.bom_row_id,
+                    description=bom_record.description,
+                    description_2=bom_record.description_2,
+                    search_name=bom_record.search_name,
+                    uom_code=bom_record.uom_code,
+                    create_date=bom_record.create_date,
+                    last_date_modified=today,
+                    action_status="Approved",  # Archive the pre-change state
+                    version_number=_to_int(bom_record.version_number),
+                    series=bom_record.series,
+                    table_id=bom_record.table_id,
+                )
+
+                # Archive all parts using the same global PK
+                active_parts = list(BOMTransaction.objects.filter(bom_creation_id=bom_creation_id))
+                max_trans_id = BOMTransactionECN.objects.aggregate(m=Max('id'))['m']
+                next_ecn_pk = (max_trans_id or 0) + 1
+                ecn_parts = []
+                for part in active_parts:
+                    ecn_parts.append(BOMTransactionECN(
+                        id=next_ecn_pk, ecn_id=new_ecn_id, item_creation_ecn=new_ecn_id,
+                        bom_creation_id=part.bom_creation_id, entry_type=part.entry_type,
+                        part_number=part.part_number, quantity=part.quantity, description=part.description,
+                        uom_code=part.uom_code, categorisation=part.categorisation,
+                        routing_link_code=part.routing_link_code, part_status=part.part_status,
+                        grp_part_no=part.grp_part_no, grp_part_descp=part.grp_part_descp,
+                        start_date=part.start_date, table_id=part.table_id,
+                    ))
+                    next_ecn_pk += 1
+                if ecn_parts:
+                    BOMTransactionECN.objects.bulk_create(ecn_parts)
+
+                # The new label for the UI (ECN:1, ECN:2, etc.)
+                ecn_id_label = str(new_ecn_id)
+
             bom_record.action_status = form_status if form_status else "Updated"
 
         bom_record.customer_id = selected_customer_id
@@ -737,14 +829,20 @@ def save_bom_form(request):
 
         bom_record.save()
 
-        return JsonResponse({
+        response_data = {
             "status": "success",
             "message": "BOM configuration created successfully!" if is_new else "BOM configuration saved successfully!",
             "table_id": bom_record.table_id,
             "bom_creation_id": bom_record.bom_creation_id,
             "action_status": bom_record.action_status,
             "last_date_modified": bom_record.last_date_modified.strftime('%d-%b-%y') if bom_record.last_date_modified else today.strftime('%d-%b-%y')
-        })
+        }
+        
+        if not is_new and ecn_id_label:
+            response_data["ecn_id"] = ecn_id_label
+
+        print(f"[SAVE RESPONSE] {response_data}")
+        return JsonResponse(response_data)
 
     except Exception as e:
         import traceback
@@ -840,30 +938,176 @@ def send_bom_approval(request):
 @csrf_exempt
 @require_active_customer
 def ecn_bom(request):
+    """Create an ECN (Engineering Change Notice) snapshot for a BOM record.
+
+    Steps (all executed inside a single atomic transaction):
+    1. Validate that bom_creation_id and item_creation_id are supplied.
+    2. Derive the next ECN version tag by counting existing ECN snapshots for
+       this item.
+    3. Update the live BOMHeader: set status to "ECN Created", stamp today's
+       date, and clear is_download / remark.
+    4. Archive the current BOMHeader into BOMHeaderECN with the new ecn_id
+       and item_creation_ecn stamp.
+    5. Bulk-archive all active BOMTransaction rows into BOMTransactionECN.
+    6. Return a JSON response with ecn_id, new status, and modified date.
+    """
     if request.method != "POST":
         return JsonResponse({"error": "Only POST requests allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        bom_id = data.get("bom_creation_id", "").strip()
+        data = json.loads(request.body or "{}")
+        bom_id = (data.get("bom_creation_id") or "").strip()
+        item_id = (data.get("item_creation_id") or "").strip()
+
+        # --- 1. Validate required IDs ---
         if not bom_id:
-            return JsonResponse({"error": "BOM Creation ID is required"}, status=400)
+            return JsonResponse({"error": "bom_creation_id is required"}, status=400)
+        if not item_id:
+            return JsonResponse({"error": "item_creation_id is required"}, status=400)
+
+        # --- 0. Ensure ECN Transaction table exists (Auto-Fix missing table) ---
+        with connection.cursor() as cursor:
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS tbl_bomcreation_partselection_ecn (
+                id INTEGER PRIMARY KEY,
+                ecn_id INTEGER,
+                itemcreation_ecn INTEGER,
+                bomcreation_id VARCHAR(100),
+                entry_type VARCHAR(50),
+                part_number VARCHAR(100),
+                quantity NUMERIC(10, 2) DEFAULT 0,
+                description VARCHAR(255),
+                unit_of_measure_code VARCHAR(50),
+                categorisation VARCHAR(100),
+                routing_link_code VARCHAR(100),
+                part_status VARCHAR(50),
+                grp_part_number VARCHAR(100),
+                grp_part_description VARCHAR(255),
+                start_date VARCHAR(50),
+                table_id VARCHAR(100)
+            );
+            """)
+
+        with transaction.atomic():
+            # Fetch the live header (lock the row for the duration of the tx)
+            header = BOMHeader.objects.select_for_update().filter(bom_creation_id=bom_id).first()
+            if not header:
+                return JsonResponse({"error": "Action Blocked: BOM Record not found."}, status=404)
+
+            # Fetch the latest ecn_id for this specific bom_creation_id
+            latest_ecn = BOMHeaderECN.objects.filter(bom_creation_id=bom_id).aggregate(m=Max('ecn_id'))['m']
+            if latest_ecn is None:
+                latest_ecn = 0
             
-        header = BOMHeader.objects.filter(bom_creation_id=bom_id).first()
-        if not header:
-            return JsonResponse({"error": "Action Blocked: BOM Record not found."}, status=404)
-            
-        header.action_status = "ECN"
-        header.last_date_modified = date.today()
-        header.save()
-        
+            new_ecn_id = latest_ecn + 1
+            ecn_id_label = str(new_ecn_id)
+            ecn_id_int = new_ecn_id
+            item_creation_ecn_int = new_ecn_id
+
+            today = date.today()
+
+            # --- 3. Update active header ---
+            header.action_status = "ECN Created"
+            header.last_date_modified = today
+            header.is_download = None
+            header.remark = None
+            header.save()
+
+            # Safe integer casts for columns that are INTEGER in the ECN table.
+            def _to_int(val):
+                try:
+                    return int(val) if val not in (None, "") else None
+                except (ValueError, TypeError):
+                    return None
+
+            BOMHeaderECN.objects.create(
+                ecn_id=ecn_id_int,
+                item_creation_ecn=item_creation_ecn_int,
+                customer_id=header.customer_id,
+                item_creation_id=header.item_creation_id,
+                bom_creation_id=header.bom_creation_id,
+                bom_row_id=header.bom_row_id,
+                description=header.description,
+                description_2=header.description_2,
+                search_name=header.search_name,
+                uom_code=header.uom_code,
+                create_date=header.create_date,
+                last_date_modified=today,
+                action_status="ECN Created",
+                version_number=_to_int(header.version_number),
+                series=header.series,
+                table_id=header.table_id,
+            )
+
+            # --- 5. Bulk-archive active line items ---
+            active_parts = list(
+                BOMTransaction.objects.filter(bom_creation_id=bom_id)
+            )
+
+            # Compute the next free PK in the ECN transaction table
+            max_ecn_id = BOMTransactionECN.objects.aggregate(m=Max('id'))['m']
+            next_ecn_pk = (max_ecn_id or 0) + 1
+
+            ecn_parts = []
+            for part in active_parts:
+                ecn_parts.append(BOMTransactionECN(
+                    id=next_ecn_pk,
+                    ecn_id=ecn_id_int,
+                    item_creation_ecn=item_creation_ecn_int,
+                    bom_creation_id=part.bom_creation_id,
+                    entry_type=part.entry_type,
+                    part_number=part.part_number,
+                    quantity=part.quantity,
+                    description=part.description,
+                    uom_code=part.uom_code,
+                    categorisation=part.categorisation,
+                    routing_link_code=part.routing_link_code,
+                    part_status=part.part_status,
+                    grp_part_no=part.grp_part_no,
+                    grp_part_descp=part.grp_part_descp,
+                    start_date=part.start_date,
+                    table_id=part.table_id,
+                ))
+                next_ecn_pk += 1
+
+            if ecn_parts:
+                BOMTransactionECN.objects.bulk_create(ecn_parts)
+
+        # --- 6. Return success response (human-readable label in JSON) ---
         return JsonResponse({
-            "status": "success", 
-            "message": "BOM Record transitioned to ECN successfully.",
+            "status": "success",
+            "message": f"ECN snapshot '{ecn_id_label}' created successfully for BOM {bom_id}.",
+            "ecn_id": ecn_id_label,
+            "ecn_id_int": ecn_id_int,
             "action_status": header.action_status,
-            "last_date_modified": header.last_date_modified.strftime('%d-%b-%y')
+            "last_date_modified": header.last_date_modified.strftime("%d-%b-%y"),
+            "parts_archived": len(ecn_parts),
         })
+
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        import traceback
+        return JsonResponse({"error": str(e), "traceback": traceback.format_exc()}, status=500)
+
+
+@csrf_exempt
+@require_active_customer
+def generate_next_table_id(request):
+    """Return the next available table_id = MAX(table_id) + 1 across all BOMHeader rows."""
+    try:
+        # Cast table_id (stored as VARCHAR) to integer for a proper numeric MAX
+        from django.db.models.functions import Cast
+        from django.db.models import IntegerField as DjInt
+
+        agg = (
+            BOMHeader.objects
+            .exclude(table_id__isnull=True)
+            .exclude(table_id="")
+            .annotate(tid_int=Cast("table_id", output_field=DjInt()))
+            .aggregate(max_tid=Max("tid_int"))
+        )
+        next_id = (agg["max_tid"] or 0) + 1
+        return JsonResponse({"status": "success", "next_table_id": next_id})
+    except Exception as e:
+        return JsonResponse({"status": "error", "error": str(e)}, status=500)
 
 
 def get_bom_details(request):
@@ -894,7 +1138,7 @@ def get_bom_details(request):
     item_no = header.item_creation_id or ""
     ecn_fixture_no = ""
     ecn_customer_name = ""
-    ecn_last_ecn_no = ""
+    ecn_last_ecn_no = "0"
     if item_no:
         _ic = item_no.strip()
         _ip = _ic.zfill(8) if _ic.isdigit() else _ic
@@ -907,7 +1151,11 @@ def get_bom_details(request):
         if ecn_edit:
             ecn_fixture_no    = ecn_edit.fixture_no    or ""
             ecn_customer_name = ecn_edit.customer_name or ""
-            ecn_last_ecn_no   = ecn_edit.ecn_id        or ""
+        
+        # Fetch the latest ecn_id for this specific bom_creation_id
+        latest_ecn = BOMHeaderECN.objects.filter(bom_creation_id=bom_creation_id).aggregate(m=Max('ecn_id'))['m']
+        if latest_ecn is not None:
+            ecn_last_ecn_no = str(latest_ecn)
 
     live_meft  = BOMTransaction.objects.filter(bom_creation_id=bom_creation_id, entry_type='MEFT').count()
     live_parts = BOMTransaction.objects.filter(bom_creation_id=bom_creation_id).count()

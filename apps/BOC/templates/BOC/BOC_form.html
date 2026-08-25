@@ -6,286 +6,1804 @@
 {% block content %}
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>BOC Form</title>
+    <meta charset="UTF-8">
+    <title>BOC Form</title>
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        margin: 0;
-        padding: 0;
-    }
+    <style>
+        /* ── Reset ─────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
-    /* Page Header */
-    h2 {
-        background-color: #2a6ebb;
-        color: white;
-        padding: 16px 24px;
-        font-size: 22px;
-        margin: 0;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* Form Section */
-    .form-section {
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 30px;
-        max-width: 1100px;
-        margin: 30px auto;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
+        /* ── Page Header ───────────────────────────────── */
+        h2 {
+            background-color: #2a6ebb;
+            color: white;
+            padding: 16px 24px;
+            font-size: 22px;
+            margin: 0;
+        }
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
-    }
+        /* ── Form Section ──────────────────────────────── */
+        .form-section {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 1300px;
+            margin: 30px auto;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .form-box {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
 
-    .row {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
+        .form-box {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
 
-    label {
-        width: 200px;
-        font-weight: bold;
-        font-size: 15px;
-        color: #333;
-    }
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
 
-    select, input {
-        flex: 1;
-        height: 36px;
-        padding: 6px 10px;
-        font-size: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
+        label {
+            width: 180px;
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+        }
 
-    /* Buttons */
-    .btn {
-        background-color: #2a6ebb;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background-color 0.2s ease;
-        margin-right: 10px;
-    }
-    .btn:hover {
-        background-color: #1f4f8a;
-    }
+        select,
+        input {
+            flex: 1;
+            height: 38px;
+            padding: 8px 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    .green-btn {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background-color 0.2s ease;
-        margin-right: 10px;
-    }
-    .green-btn:hover {
-        background-color: #218838;
-    }
+        input[readonly],
+        select[disabled] {
+            background-color: #e9ecef !important;
+            color: #666 !important;
+            cursor: not-allowed;
+        }
 
-    /* Tabs */
-    .tabs {
-        display: flex;
-        gap: 10px;
-        margin-top: 25px;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 10px;
-    }
-    .tab {
-        padding: 8px 12px;
-        background: #e9f2fb;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #2a6ebb;
-    }
-    .tab.active {
-        background: #2a6ebb;
-        color: white;
-    }
+        /* Buttons */
+        .btn {
+            background-color: #2a6ebb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+            margin-right: 12px;
+        }
 
-    /* Sections */
-    .section {
-        display: none;
-        background: #ffffff;
-        padding: 20px;
-        margin-top: 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    .section.active {
-        display: block;
-    }
+        .btn:hover {
+            background-color: #1f4f8a;
+        }
 
-    /* Table */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-    }
-    th, td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: center;
-    }
-    th {
-        background: #e9f2fb;
-        color: #2a6ebb;
-    }
-</style>
+        /* ── Tab Bar ───────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-top: 25px;
+            border-bottom: 2px solid #2a6ebb;
+        }
+
+        .tab {
+            padding: 10px 18px;
+            background: #f4f7fb;
+            border: 1px solid #c8d6e8;
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 15px;
+            color: #444;
+            margin-right: 4px;
+            border-radius: 6px 6px 0 0;
+            user-select: none;
+            transition: background 0.15s;
+        }
+
+        .tab:hover {
+            background: #e2eaf5;
+        }
+
+        .tab.active {
+            background: #2a6ebb;
+            color: #fff;
+            font-weight: 600;
+            border-color: #2a6ebb;
+        }
+
+        /* ── Tab Panels ────────────────────────────────── */
+        .section {
+            display: none;
+            border: 1px solid #c8d6e8;
+            border-top: none;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* ── Inner Form Box ────────────────────────────── */
+        .inner-form {
+            background: #f4f7fb;
+            border: 1px solid #c8d6e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-bottom: 12px;
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── Field: [label][input] ─────────────────────── */
+        .field {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .field label {
+            background: #dce8f4;
+            border: 1px solid #a8c0d8;
+            border-right: none;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+            width: auto;
+            border-radius: 0;
+            flex: none;
+            height: 28px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .field input,
+        .field select {
+            border: 1px solid #a8c0d8;
+            height: 28px;
+            padding: 0 8px;
+            font-size: 12px;
+            background: #fff;
+            color: #333;
+            border-radius: 0;
+            flex: none;
+            width: 120px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .field input[readonly] {
+            background: #e9ecef !important;
+            color: #666 !important;
+        }
+
+        .field textarea {
+            border: 1px solid #a8c0d8;
+            font-size: 12px;
+            background: #fff;
+            color: #333;
+            resize: none;
+            padding: 4px 8px;
+            width: 200px;
+            height: 60px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .field.textarea-field {
+            align-items: flex-start;
+        }
+
+        .field.textarea-field label {
+            align-items: flex-start;
+            padding-top: 6px;
+            height: 60px;
+        }
+
+        /* ── Tab Action Buttons ────────────────────────── */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-tab {
+            background: #2a6ebb;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-tab:hover {
+            background: #1f4f8a;
+        }
+
+        .btn-tab.secondary {
+            background: #5a7fa8;
+        }
+
+        .btn-tab.secondary:hover {
+            background: #3f5f80;
+        }
+
+        /* ── Data Table ────────────────────────────────── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .data-table thead tr {
+            background: #dce8f4;
+        }
+
+        .data-table th {
+            border: 1px solid #a8c0d8;
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            border: 1px solid #c8d6e8;
+            padding: 5px 10px;
+            color: #333;
+        }
+
+        .data-table tbody tr:nth-child(even) td {
+            background: #f5f8fc;
+        }
+
+        .data-table tbody tr:hover td {
+            background: #eaf1fb;
+        }
+
+        .edit-btn {
+            background: #2a6ebb;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 7px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #1f4f8a;
+        }
+
+        /* ── ECN Popup Modal ─────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+            padding: 36px 40px;
+            min-width: 340px;
+            text-align: center;
+            animation: popIn 0.2s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-card .modal-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .modal-card h3 {
+            margin: 0 0 8px;
+            font-size: 20px;
+            color: #2a6ebb;
+        }
+
+        .modal-card p {
+            margin: 0 0 20px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .modal-card .ecn-badge {
+            display: inline-block;
+            background: #e8f0fb;
+            color: #2a6ebb;
+            border: 1px solid #b0c8f0;
+            border-radius: 6px;
+            padding: 6px 18px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .modal-card .btn-modal-close {
+            background: #2a6ebb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 9px 28px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .modal-card .btn-modal-close:hover {
+            background: #1f4f8a;
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- Page Header -->
-<h2>BOC Creation</h2>
+    <h2>BOC Creation</h2>
 
-<div class="form-section">
-    <!-- TOP HALF -->
-    <div class="form-grid">
-        <div class="form-box">
-            <div class="row"><label>Customer ID</label><input value="CUST-005"></div>
-            <div class="row"><label>Customer Name</label><input value="Cooper Corporation Pvt. Ltd."></div>
-            <div class="row"><label>Item Number</label><select></select></div>
-            <div class="row"><label>Customer Drg No#</label><input></div>
-            <div class="row"><label>DRG Rev# No#</label><input></div>
-            <div class="row"><label>DRG Rev Date</label><input></div>
-            <div class="row"><label>Customer Part Set No#</label><input></div>
-            <div class="row"><label>Table ID</label><select></select></div>
-        </div>
-
-        <div class="form-box">
-            <div class="row"><label>Last ECN No</label><input></div>
-            <div class="row"><label>Part Name</label><input></div>
-            <div class="row"><label>Project</label><input></div>
-            <div class="row"><label>Project SOP Date</label><input></div>
-            <div class="row"><label>RFQ No</label><input></div>
-            <div class="row"><label>Annual Volume</label><input></div>
-            <div class="row"><label>BOC NO</label><select></select></div>
+    <!-- ── ECN Success Modal ───────────────────────────────────────────── -->
+    <div id="ecn_modal" class="modal-overlay" onclick="closeEcnModal(event)">
+        <div class="modal-card">
+            <div class="modal-icon">✅</div>
+            <h3>ECN Created Successfully</h3>
+            <p>BOC record has been updated.<br>New ECN Number:</p>
+            <div class="ecn-badge" id="ecn_modal_number">—</div>
+            <br>
+            <button class="btn-modal-close" onclick="closeEcnModal()">OK</button>
         </div>
     </div>
 
-    <!-- Buttons -->
-    <div style="margin-top:20px;">
-        <button class="btn">Create</button>
-        <button class="btn">Edit</button>
-        <button class="btn">Save</button>
-        <button class="btn">Send Approval</button>
-        <button class="btn">ECN</button>
+    <div class="form-section">
+        <!-- TOP HALF -->
+        <div class="form-grid">
+            <div class="form-box">
+                <div class="row"><label>Customer ID</label><input id="customer_id" value="{{ customer_id }}" readonly>
+                </div>
+                <div class="row"><label>Customer Name</label><input id="customer_name" value="{{ customer_name }}"
+                        readonly></div>
+                <div class="row"><label>Item Number</label>
+                    <select id="item_number" onchange="fetchItemDetails()">
+                        <option value="">-- Select Item --</option>
+                        {% for no in item_nos %}
+                        <option value="{{ no }}">{{ no }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="row"><label>Customer Drg No#</label><input id="customer_drgno" readonly></div>
+                <div class="row"><label>DRG Rev# No#</label><input id="drg_revno" readonly></div>
+                <div class="row"><label>DRG Rev Date</label><input id="drg_revdate" readonly></div>
+                <div class="row"><label>Customer Part Set No#</label><input id="customer_partsetno" readonly></div>
+                <div class="row"><label>Table ID</label><input id="table_id" readonly></div>
+            </div>
+            <div class="form-box">
+                <div class="row"><label>Last ECN No</label><input id="ecn_id" readonly></div>
+                <div class="row"><label>Part Name</label><input id="part_name" readonly></div>
+                <div class="row"><label>Project</label><input id="project" readonly></div>
+                <div class="row"><label>Project SOP Date</label><input id="project_sopdate" readonly></div>
+                <div class="row"><label>RFQ No</label><input id="rfq_no" readonly></div>
+                <div class="row"><label>Annual Volume</label><input id="annual_volume" readonly></div>
+                <div class="row">
+                    <label>BOC NO</label>
+                    <div id="boc_no_wrapper" style="flex:1; display:flex; gap:6px; align-items:center;">
+                        <!-- Shown when item has no BOC (new entry mode) -->
+                        <input id="boc_no_input" placeholder="Enter BOC NO" style="display:none; flex:1;">
+                        <!-- Shown when item already has BOC(s) -->
+                        <select id="boc_no" onchange="fetchBocDetails()" style="flex:1;">
+                            <option value="">-- Select BOC --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div id="status_banner"
+            style="display:none; margin-top:12px; padding:10px 16px; border-radius:5px; font-size:14px;"></div>
+
+        <!-- Header Buttons -->
+        <div style="margin-top:12px;">
+            <button id="btn_create" class="btn" onclick="handleCreate()">Create</button>
+            <button id="btn_edit" class="btn" onclick="handleEdit()">Edit</button>
+            <button id="btn_save" class="btn" onclick="handleSave()">Save</button>
+            <button id="btn_delete" class="btn" onclick="handleDelete()">Delete</button>
+            <button id="btn_approval" class="btn" onclick="handleSendApproval()">Send Approval</button>
+            <button id="btn_ecn" class="btn" onclick="handleECN()">ECN</button>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('production', this)">Tooling_Production</div>
+            <div class="tab" onclick="showTab('boc', this)">Tooling_BOC</div>
+            <div class="tab" onclick="showTab('status', this)">BOC_Status</div>
+            <div class="tab" onclick="showTab('cost', this)">BOM_NewParts_Cost</div>
+            <div class="tab" onclick="showTab('settle', this)">BOM_NewParts_SettlePrice</div>
+        </div>
+
+        <!-- ══ TAB 1 – Tooling Production ══ -->
+        <div id="production" class="section active">
+            <div class="inner-form">
+                <div class="form-row">
+                    <div class="field">
+                        <label>Tool Description</label>
+                        <select id="prod_tool_desc" style="width:200px;" onchange="updateProdToolingFields()">
+                            <option value="">-- Select Tool --</option>
+                            {% for tool in tooling_options %}
+                            <option value="{{ tool.id }}" data-desc="{{ tool.tool_description }}"
+                                data-cost="{{ tool.unit_cost|default:0 }}">
+                                {{ tool.tool_description }} - {{ tool.unit_cost|default:0 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Unit Cost</label>
+                        <input type="number" step="0.01" id="prod_unit_cost" readonly>
+                    </div>
+                    <div class="field">
+                        <label>Qty required</label>
+                        <input type="number" id="prod_qty" oninput="calculateProdTotal()">
+                    </div>
+                    <div class="field">
+                        <label>Total Estimate</label>
+                        <input type="number" step="0.01" id="prod_total" readonly>
+                    </div>
+                </div>
+
+                <script>
+                    function updateProdToolingFields() {
+                        var select = document.getElementById("prod_tool_desc");
+                        var option = select.options[select.selectedIndex];
+                        var unitCostInput = document.getElementById("prod_unit_cost");
+                        if (option.value) {
+                            unitCostInput.value = option.getAttribute("data-cost");
+                        } else {
+                            unitCostInput.value = "";
+                        }
+                        calculateProdTotal();
+                    }
+
+                    function calculateProdTotal() {
+                        var unitCost = parseFloat(document.getElementById("prod_unit_cost").value) || 0;
+                        var qty = parseInt(document.getElementById("prod_qty").value, 10) || 0;
+                        document.getElementById("prod_total").value = (qty * unitCost).toFixed(2);
+                    }
+
+                    function getProdToolingPayload() {
+                        var select = document.getElementById("prod_tool_desc");
+                        var toolDesc = select.options[select.selectedIndex].getAttribute("data-desc") || "";
+                        return {
+                            boc_no: document.getElementById("boc_no").value || document.getElementById("boc_no_input").value,
+                            item_no: document.getElementById("item_number").value,
+                            tool_description_boc: toolDesc,
+                            unit_cost: document.getElementById("prod_unit_cost").value,
+                            qty_required: document.getElementById("prod_qty").value,
+                            total_estimate: document.getElementById("prod_total").value,
+                            remark: document.getElementById("prod_remark").value,
+                            customer_drgno: document.getElementById("customer_drgno").value,
+                            drg_revno: document.getElementById("drg_revno").value,
+                            drg_revdate: document.getElementById("drg_revdate").value,
+                            customer_partsetno: document.getElementById("customer_partsetno").value,
+                            part_name: document.getElementById("part_name").value,
+                            project: document.getElementById("project").value,
+                            project_sopdate: document.getElementById("project_sopdate").value,
+                            rfq_no: document.getElementById("rfq_no").value,
+                            annual_volume: document.getElementById("annual_volume").value,
+                            table_id: document.getElementById("table_id").value,
+                            ecn_id: document.getElementById("ecn_id").value
+                        };
+                    }
+
+                    function addProdTooling() {
+                        var payload = getProdToolingPayload();
+                        if (!payload.boc_no) { alert("Please enter or select a BOC NO first."); return; }
+                        if (!payload.tool_description_boc) { alert("Please select a Tool Description."); return; }
+                        fetch('/BOC/api/add_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) {
+                                showBanner("Record Added!", false);
+                                loadProdToolingTable();
+                            } else {
+                                showBanner("Error: " + data.error, true);
+                            }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function saveProdTooling() {
+                        var payload = getProdToolingPayload();
+                        if (!payload.boc_no || !payload.tool_description_boc) { alert("Please select BOC and Tool Description."); return; }
+                        fetch('/BOC/api/save_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) {
+                                showBanner("Record Saved!", false);
+                                loadProdToolingTable();
+                            } else {
+                                showBanner("Error: " + data.error, true);
+                            }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function deleteProdTooling() {
+                        var payload = getProdToolingPayload();
+                        if (!payload.boc_no || !payload.tool_description_boc) { alert("Please select BOC and Tool Description."); return; }
+                        if (!confirm("Delete this tooling record?")) return;
+                        fetch('/BOC/api/delete_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) {
+                                showBanner("Record Deleted!", false);
+                                loadProdToolingTable();
+                            } else {
+                                showBanner("Error: " + data.error, true);
+                            }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function loadProdToolingTable() {
+                        var bocNo = document.getElementById("boc_no").value.trim();
+                        var tbody = document.querySelector('#prod_tooling_table tbody');
+                        if (!bocNo) {
+                            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:14px;">Select a BOC to load records.</td></tr>';
+                            return;
+                        }
+                        fetch('/BOC/api/get_prod_tooling/?boc_no=' + encodeURIComponent(bocNo))
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.records && data.records.length > 0) {
+                                    tbody.innerHTML = '';
+                                    data.records.forEach(rec => {
+                                        var tr = document.createElement('tr');
+                                        tr.innerHTML =
+                                            '<td><button class="edit-btn" onclick="editProdTooling(\'' + (rec.tool_description_boc || '').replace(/'/g, "\\'") + '\', ' + (rec.unit_cost || 0) + ', ' + (rec.qty_required || 0) + ', \'' + (rec.remark || '').replace(/'/g, "\\'") + '\')">✎</button></td>' +
+                                            '<td>' + (rec.tool_description_boc || '') + '</td>' +
+                                            '<td>' + (rec.unit_cost || '') + '</td>' +
+                                            '<td>' + (rec.qty_required || '') + '</td>' +
+                                            '<td>' + (rec.total_estimate || '') + '</td>' +
+                                            '<td>' + (rec.remark || '') + '</td>';
+                                        tbody.appendChild(tr);
+                                    });
+                                } else {
+                                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:14px;">No records found.</td></tr>';
+                                }
+                            })
+                            .catch(err => console.error(err));
+                    }
+
+                    function editProdTooling(toolDesc, unitCost, qty, remark) {
+                        // Find option by data-desc and select it
+                        var select = document.getElementById("prod_tool_desc");
+                        for (var i = 0; i < select.options.length; i++) {
+                            if (select.options[i].getAttribute("data-desc") === toolDesc) {
+                                select.selectedIndex = i;
+                                break;
+                            }
+                        }
+                        document.getElementById("prod_unit_cost").value = unitCost;
+                        document.getElementById("prod_qty").value = qty;
+                        calculateProdTotal();
+                        document.getElementById("prod_remark").value = remark;
+                    }
+                </script>
+
+                <div class="form-row">
+                    <div class="field textarea-field">
+                        <label>Remark</label>
+                        <textarea id="prod_remark"></textarea>
+                    </div>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-tab" onclick="addProdTooling()">Add</button>
+                    <button class="btn-tab" onclick="saveProdTooling()">Save</button>
+                    <button class="btn-tab" onclick="deleteProdTooling()">Delete</button>
+                </div>
+            </div>
+            <table class="data-table" id="prod_tooling_table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>Tool Description</th>
+                        <th>Unit Cost</th>
+                        <th>Quantity</th>
+                        <th>Total Estimate</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align:center;color:#999;padding:14px;">Select a BOC to load records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══ TAB 2 – Tooling BOC ══ -->
+        <div id="boc" class="section">
+            <div class="inner-form">
+                <div class="form-row">
+                    <div class="field">
+                        <label>Tool Description for BOC</label>
+                        <input type="text" id="boc_tool_desc" style="width:200px;" placeholder="Enter tool description">
+                    </div>
+                    <div class="field">
+                        <label>Unit Cost</label>
+                        <input type="number" step="0.01" id="boc_unit_cost" oninput="calculateBocTotal()" placeholder="0.00">
+                    </div>
+                    <div class="field">
+                        <label>Qty required</label>
+                        <input type="number" id="boc_qty" oninput="calculateBocTotal()" placeholder="0">
+                    </div>
+                    <div class="field">
+                        <label>Total Estimate</label>
+                        <input type="number" step="0.01" id="boc_total" readonly>
+                    </div>
+                </div>
+
+                <script>
+                    function calculateBocTotal() {
+                        var unitCost = parseFloat(document.getElementById("boc_unit_cost").value) || 0;
+                        var qty = parseFloat(document.getElementById("boc_qty").value) || 0;
+                        document.getElementById("boc_total").value = (qty * unitCost).toFixed(2);
+                    }
+
+                    function getBocToolingPayload() {
+                        return {
+                            boc_no: document.getElementById("boc_no").value || document.getElementById("boc_no_input").value,
+                            item_no: document.getElementById("item_number").value,
+                            tool_description_boc: document.getElementById("boc_tool_desc").value.trim(),
+                            unit_cost: document.getElementById("boc_unit_cost").value,
+                            qty_required: document.getElementById("boc_qty").value,
+                            total_estimate: document.getElementById("boc_total").value,
+                            remark: document.getElementById("boc_remark").value,
+                            customer_drgno: document.getElementById("customer_drgno").value,
+                            drg_revno: document.getElementById("drg_revno").value,
+                            drg_revdate: document.getElementById("drg_revdate").value,
+                            customer_partsetno: document.getElementById("customer_partsetno").value,
+                            part_name: document.getElementById("part_name").value,
+                            project: document.getElementById("project").value,
+                            project_sopdate: document.getElementById("project_sopdate").value,
+                            rfq_no: document.getElementById("rfq_no").value,
+                            annual_volume: document.getElementById("annual_volume").value,
+                            table_id: document.getElementById("table_id").value,
+                            ecn_id: document.getElementById("ecn_id").value
+                        };
+                    }
+
+                    function addBocTooling() {
+                        var payload = getBocToolingPayload();
+                        if (!payload.boc_no) { showBanner("Please enter or select a BOC NO first.", true); return; }
+                        if (!payload.tool_description_boc) { showBanner("Please enter a Tool Description.", true); return; }
+                        fetch('/BOC/api/add_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) {
+                                showBanner("Record Added!", false);
+                                document.getElementById("boc_tool_desc").value = "";
+                                document.getElementById("boc_unit_cost").value = "";
+                                document.getElementById("boc_qty").value = "";
+                                document.getElementById("boc_total").value = "";
+                                document.getElementById("boc_remark").value = "";
+                                loadBocToolingTable();
+                            } else { showBanner("Error: " + data.error, true); }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function saveBocTooling() {
+                        var payload = getBocToolingPayload();
+                        if (!payload.boc_no || !payload.tool_description_boc) { showBanner("Please enter BOC NO and Tool Description.", true); return; }
+                        fetch('/BOC/api/save_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) { showBanner("Record Saved!", false); loadBocToolingTable(); }
+                            else { showBanner("Error: " + data.error, true); }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function deleteBocTooling() {
+                        var payload = getBocToolingPayload();
+                        if (!payload.boc_no || !payload.tool_description_boc) { showBanner("Please enter BOC NO and Tool Description.", true); return; }
+                        if (!confirm("Delete record for: " + payload.tool_description_boc + "?")) return;
+                        fetch('/BOC/api/delete_boc_tooling/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            body: JSON.stringify(payload)
+                        }).then(r => r.json()).then(data => {
+                            if (data.success) { showBanner("Record Deleted!", false); loadBocToolingTable(); }
+                            else { showBanner("Error: " + data.error, true); }
+                        }).catch(err => console.error(err));
+                    }
+
+                    function loadBocToolingTable() {
+                        var bocNo = document.getElementById("boc_no").value.trim();
+                        var tbody = document.querySelector('#boc_tooling_table tbody');
+                        if (!bocNo) {
+                            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:14px;">Select a BOC to load records.</td></tr>';
+                            return;
+                        }
+                        fetch('/BOC/api/get_prod_tooling/?boc_no=' + encodeURIComponent(bocNo))
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.records && data.records.length > 0) {
+                                    tbody.innerHTML = '';
+                                    data.records.forEach(rec => {
+                                        var desc = (rec.tool_description_boc || '').replace(/'/g, "\\'");
+                                        var rem = (rec.remark || '').replace(/'/g, "\\'");
+                                        var tr = document.createElement('tr');
+                                        tr.innerHTML =
+                                            '<td><button class="edit-btn" onclick="editBocTooling(\'' + desc + '\', ' + (rec.unit_cost || 0) + ', ' + (rec.qty_required || 0) + ', \'' + rem + '\')">&#9998;</button></td>' +
+                                            '<td>' + (rec.tool_description_boc || '') + '</td>' +
+                                            '<td>' + (rec.unit_cost || '') + '</td>' +
+                                            '<td>' + (rec.qty_required || '') + '</td>' +
+                                            '<td>' + (rec.total_estimate || '') + '</td>' +
+                                            '<td>' + (rec.remark || '') + '</td>';
+                                        tbody.appendChild(tr);
+                                    });
+                                } else {
+                                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:14px;">No records found.</td></tr>';
+                                }
+                            }).catch(err => console.error(err));
+                    }
+
+                    function editBocTooling(toolDesc, unitCost, qty, remark) {
+                        document.getElementById("boc_tool_desc").value = toolDesc;
+                        document.getElementById("boc_unit_cost").value = unitCost;
+                        document.getElementById("boc_qty").value = qty;
+                        calculateBocTotal();
+                        document.getElementById("boc_remark").value = remark;
+                    }
+                </script>
+
+                <div class="form-row">
+                    <div class="field textarea-field">
+                        <label>Remark</label>
+                        <textarea id="boc_remark"></textarea>
+                    </div>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-tab" onclick="addBocTooling()">Add</button>
+                    <button class="btn-tab" onclick="saveBocTooling()">Save</button>
+                    <button class="btn-tab" onclick="deleteBocTooling()">Delete</button>
+                </div>
+            </div>
+            <table class="data-table" id="boc_tooling_table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>Tool Description</th>
+                        <th>Unit Cost</th>
+                        <th>Quantity</th>
+                        <th>Total Estimate</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align:center;color:#999;padding:14px;">Select a BOC to load records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══ TAB 3 – BOC Status ══ -->
+        <div id="status" class="section">
+            <div class="inner-form">
+                <input type="hidden" id="boc_status_id">
+                <div class="form-row">
+                    <div class="field">
+                        <label>BOC_Creation_ID</label>
+                        <input type="text" id="boc_status_creation_id" style="width:140px;">
+                    </div>
+                    <div class="field">
+                        <label>Cost Type</label>
+                        <select id="boc_status_cost_type" style="width:150px;">
+                            <option value="">-- Select --</option>
+                            <option value="Raw Material">Raw Material</option>
+                            <option value="Tooling Cost of Production">Tooling Cost of Production</option>
+                            <option value="Tooling Cost of BOC">Tooling Cost of BOC</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Supplier</label>
+                        <select id="boc_status_supplier" style="width:140px;">
+                            <option value="">-- Select --</option>
+                            {% for sup in suppliers %}
+                            <option value="{{ sup.name }}" data-id="{{ sup.no }}">{{ sup.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="boc_status_status" style="width:150px;">
+                            <option value="">-- Select --</option>
+                            <option value="RFQ Sent">RFQ Sent</option>
+                            <option value="Feasibility Received">Feasibility Received</option>
+                            <option value="Feasibility Not Received">Feasibility Not Received</option>
+                            <option value="Quote Received">Quote Received</option>
+                            <option value="Quote Not Received">Quote Not Received</option>
+                            <option value="Price sent to MKT">Price sent to MKT</option>
+                            <option value="Price Negotiations">Price Negotiations</option>
+                            <option value="Revised Quote Received">Revised Quote Received</option>
+                            <option value="Revised Quote Not Received">Revised Quote Not Received</option>
+                            <option value="Final Price Received">Final Price Received</option>
+                            <option value="Final Price Not Received">Final Price Not Received</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Date_Sent</label>
+                        <input type="date" id="boc_status_date_sent" style="width:140px;">
+                    </div>
+                    <div class="field">
+                        <label>Basic_Price_Quoted_by_supplier_in_Rs</label>
+                        <input type="number" step="0.01" id="boc_status_basic_price" style="width:140px;">
+                    </div>
+                    <div class="field">
+                        <label>Final_price_submission_date</label>
+                        <input type="date" id="boc_status_final_date" style="width:140px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field textarea-field">
+                        <label>Comments</label>
+                        <textarea id="boc_status_comments" style="width:240px;"></textarea>
+                    </div>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-tab" onclick="saveBocStatus()">Save</button>
+                </div>
+            </div>
+            <table class="data-table" id="boc_status_table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>BOC</th>
+                        <th>Supplier</th>
+                        <th>Status</th>
+                        <th>Date_Sent</th>
+                        <th>Comments</th>
+                        <th>Price</th>
+                        <th>Final Price Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" style="text-align:center;color:#999;">Select a BOC to load records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══ TAB 4 – BOM New Parts Cost ══ -->
+        <div id="cost" class="section">
+            <div class="inner-form">
+                <div class="form-row">
+                    <div class="field">
+                        <label>Part No</label>
+                        <input type="text" id="bom_cost_part_no" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Cost Price</label>
+                        <input type="number" step="0.01" id="bom_cost_price" style="width:200px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Part Description</label>
+                        <input type="text" id="bom_cost_part_desc" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Categorisation</label>
+                        <input type="text" id="bom_cost_categorisation" style="width:200px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Base Unit of Measure</label>
+                        <input type="text" id="bom_cost_uom" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Classification</label>
+                        <input type="text" id="bom_cost_classification" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Part_Status</label>
+                        <input type="text" id="bom_cost_status" value="Sent for approval" readonly style="width:200px;">
+                    </div>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-tab" onclick="saveBomCost()">Save</button>
+                </div>
+            </div>
+            <table class="data-table" id="bom_cost_table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>Part No</th>
+                        <th>Part Description</th>
+                        <th>Classification</th>
+                        <th>CostPrice</th>
+                        <th>Categorisation</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align:center;color:#999;">Select a BOC to load records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══ TAB 5 – BOM New Parts Settle Price ══ -->
+        <div id="settle" class="section">
+            <div class="inner-form">
+                <div class="form-row">
+                    <div class="field">
+                        <label>Part No</label>
+                        <input type="text" id="bom_settle_part_no" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Settle Price</label>
+                        <input type="number" step="0.01" id="bom_settle_price" style="width:200px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Part Description</label>
+                        <input type="text" id="bom_settle_part_desc" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Categorisation</label>
+                        <input type="text" id="bom_settle_categorisation" style="width:200px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label>Base Unit of Measure</label>
+                        <input type="text" id="bom_settle_uom" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Classification</label>
+                        <input type="text" id="bom_settle_classification" style="width:150px;">
+                    </div>
+                    <div class="field">
+                        <label>Part_Status</label>
+                        <input type="text" id="bom_settle_status" value="Sent for approval" readonly style="width:200px;">
+                    </div>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-tab" onclick="saveBomSettle()">Save</button>
+                    <button class="btn-tab secondary" onclick="openNewCustomerModal()">New Customer</button>
+                </div>
+            </div>
+            <table class="data-table" id="bom_settle_table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>Part No</th>
+                        <th>Part Description</th>
+                        <th>Classification</th>
+                        <th>Settle Price</th>
+                        <th>Categorisation</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align:center;color:#999;">Select a BOC to load records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('production')">Tooling Production</div>
-        <div class="tab" onclick="showTab('boc')">Tooling BOC</div>
-        <div class="tab" onclick="showTab('status')">BOC Status</div>
-        <div class="tab" onclick="showTab('cost')">BOM New Parts Cost</div>
-        <div class="tab" onclick="showTab('settle')">BOM New Parts Settle Price</div>
+    <!-- ============================================================
+         Modal: BOM_PartDetails_Master (New Part creation)
+         ============================================================ -->
+    <div class="modal fade" id="modalPartDetailsMaster" tabindex="-1" role="dialog" aria-labelledby="partDetailsMasterLabel" aria-hidden="true" style="z-index:9999;">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 580px;">
+            <div class="modal-content" style="border-radius: 4px; border: 1px solid #999; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
+                <div class="modal-header py-1 px-3" style="background-color: #f2f2f5; border-bottom: 1px solid #ccc;">
+                    <h6 class="modal-title font-weight-normal small" id="partDetailsMasterLabel" style="color: #333;">
+                        <i class="far fa-window-restore mr-2" style="color: #555;"></i>BOM_PartDetails_Master
+                    </h6>
+                    <button type="button" class="close py-1" onclick="closeNewCustomerModal()" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.1rem;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-3" style="background-color: #fcfcfc;">
+                    <h5 class="font-weight-bold mb-3" style="color: #333; border-bottom: 1px solid #aaa; padding-bottom: 6px;">
+                        BOM_PartDetails_Master
+                    </h5>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part No</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="pdm_part_no" class="form-control form-control-sm" style="background-color: #fff; width:100%;">
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part Description</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="pdm_part_description" class="form-control form-control-sm" style="background-color: #fff; width:100%;">
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Base Unit of Measure</label>
+                        <div class="col-sm-7">
+                            <select id="pdm_base_unit_of_measure" class="form-control form-control-sm" style="width:100%;"><option value=""></option></select>
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Customer</label>
+                        <div class="col-sm-7">
+                            <select id="pdm_customer" class="form-control form-control-sm" style="width:100%;"><option value=""></option></select>
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Classification</label>
+                        <div class="col-sm-7">
+                            <select id="pdm_classification" class="form-control form-control-sm" style="width:100%;"><option value=""></option></select>
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Cost Price</label>
+                        <div class="col-sm-7">
+                            <input type="number" id="pdm_cost_price" class="form-control form-control-sm" value="0" min="0" step="0.01" style="width:100%;">
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Settle Price</label>
+                        <div class="col-sm-7">
+                            <input type="number" id="pdm_settle_price" class="form-control form-control-sm" value="0" min="0" step="0.01" style="width:100%;">
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-2 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Categorisation</label>
+                        <div class="col-sm-7">
+                            <select id="pdm_categorisation" class="form-control form-control-sm" style="width:100%;"><option value=""></option></select>
+                        </div>
+                    </div>
+                    <div class="form-group row no-gutters mb-3 small">
+                        <label class="col-sm-5 font-weight-bold" style="color: #003399;">Part_Status</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="pdm_part_status" class="form-control form-control-sm" value="Sent for approval" readonly style="background-color: #f5f5f5; width:100%;">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end" style="text-align: right;">
+                        <button type="button" id="btn_pdm_create" class="btn-tab secondary" onclick="submitNewCustomerModal()">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Tooling Production -->
-    <div id="production" class="section active">
-        <div class="row">
-            <input placeholder="Tool Description">
-            <input placeholder="Unit Cost">
-            <input placeholder="Qty">
-            <input placeholder="Total Estimate">
-        </div>
-        <div class="row">
-            <input placeholder="Remark">
-            <button class="green-btn">Add</button>
-        </div>
-        <table>
-            <tr>
-                <th>Description</th>
-                <th>Cost</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Remark</th>
-            </tr>
-        </table>
-    </div>
+    <script>
+        function showTab(tabId, el) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.section').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
 
-    <!-- Tooling BOC -->
-    <div id="boc" class="section">
-        <div class="row">
-            <input placeholder="Tool Description">
-            <input placeholder="Unit Cost">
-            <input placeholder="Qty">
-            <input placeholder="Total">
-            <input placeholder="Remark">
-        </div>
-        <button class="btn">Save</button>
-    </div>
+        // ── State ──────────────────────────────────────────────────────────────────
+        // mode: 'view' | 'edit' | 'new'
+        let formMode = 'view';
 
-    <!-- BOC Status -->
-    <div id="status" class="section">
-        <div class="row">
-            <input placeholder="Supplier">
-            <input placeholder="Status">
-            <input type="date">
-        </div>
-        <div class="row">
-            <input placeholder="Comments">
-            <button class="btn">Save</button>
-        </div>
-        <table>
-            <tr>
-                <th>Supplier</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Comments</th>
-            </tr>
-        </table>
-    </div>
+        // Fields that are ALWAYS readonly (never unlocked during edit)
+        const ALWAYS_LOCKED = ['customer_id', 'customer_name'];
 
-    <!-- Cost -->
-    <div id="cost" class="section">
-        <div class="row">
-            <input placeholder="Part No">
-            <input placeholder="Description">
-            <input placeholder="Cost Price">
-        </div>
-        <button>Save</button>
-    </div>
+        // Fields that are auto-filled (editable in edit/new mode)
+        const AUTOFILL_FIELDS = [
+            'customer_drgno', 'drg_revno', 'drg_revdate', 'customer_partsetno',
+            'part_name', 'project', 'project_sopdate', 'rfq_no', 'annual_volume'
+        ];
 
-    <!-- Settle -->
-    <div id="settle" class="section">
-        <div class="form-row">
-            <input placeholder="Part No">
-            <input placeholder="Settle Price">
-            <select><option>Category</option></select>
-        </div>
-        <button>Save</button>
-    </div>
-</div>
+        // ── Helpers ────────────────────────────────────────────────────────────────
+        function showBanner(msg, isError) {
+            const b = document.getElementById('status_banner');
+            b.textContent = msg;
+            b.style.display = 'block';
+            b.style.background = isError ? '#fce8e8' : '#e8f5e9';
+            b.style.color = isError ? '#c0392b' : '#27ae60';
+            b.style.border = isError ? '1px solid #e57373' : '1px solid #66bb6a';
+            setTimeout(() => { b.style.display = 'none'; }, 4000);
+        }
 
-<script>
-function showTab(tabId) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-}
-</script>
-{% endblock %}
+        function setFieldsEditable(editable) {
+            AUTOFILL_FIELDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.readOnly = !editable;
+            });
+        }
+
+        function getFormData() {
+            const bocNo = formMode === 'new'
+                ? document.getElementById('boc_no_input').value.trim()
+                : document.getElementById('boc_no').value.trim();
+            return {
+                boc_no: bocNo,
+                item_no: document.getElementById('item_number').value.trim(),
+                customer_drgno: document.getElementById('customer_drgno').value.trim(),
+                drg_revno: document.getElementById('drg_revno').value.trim(),
+                drg_revdate: document.getElementById('drg_revdate').value.trim(),
+                customer_partsetno: document.getElementById('customer_partsetno').value.trim(),
+                part_name: document.getElementById('part_name').value.trim(),
+                project: document.getElementById('project').value.trim(),
+                project_sopdate: document.getElementById('project_sopdate').value.trim(),
+                rfq_no: document.getElementById('rfq_no').value.trim(),
+                annual_volume: document.getElementById('annual_volume').value.trim(),
+            };
+        }
+
+        function resetToViewMode() {
+            formMode = 'view';
+            setFieldsEditable(false);
+            // Hide new-BOC input, show select
+            document.getElementById('boc_no_input').style.display = 'none';
+            document.getElementById('boc_no').style.display = '';
+        }
+
+        // ── Page Init ──────────────────────────────────────────────────────────────
+        document.addEventListener("DOMContentLoaded", function () {
+            const bocSelect = document.getElementById('boc_no');
+            if (bocSelect) bocSelect.disabled = true;
+            setFieldsEditable(false);   // start locked
+        });
+
+        // ── Item Selection ─────────────────────────────────────────────────────────
+        function fetchItemDetails() {
+            const itemNo = document.getElementById('item_number').value;
+            const bocSelect = document.getElementById('boc_no');
+            const bocInput = document.getElementById('boc_no_input');
+
+            // Reset BOC fields
+            bocSelect.innerHTML = '<option value="">-- Select BOC --</option>';
+            bocSelect.disabled = true;
+            bocInput.value = '';
+            bocInput.style.display = 'none';
+            bocSelect.style.display = '';
+            document.getElementById('table_id').value = '';
+            document.getElementById('ecn_id').value = '';
+            resetToViewMode();
+
+            if (!itemNo) {
+                AUTOFILL_FIELDS.forEach(id => { document.getElementById(id).value = ''; });
+                return;
+            }
+
+            // Fetch item details (autofill)
+            fetch(`/BOC/api/get_item_details/?item_no=${encodeURIComponent(itemNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { console.error(data.error); return; }
+                    document.getElementById('drg_revno').value = data.drg_revno || '';
+                    document.getElementById('drg_revdate').value = data.drg_revdate || '';
+                    document.getElementById('customer_partsetno').value = data.customer_partsetno || '';
+                    document.getElementById('part_name').value = data.part_name || '';
+                    document.getElementById('project').value = data.project || '';
+                    document.getElementById('project_sopdate').value = data.project_sopdate || '';
+                    document.getElementById('rfq_no').value = data.rfq_no || '';
+                    document.getElementById('annual_volume').value = data.annual_volume || '';
+                    document.getElementById('customer_drgno').value = data.customer_drgno || '';
+                })
+                .catch(err => console.error("Error fetching item details:", err));
+
+            // Fetch existing BOC nos for this item
+            fetch(`/BOC/api/get_boc_nos/?item_no=${encodeURIComponent(itemNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    bocSelect.innerHTML = '<option value="">-- Select BOC --</option>';
+                    if (data.boc_nos && data.boc_nos.length > 0) {
+                        data.boc_nos.forEach(boc => {
+                            const opt = document.createElement('option');
+                            opt.value = boc;
+                            opt.textContent = boc;
+                            bocSelect.appendChild(opt);
+                        });
+                        bocSelect.disabled = false;
+                        bocInput.style.display = 'none';
+                        bocSelect.style.display = '';
+                    } else {
+                        // No BOC yet — show text input for new BOC NO
+                        bocInput.style.display = '';
+                        bocSelect.style.display = 'none';
+                        bocInput.disabled = false;
+                    }
+                })
+                .catch(err => console.error("Error fetching BOC nos:", err));
+        }
+
+        // ── BOC Selection ──────────────────────────────────────────────────────────
+        function fetchBocDetails() {
+            const bocSelect = document.getElementById('boc_no');
+            const bocNo = bocSelect.value;
+
+            document.getElementById('table_id').value = '';
+            document.getElementById('ecn_id').value = '';
+
+            if (!bocNo) { bocSelect.disabled = false; return; }
+
+            bocSelect.disabled = true;
+
+            fetch(`/BOC/api/get_boc_details/?boc_no=${encodeURIComponent(bocNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { console.error(data.error); bocSelect.disabled = false; return; }
+                    document.getElementById('table_id').value = data.table_id || '';
+                    document.getElementById('ecn_id').value = data.ecn_id || '';
+                })
+                .catch(err => { console.error("Error fetching BOC details:", err); bocSelect.disabled = false; });
+        }
+
+        // ── CREATE ─────────────────────────────────────────────────────────────────
+        function handleCreate() {
+            const itemNo = document.getElementById('item_number').value.trim();
+            const bocInput = document.getElementById('boc_no_input');
+            const bocNo = bocInput.value.trim();
+
+            if (!itemNo) { showBanner('Please select an Item Number first.', true); return; }
+            if (!bocNo) { showBanner('Please enter a BOC NO to create.', true); return; }
+
+            const payload = { ...getFormData(), boc_no: bocNo, item_no: itemNo };
+
+            fetch('/BOC/api/create_boc/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { showBanner('Error: ' + data.error, true); return; }
+                    showBanner('BOC "' + bocNo + '" created successfully!', false);
+                    const bocSelect = document.getElementById('boc_no');
+                    const opt = document.createElement('option');
+                    opt.value = bocNo; opt.textContent = bocNo;
+                    bocSelect.appendChild(opt);
+                    bocSelect.value = bocNo;
+                    bocInput.style.display = 'none';
+                    bocSelect.style.display = '';
+                    bocSelect.disabled = true;
+                    fetchBocDetails();
+                    resetToViewMode();
+                })
+                .catch(err => { console.error(err); showBanner('Network error.', true); });
+        }
+
+        // ── EDIT ───────────────────────────────────────────────────────────────────
+        function handleEdit() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Select a BOC NO first to edit.', true); return; }
+            formMode = 'edit';
+            setFieldsEditable(true);
+            showBanner('Fields unlocked. Make your changes and click Save.', false);
+        }
+
+        // ── SAVE ───────────────────────────────────────────────────────────────────
+        function handleSave() {
+            if (formMode === 'new') { handleCreate(); return; }
+            if (formMode === 'ecn') { handleEcnSave(); return; }
+            if (formMode !== 'edit') { showBanner('Click Edit first to modify a record.', true); return; }
+
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('No BOC NO selected.', true); return; }
+
+            fetch('/BOC/api/save_boc/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(getFormData())
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { showBanner('Error: ' + data.error, true); return; }
+                    showBanner('BOC "' + bocNo + '" saved successfully!', false);
+                    resetToViewMode();
+                })
+                .catch(err => { console.error(err); showBanner('Network error.', true); });
+        }
+
+        // ── DELETE ─────────────────────────────────────────────────────────────────
+        function handleDelete() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Select a BOC NO first to delete.', true); return; }
+            if (!confirm(`Delete BOC "${bocNo}"? This cannot be undone.`)) return;
+
+            fetch('/BOC/api/delete_boc/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify({ boc_no: bocNo })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { showBanner('Error: ' + data.error, true); return; }
+                    showBanner('BOC "' + bocNo + '" deleted.', false);
+                    const bocSelect = document.getElementById('boc_no');
+                    const toRemove = bocSelect.querySelector(`option[value="${bocNo}"]`);
+                    if (toRemove) toRemove.remove();
+                    bocSelect.value = '';
+                    AUTOFILL_FIELDS.forEach(id => { document.getElementById(id).value = ''; });
+                    document.getElementById('table_id').value = '';
+                    document.getElementById('ecn_id').value = '';
+                    resetToViewMode();
+                })
+                .catch(err => { console.error(err); showBanner('Network error.', true); });
+        }
+
+        // ── ECN ────────────────────────────────────────────────────────────────────
+        function handleECN() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Select a BOC NO first before creating an ECN.', true); return; }
+
+            const currentEcn = document.getElementById('ecn_id').value.trim() || '0';
+            if (!confirm(`Create ECN for BOC "${bocNo}"?\n\nCurrent ECN: ${currentEcn}\nAll fields (except Customer ID & Name) will be unlocked for editing.\nECN number will increment to ${parseInt(currentEcn) + 1} when you click Save.`)) return;
+
+            formMode = 'ecn';
+
+            // Unlock autofill fields
+            setFieldsEditable(true);
+
+            // Also unlock item_number dropdown for ECN
+            document.getElementById('item_number').disabled = false;
+
+            showBanner('ECN mode active — edit fields and click Save to increment ECN.', false);
+        }
+
+        // ── ECN SAVE ───────────────────────────────────────────────────────────────
+        function handleEcnSave() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('No BOC NO selected.', true); return; }
+
+            fetch('/BOC/api/ecn_boc/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(getFormData())
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { showBanner('Error: ' + data.error, true); return; }
+
+                    // Update the ECN field in UI to new value
+                    document.getElementById('ecn_id').value = data.new_ecn_id;
+
+                    // Show popup
+                    document.getElementById('ecn_modal_number').textContent = data.new_ecn_id;
+                    document.getElementById('ecn_modal').classList.add('active');
+
+                    resetToViewMode();
+                })
+                .catch(err => { console.error(err); showBanner('Network error.', true); });
+        }
+
+        // ── ECN MODAL CLOSE ────────────────────────────────────────────────────────
+        function closeEcnModal(e) {
+            // Close if clicking overlay background or OK button
+            if (!e || e.target === document.getElementById('ecn_modal')) {
+                document.getElementById('ecn_modal').classList.remove('active');
+            }
+        }
+
+        // ── CSRF helper ────────────────────────────────────────────────────────────
+        function getCsrfToken() {
+            const cookieVal = document.cookie.split(';')
+                .map(c => c.trim())
+                .find(c => c.startsWith('csrftoken='));
+            return cookieVal ? cookieVal.split('=')[1] : '';
+        }
+
+        // ── SEND APPROVAL ──────────────────────────────────────────────────────────
+        function handleSendApproval() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Select a BOC NO first to send for approval.', true); return; }
+
+            if (!confirm(`Send BOC "${bocNo}" for approval? This will lock the record.`)) return;
+
+            fetch('/BOC/api/send_approval_boc/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify({ boc_no: bocNo })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) { showBanner('Error: ' + data.error, true); return; }
+                    showBanner('BOC "' + bocNo + '" sent for approval successfully!', false);
+                    resetToViewMode();
+                    document.getElementById('btn_approval').textContent = 'Send Approval (Locked)';
+                    document.getElementById('btn_approval').style.backgroundColor = '#999';
+                    document.getElementById('btn_approval').disabled = true;
+                })
+                .catch(err => { console.error(err); showBanner('Network error.', true); });
+        }
+
+        // ── TAB 3: BOC Status ───────────────────────────────────────────────────────
+        function loadBocStatus() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            const tbody = document.querySelector('#boc_status_table tbody');
+            if (!bocNo) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;">Select a BOC to load records.</td></tr>';
+                return;
+            }
+            document.getElementById('boc_status_creation_id').value = bocNo;
+            fetch(`/BOC/api/get_boc_status/?boc_no=${encodeURIComponent(bocNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.records && data.records.length > 0) {
+                        tbody.innerHTML = '';
+                        data.records.forEach(rec => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td><button class="edit-btn" onclick="editBocStatus(${rec.id}, '${rec.boc || ''}', '${rec.supplier || ''}', '${rec.status || ''}', '${rec.date_sent || ''}', '${(rec.comments || '').replace(/\n/g, '\\n')}', '${rec.basic_price_quoted_by_supplier_in_rs || ''}', '${rec.final_price_submission_date || ''}')">✎</button></td>
+                                <td>${rec.boc || ''}</td>
+                                <td>${rec.supplier || ''}</td>
+                                <td>${rec.status || ''}</td>
+                                <td>${rec.date_sent || ''}</td>
+                                <td>${rec.comments || ''}</td>
+                                <td>${rec.basic_price_quoted_by_supplier_in_rs || ''}</td>
+                                <td>${rec.final_price_submission_date || ''}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;">No records found.</td></tr>';
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        function editBocStatus(id, costType, supplier, status, dateSent, comments, price, finalDate) {
+            document.getElementById('boc_status_id').value = id;
+            document.getElementById('boc_status_cost_type').value = costType;
+            document.getElementById('boc_status_supplier').value = supplier;
+            document.getElementById('boc_status_status').value = status;
+            document.getElementById('boc_status_date_sent').value = dateSent;
+            document.getElementById('boc_status_comments').value = comments;
+            document.getElementById('boc_status_basic_price').value = price;
+            document.getElementById('boc_status_final_date').value = finalDate;
+        }
+
+        function saveBocStatus() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            const itemNo = document.getElementById('item_number').value.trim();
+            if (!bocNo) { showBanner('Please select a BOC NO first.', true); return; }
+
+            const payload = {
+                id: document.getElementById('boc_status_id').value || null,
+                boc_no: bocNo,
+                item_no: itemNo,
+                boc: document.getElementById('boc_status_cost_type').value,
+                supplier: document.getElementById('boc_status_supplier').value,
+                status: document.getElementById('boc_status_status').value,
+                date_sent: document.getElementById('boc_status_date_sent').value,
+                comments: document.getElementById('boc_status_comments').value,
+                basic_price: document.getElementById('boc_status_basic_price').value,
+                final_price_date: document.getElementById('boc_status_final_date').value,
+                table_id: document.getElementById('table_id').value
+            };
+
+            fetch('/BOC/api/save_boc_status/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    showBanner('BOC Status saved!', false);
+                    document.getElementById('boc_status_id').value = '';
+                    document.getElementById('boc_status_cost_type').value = '';
+                    document.getElementById('boc_status_supplier').value = '';
+                    document.getElementById('boc_status_status').value = '';
+                    document.getElementById('boc_status_date_sent').value = '';
+                    document.getElementById('boc_status_comments').value = '';
+                    document.getElementById('boc_status_basic_price').value = '';
+                    document.getElementById('boc_status_final_date').value = '';
+                    loadBocStatus();
+                } else {
+                    showBanner('Error: ' + data.error, true);
+                }
+            }).catch(err => console.error(err));
+        }
+
+        // ── TAB 4: BOM Cost ────────────────────────────────────────────────────────
+        function loadBomCost() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            const tbody = document.querySelector('#bom_cost_table tbody');
+            if (!bocNo) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">Select a BOC to load records.</td></tr>';
+                return;
+            }
+            fetch(`/BOC/api/get_bom_cost/?boc_no=${encodeURIComponent(bocNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.records && data.records.length > 0) {
+                        tbody.innerHTML = '';
+                        data.records.forEach(rec => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td><button class="edit-btn" onclick="editBomCost('${(rec.part_no || '').replace(/'/g, "\\'")}', '${(rec.part_description || '').replace(/'/g, "\\'")}', '${(rec.classification || '').replace(/'/g, "\\'")}', '${rec.cost_price || ''}', '${(rec.categorisation || '').replace(/'/g, "\\'")}', '${(rec.base_unit_of_measure || '').replace(/'/g, "\\'")}', '${(rec.part_status || '').replace(/'/g, "\\'")}')">✎</button></td>
+                                <td>${rec.part_no || ''}</td>
+                                <td>${rec.part_description || ''}</td>
+                                <td>${rec.classification || ''}</td>
+                                <td>${rec.cost_price || ''}</td>
+                                <td>${rec.categorisation || ''}</td>
+                                <td>${rec.part_status || ''}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">No records found.</td></tr>';
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        function editBomCost(partNo, partDesc, classification, costPrice, categorisation, uom, status) {
+            document.getElementById('bom_cost_part_no').value = partNo;
+            document.getElementById('bom_cost_part_desc').value = partDesc;
+            document.getElementById('bom_cost_classification').value = classification;
+            document.getElementById('bom_cost_price').value = costPrice;
+            document.getElementById('bom_cost_categorisation').value = categorisation;
+            document.getElementById('bom_cost_uom').value = uom;
+            document.getElementById('bom_cost_status').value = status;
+        }
+
+        function saveBomCost() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Please select a BOC NO first.', true); return; }
+            
+            const payload = {
+                part_no: document.getElementById('bom_cost_part_no').value,
+                part_description: document.getElementById('bom_cost_part_desc').value,
+                classification: document.getElementById('bom_cost_classification').value,
+                cost_price: document.getElementById('bom_cost_price').value,
+                categorisation: document.getElementById('bom_cost_categorisation').value,
+                base_unit_of_measure: document.getElementById('bom_cost_uom').value,
+                part_status: document.getElementById('bom_cost_status').value,
+            };
+
+            fetch('/BOC/api/save_bom_cost/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(data => {
+                if (data.success) { showBanner('BOM Cost saved!', false); loadBomCost(); } 
+                else { showBanner('Error: ' + data.error, true); }
+            }).catch(err => console.error(err));
+        }
+
+        // ── TAB 5: BOM Settle ──────────────────────────────────────────────────────
+        function loadBomSettle() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            const tbody = document.querySelector('#bom_settle_table tbody');
+            if (!bocNo) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">Select a BOC to load records.</td></tr>';
+                return;
+            }
+            fetch(`/BOC/api/get_bom_settle/?boc_no=${encodeURIComponent(bocNo)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.records && data.records.length > 0) {
+                        tbody.innerHTML = '';
+                        data.records.forEach(rec => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td><button class="edit-btn" onclick="editBomSettle('${(rec.part_no || '').replace(/'/g, "\\'")}', '${(rec.part_description || '').replace(/'/g, "\\'")}', '${(rec.classification || '').replace(/'/g, "\\'")}', '${rec.settle_price || ''}', '${(rec.categorisation || '').replace(/'/g, "\\'")}', '${(rec.base_unit_of_measure || '').replace(/'/g, "\\'")}', '${(rec.part_status || '').replace(/'/g, "\\'")}')">✎</button></td>
+                                <td>${rec.part_no || ''}</td>
+                                <td>${rec.part_description || ''}</td>
+                                <td>${rec.classification || ''}</td>
+                                <td>${rec.settle_price || ''}</td>
+                                <td>${rec.categorisation || ''}</td>
+                                <td>${rec.part_status || ''}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">No records found.</td></tr>';
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        function editBomSettle(partNo, partDesc, classification, settlePrice, categorisation, uom, status) {
+            document.getElementById('bom_settle_part_no').value = partNo;
+            document.getElementById('bom_settle_part_desc').value = partDesc;
+            document.getElementById('bom_settle_classification').value = classification;
+            document.getElementById('bom_settle_price').value = settlePrice;
+            document.getElementById('bom_settle_categorisation').value = categorisation;
+            document.getElementById('bom_settle_uom').value = uom;
+            document.getElementById('bom_settle_status').value = status;
+        }
+
+        function saveBomSettle() {
+            const bocNo = document.getElementById('boc_no').value.trim();
+            if (!bocNo) { showBanner('Please select a BOC NO first.', true); return; }
+            
+            const payload = {
+                part_no: document.getElementById('bom_settle_part_no').value,
+                part_description: document.getElementById('bom_settle_part_desc').value,
+                classification: document.getElementById('bom_settle_classification').value,
+                settle_price: document.getElementById('bom_settle_price').value,
+                categorisation: document.getElementById('bom_settle_categorisation').value,
+                base_unit_of_measure: document.getElementById('bom_settle_uom').value,
+                part_status: document.getElementById('bom_settle_status').value,
+            };
+
+            fetch('/BOC/api/save_bom_settle/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(data => {
+                if (data.success) { showBanner('BOM Settle saved!', false); loadBomSettle(); } 
+                else { showBanner('Error: ' + data.error, true); }
+            }).catch(err => console.error(err));
+        }
+
+        // Add hooks to load data when boc selection changes
+        const originalFetchBocDetails = fetchBocDetails;
+        fetchBocDetails = function() {
+            originalFetchBocDetails();
+            loadProdToolingTable();
+            loadBocStatus();
+            loadBomCost();
+            loadBomSettle();
+        };
+
+        // ── New Customer / New Part Modal ──────────────────────────────────────────
+        function openNewCustomerModal() {
+            // 1. Clear modal fields & reset defaults
+            document.getElementById("pdm_part_no").value = "";
+            document.getElementById("pdm_part_description").value = "";
+            document.getElementById("pdm_base_unit_of_measure").value = "";
+            document.getElementById("pdm_customer").value = "";
+            document.getElementById("pdm_classification").value = "";
+            document.getElementById("pdm_cost_price").value = "0";
+            document.getElementById("pdm_settle_price").value = "0";
+            document.getElementById("pdm_categorisation").value = "";
+            document.getElementById("pdm_part_status").value = "Sent for approval";
+
+            // 2. Fetch dropdown options from server using the existing BOM app endpoint
+            fetch("/BOM/ajax/part_master_dropdowns/")
+                .then(r => r.json())
+                .then(data => {
+                    function fillSelect(selId, items) {
+                        const sel = document.getElementById(selId);
+                        sel.innerHTML = "<option value=''></option>";
+                        (items || []).forEach(v => {
+                            const opt = document.createElement("option");
+                            opt.value = v;
+                            opt.textContent = v;
+                            sel.appendChild(opt);
+                        });
+                    }
+                    fillSelect("pdm_base_unit_of_measure", data.base_units);
+                    fillSelect("pdm_customer", data.customers);
+                    fillSelect("pdm_classification", data.classifications);
+                    fillSelect("pdm_categorisation", data.categorisations);
+                })
+                .catch(err => console.error("Error loading part master dropdowns:", err));
+
+            // 3. Show the modal
+            const modal = document.getElementById('modalPartDetailsMaster');
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            modal.style.background = 'rgba(0,0,0,0.5)';
+        }
+
+        function closeNewCustomerModal() {
+            const modal = document.getElementById('modalPartDetailsMaster');
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+        }
+
+        function submitNewCustomerModal() {
+            const payload = {
+                part_no: document.getElementById("pdm_part_no").value.trim(),
+                part_description: document.getElementById("pdm_part_description").value.trim(),
+                base_unit_of_measure: document.getElementById("pdm_base_unit_of_measure").value,
+                customer: document.getElementById("pdm_customer").value,
+                classification: document.getElementById("pdm_classification").value,
+                cost_price: document.getElementById("pdm_cost_price").value || 0,
+                settle_price: document.getElementById("pdm_settle_price").value || 0,
+                categorisation: document.getElementById("pdm_categorisation").value,
+                part_status: document.getElementById("pdm_part_status").value || "Sent for approval"
+            };
+
+            fetch("/BOM/ajax/create_part_master/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", 'X-CSRFToken': getCsrfToken() },
+                body: JSON.stringify(payload)
+            })
+                .then(r => r.json().then(res => ({ ok: r.ok, data: res })))
+                .then(({ ok, data }) => {
+                    if (!ok || data.status === "error") {
+                        alert(data.message || "Error creating part");
+                        return;
+                    }
+
+                    alert("Records saved!");
+                    closeNewCustomerModal();
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    alert("Network error creating part");
+                });
+        }
+    </script>
+
+    {% endblock %}
