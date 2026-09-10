@@ -1,77 +1,1502 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: {
+      preflight: false, // Prevent reset from breaking AdminLTE / existing styles
+    }
+  }
+</script>
+<style>
+  /* ── Page shell ───────────────────────────────────────────────── */
+  .norms-page { background: #FFFFFF; color: #000000; }
+
+
+  /* ── Top header row ───────────────────────────────────────────── */
+  .norms-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px 4px;
+    border-bottom: 2px solid #DEE2E6;
+  }
+  .norms-brand { color: #FF3131; font-weight: 800; font-size: 1.35rem; letter-spacing: .5px; font-family: 'Permanent Marker', cursive; }
+  .norms-title { color: #2E266D; font-size: 1.05rem; font-weight: 600; margin-left: 10px; font-family: 'Permanent Marker', cursive; }
+
+  /* ── Top control bar ──────────────────────────────────────────── */
+  .top-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 18px;
+    padding: 6px 14px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #DEE2E6;
+    flex-wrap: wrap;
+  }
+  .top-controls .ctrl-group { display: flex; flex-direction: column; min-width: 160px; }
+  .top-controls label { font-size: 0.68rem; font-weight: 700; color: #2E266D; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+  .top-controls select,
+  .top-controls input { font-size: 0.8rem; height: 30px; border-radius: 4px; border: 1px solid #DEE2E6; padding: 2px 8px; background: #FFFFFF; color: #000000; }
+  .top-controls select:focus,
+  .top-controls input:focus { outline: none; border-color: #2E266D; box-shadow: 0 0 0 2px rgba(46, 38, 109, 0.18); }
+
+  /* ── Tab bar ──────────────────────────────────────────────────── */
+  .tab-bar {
+    display: flex;
+    gap: 3px;
+    padding: 6px 14px 0;
+    background: #FFFFFF;
+    border-bottom: 2px solid #DEE2E6;
+  }
+  .tab-btn {
+    padding: 5px 18px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #DEE2E6;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: #FFFFFF;
+    color: #2E266D;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .tab-btn:hover { background: #2E266D; color: #FFFFFF; }
+  .tab-btn.active { background: #2E266D; color: #FFFFFF; border-color: #2E266D; }
+
+  /* ── Tab panels ───────────────────────────────────────────────── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .tab-placeholder {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 300px; color: #2E266D; font-size: 1.1rem; font-style: italic;
+  }
+
+  /* ── Norms control section ────────────────────────────────────── */
+  .norms-controls {
+    padding: 10px 14px 6px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #DEE2E6;
+  }
+
+  /* Filter row (Customer Name + Export) */
+  .norms-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .norms-filter-row .filter-label {
+    font-size: 0.72rem; font-weight: 700; color: #2E266D;
+    text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
+  }
+  .norms-filter-row select {
+    font-size: 0.8rem; height: 30px; border-radius: 4px;
+    border: 1px solid #DEE2E6; padding: 2px 8px; min-width: 260px;
+    background: #FFFFFF; color: #000000;
+  }
+  .norms-filter-row select:focus { outline: none; border-color: #2E266D; box-shadow: 0 0 0 2px rgba(46,38,109,.18); }
+
+  /* Two-column form grid */
+  .norms-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 28px;
+  }
+  @media (max-width: 768px) { .norms-form-grid { grid-template-columns: 1fr; } }
+
+  /* Field rows inside columns */
+  .norms-field-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .norms-field-row label {
+    font-size: 0.72rem; font-weight: 700; color: #2E266D;
+    text-transform: uppercase; letter-spacing: .4px;
+    white-space: nowrap; min-width: 110px; text-align: right;
+  }
+  .norms-field-row input,
+  .norms-field-row select {
+    font-size: 0.8rem; height: 28px; flex: 1;
+    border-radius: 4px; border: 1px solid #DEE2E6;
+    padding: 2px 8px; background: #FFFFFF; color: #000000;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .norms-field-row input:focus,
+  .norms-field-row select:focus {
+    outline: none; border-color: #2E266D;
+    box-shadow: 0 0 0 2px rgba(46, 38, 109, .18);
+  }
+  .norms-field-row input:read-only { background: #FFFFFF; color: #000000; cursor: default; }
+  .norms-field-row input.editable { background: #FFFFFF; color: #000000; cursor: text; border-color: #FF3131; }
+
+  /* ── Buttons ──────────────────────────────────────────────────── */
+  .btn-norms-primary {
+    padding: 4px 13px; font-size: 0.78rem; font-weight: 600;
+    border: none; border-radius: 4px; cursor: pointer;
+    background: #FF3131; color: #FFFFFF;
+    transition: background .15s, transform .1s;
+  }
+  .btn-norms-primary:hover { background: #e02828; transform: translateY(-1px); }
+  .btn-norms-primary:active { transform: translateY(0); }
+
+  .btn-norms-secondary {
+    padding: 3px 10px; font-size: 0.75rem; font-weight: 600;
+    border: 1px solid #2E266D; border-radius: 4px; cursor: pointer;
+    background: #2E266D; color: #FFFFFF;
+    transition: background .15s;
+  }
+  .btn-norms-secondary:hover { background: #1f1a4a; }
+
+  .btn-norms-export {
+    padding: 4px 14px; font-size: 0.78rem; font-weight: 600;
+    border: none; border-radius: 4px; cursor: pointer;
+    background: #2E266D; color: #FFFFFF;
+    transition: background .15s, transform .1s;
+  }
+  .btn-norms-export:hover { background: #FF3131; transform: translateY(-1px); }
+
+  /* ── Data table ───────────────────────────────────────────────── */
+  .norms-table-wrap {
+    padding: 10px 14px 18px;
+    overflow-x: auto;
+  }
+  .norms-table-wrap h6 {
+    font-size: 0.78rem; font-weight: 700; color: #2E266D;
+    text-transform: uppercase; letter-spacing: .6px;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #DEE2E6;
+  }
+  #norms-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.76rem; background: #FFFFFF;
+  }
+  #norms-table thead tr {
+    background: #2E266D; color: #FFFFFF;
+    position: sticky; top: 0; z-index: 2;
+  }
+  #norms-table thead th {
+    padding: 7px 10px; text-align: left;
+    font-weight: 600; font-size: 0.72rem;
+    white-space: nowrap; cursor: pointer;
+    user-select: none;
+    border-right: 1px solid rgba(255,255,255,.15);
+  }
+  #norms-table thead th:hover { background: #FF3131; }
+  #norms-table thead th .sort-icon { margin-left: 4px; opacity: .6; }
+  #norms-table tbody tr {
+    border-bottom: 1px solid #DEE2E6;
+    cursor: pointer;
+    transition: background .1s;
+  }
+  #norms-table tbody tr:hover { background: rgba(46, 38, 109, 0.08); }
+  #norms-table tbody tr.selected { background: rgba(255, 49, 49, 0.15) !important; }
+  #norms-table tbody td {
+    padding: 5px 10px; color: #000000;
+    max-width: 200px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  #norms-table tbody td:first-child { color: #2E266D; font-size: 0.7rem; font-weight: 600; }
+  .table-empty {
+    text-align: center; color: #2E266D; font-style: italic;
+    padding: 30px !important;
+  }
+
+  /* ── Loading spinner ──────────────────────────────────────────── */
+  .spinner-wrap {
+    display: flex; align-items: center; justify-content: center;
+    padding: 30px; gap: 10px; color: #2E266D;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 3px solid #DEE2E6;
+    border-top-color: #FF3131;
+    border-radius: 50%;
+    animation: spin .65s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Toast notification ───────────────────────────────────────── */
+  #norms-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    padding: 10px 20px; border-radius: 6px;
+    font-size: 0.85rem; font-weight: 600;
+    color: #fff; box-shadow: 0 4px 18px rgba(0,0,0,.18);
+    transform: translateY(20px); opacity: 0;
+    transition: all .25s ease;
+    pointer-events: none;
+  }
+  #norms-toast.show { transform: translateY(0); opacity: 1; }
+  #norms-toast.success { background: #27a745; }
+  #norms-toast.error   { background: #dc3545; }
+
+  /* ── Submit button in top bar ─────────────────────────────────── */
+  .btn-submit-top {
+    padding: 5px 18px; font-size: 0.8rem; font-weight: 600;
+    border: none; border-radius: 4px; cursor: pointer;
+    background: #5b74a3; color: #fff; height: 30px;
+    transition: background .15s;
+    align-self: flex-end;
+  }
+  .btn-submit-top:hover { background: #3f5a8a; }
+
+  /* ── Back button ──────────────────────────────────────────────── */
+  .btn-back {
+    padding: 4px 16px; font-size: 0.78rem;
+    border: 1px solid #b0b9cc; border-radius: 4px;
+    background: #fff; color: #5a6375;
+    cursor: pointer; font-style: italic;
+    text-decoration: underline;
+    transition: background .15s;
+  }
+  .btn-back:hover { background: #eef1f8; }
+
+  /* ── Status Indicator & IC Cards ────────────────────────────── */
+  .rfq-status-badge { color: #dc3545; font-style: italic; font-weight: 700; font-size: 0.88rem; margin-left: 20px; }
+  
+  .ic-card {
+    background: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+    margin: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+  .ic-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #DEE2E6;
+  }
+  .ic-card-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2E266D;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 0;
+  }
+  .ic-table-wrap {
+    overflow-x: auto;
+    padding: 0;
+  }
+  .ic-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  .ic-table thead tr {
+    background: #2E266D;
+    color: #FFFFFF;
+  }
+  .ic-table thead th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .ic-table tbody tr {
+    border-bottom: 1px solid #DEE2E6;
+  }
+  .ic-table tbody tr:hover {
+    background: rgba(46, 38, 109, 0.04);
+  }
+  .ic-table td {
+    padding: 6px 12px;
+    color: #000;
+  }
+  .ic-table tfoot tr {
+    background: #eef1f8;
+    font-weight: 700;
+    border-top: 2px solid #2E266D;
+  }
+  .ic-table tfoot td {
+    padding: 8px 12px;
+    color: #2E266D;
+  }
+  
+  .closer-fieldset {
+    margin: 14px;
+    padding: 12px 18px;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+    background: #FAFAFA;
+  }
+  .closer-fieldset legend {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #2E266D;
+    padding: 0 8px;
+    width: auto;
+    margin: 0;
+  }
+  .closer-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #2E266D;
+    cursor: pointer;
+  }
+
+  /* hidden file picker */
+  #file-picker-location, #folder-picker-export { display: none; }
+
+  /* ── Offer Sheet Sub-bar & Sub-tabs ────────────────────────────── */
+  .offer-sub-bar {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: #F8F9FA;
+    border-bottom: 1px solid #DEE2E6;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .offer-label-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .offer-title-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+  }
+  .offer-arrow-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    background: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    border-radius: 3px;
+  }
+  .offer-tabs-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .subtab-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #2E266D;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    min-width: 70px;
+    height: 32px;
+    transition: transform 0.1s ease;
+  }
+  .subtab-btn svg.tab-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .subtab-btn svg.tab-bg polygon {
+    transition: fill 0.15s ease, stroke 0.15s ease;
+  }
+  .subtab-btn span {
+    position: relative;
+    z-index: 2;
+    transition: color 0.15s ease;
+  }
+  .subtab-btn:hover svg.tab-bg polygon {
+    fill: #f1f5f9;
+    stroke: #2E266D;
+  }
+  .subtab-btn.active svg.tab-bg polygon {
+    fill: #FFFFFF;
+    stroke: #2E266D;
+    stroke-width: 1.6;
+  }
+  .subtab-btn.active span {
+    color: #2E266D;
+    font-weight: 700;
+  }
+  .offer-blue-divider {
+    height: 2px;
+    background: #2E266D;
+    width: 100%;
+  }
+  .offer-tab-content-area {
+    background: #FFFFFF;
+    min-height: 400px;
+  }
+</style>
+{% endblock extrastyle %}
 
 {% block content %}
-<div class="container-fluid full-dashboard bg-white">
-    <div class="d-flex justify-content-between align-items-center pt-2 px-3">
-        <div class="d-flex align-items-center">
-            <h2 class="mb-0 mr-3" style="color: #d11252; font-weight: bold;">FlowNexis</h2>
-            <h3 class="mb-0 text-secondary" style="font-size: 1.5rem;">Costing BC Calculations</h3>
-        </div>
-        <button class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></button>
+<div class="norms-page">
+
+  <!-- ── TOP HEADER ──────────────────────────────────────────────────── -->
+  <div class="norms-header">
+    <div style="display:flex; align-items:center;">
+      <span class="norms-brand">VOSS</span>
+      <span class="norms-title">&nbsp;&nbsp;Costing BC Calculations</span>
+      <span class="rfq-status-badge"><i>Status : RFQ Closed</i></span>
+    </div>
+    <button class="btn-back" onclick="history.back()"><i>Back</i></button>
+  </div>
+
+
+  <!-- ── TOP CONTROL BAR ─────────────────────────────────────────────── -->
+  <div class="top-controls">
+    <div class="ctrl-group">
+      <label for="top-customer-id">Customer ID</label>
+      <select id="top-customer-id">
+        <option value="">-- Select --</option>
+        {% for cid in customers %}
+          <option value="{{ cid }}">{{ cid }}</option>
+        {% endfor %}
+      </select>
     </div>
 
-    <hr class="my-2">
-
-    <form method="post" class="px-3">
-        {% csrf_token %}
-        <div class="row align-items-start">
-            
-            <div class="col-md-3">
-                <div class="form-group row no-gutters mb-1">
-                    <label class="col-sm-5 col-form-label col-form-label-sm text-right pr-2">Customer ID :</label>
-                    <div class="col-sm-7">
-                        <input type="text" name="customer_id" class="form-control form-control-sm bg-light">
-                    </div>
-                </div>
-                <div class="form-group row no-gutters">
-                    <label class="col-sm-5 col-form-label col-form-label-sm text-right pr-2">Item Creation ID :</label>
-                    <div class="col-sm-7">
-                        <select name="item_id" class="form-control form-control-sm bg-light">
-                            <option value=""></option>
-                            {% for id in item_ids %}<option>{{ id }}</option>{% endfor %}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="form-group row no-gutters">
-                    <label class="col-sm-6 col-form-label col-form-label-sm text-right pr-2">Assignment Year :</label>
-                    <div class="col-sm-6">
-                        <select name="year" class="form-control form-control-sm bg-primary text-white font-weight-bold">
-                            <option value="2026">2026</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <fieldset class="border p-2" style="border-radius: 4px;">
-                    <legend class="w-auto px-2 small text-secondary" style="font-size: 0.75rem; margin-bottom: 0;">Closer Action</legend>
-                    <div class="d-flex align-items-center justify-content-around">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="completed">
-                            <label class="form-check-label small" for="completed">Is Completed</label>
-                        </div>
-                        <button type="submit" class="btn btn-sm text-white" style="background-color: #5b74a3;">
-                           <i class="fas fa-print"></i> Submit
-                        </button>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </form>
-
-    <div class="px-3 mt-2 pb-2" style="background-color: #f8f9fa;">
-        <div class="btn-group">
-            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Norms</button>
-            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Internal Conversion</button>
-            <button class="btn btn-sm mr-1 text-white" style="background-color: #5b74a3;">Data Tooling</button>
-            <button class="btn btn-sm text-white" style="background-color: #5b74a3;">Offer Sheet</button>
-        </div>
+    <div class="ctrl-group">
+      <label for="top-item-id">Item Creation ID</label>
+      <select id="top-item-id" name="item_creation_id">
+        <option value="">-- Select --</option>
+        {% for iid in item_ids %}
+          <option value="{{ iid }}">{{ iid }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" id="id_item_creation_id" name="item_creation_id" value="">
     </div>
 
-    <div class="border-top" style="min-height: 400px; background-color: #ffffff;">
+    <div class="ctrl-group">
+      <label for="top-year">Assignment Year</label>
+      <input type="text"
+             id="top-year"
+             name="assignment_year"
+             list="year-options"
+             value="2026"
+             placeholder="Type or select year..."
+             style="padding: 4px 8px; font-size: 0.8rem; border: 1px solid #d1d5db; border-radius: 4px; color: #111827; width: 110px; background: #ffffff;">
+      <datalist id="year-options">
+        <option value="2020"></option>
+        <option value="2021"></option>
+        <option value="2022"></option>
+        <option value="2023"></option>
+        <option value="2024"></option>
+        <option value="2025"></option>
+        <option value="2026"></option>
+        <option value="2027"></option>
+        <option value="2028"></option>
+        <option value="2029"></option>
+        <option value="2030"></option>
+      </datalist>
+    </div>
+
+    <!-- Closer Action — inline after Assignment Year & Submit -->
+    <fieldset class="closer-fieldset" style="margin: 0; padding: 4px 14px; border: 1px solid #DEE2E6; border-radius: 4px; display: flex; align-items: center; gap: 0;">
+      <legend style="font-size: 0.68rem; font-weight: 700; color: #2E266D; padding: 0 4px; text-transform: uppercase; letter-spacing: .4px;"><i class="fas fa-tasks mr-1"></i>Closer Action</legend>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #374151; cursor: pointer; margin: 0;">
+          <input type="checkbox" id="ic-is-completed" style="width: 14px; height: 14px; cursor: pointer;">
+          <span>Is Completed</span>
+        </label>
+        <button class="btn-norms-primary" id="btn-ic-submit-action" style="padding: 4px 14px; font-size: 0.78rem;">
+          <i class="fas fa-check-circle"></i> Submit
+        </button>
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- ── TAB BAR ─────────────────────────────────────────────────────── -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-norms"       data-tab="panel-norms">Norms</button>
+    <button class="tab-btn"        id="tab-internal"    data-tab="panel-internal">Internal Conversion</button>
+    <button class="tab-btn"        id="tab-tooling"     data-tab="panel-tooling">Data Tooling</button>
+    <button class="tab-btn"        id="tab-offer"       data-tab="panel-offer">Offer Sheet</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- NORMS TAB PANEL                                                    -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- NORMS TAB PANEL                                                    -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-norms">
+
+    <!-- Norms Content Section (Hidden by Default) -->
+    <div id="norms-content-section" style="display: none;">
+
+      <!-- ── NORMS CONTROLS ──────────────────────────────────────────── -->
+      <div class="norms-controls">
+
+        <!-- Filter row: Customer Name + Export -->
+        <div class="norms-filter-row">
+          <span class="filter-label">Customer Name :</span>
+          <select id="dd-customer-name" title="Select a customer to filter the grid">
+            <option value="">-- All Customers --</option>
+          </select>
+          <button class="btn-norms-export" id="btn-export" title="Export current norms to CSV">
+            <i class="fas fa-file-export"></i> Export
+          </button>
         </div>
-</div>
-{% endblock %}
+
+        <!-- Two-column form grid -->
+        <div class="norms-form-grid">
+
+          <!-- ── LEFT COLUMN ── -->
+          <div>
+            <!-- Location row -->
+            <div class="norms-field-row">
+              <label>Location :</label>
+              <input type="text" id="txt-location" readonly placeholder="Select or browse for .xlsx file…">
+              <button class="btn-norms-secondary" id="btn-browse-location" title="Browse for Excel file">
+                <i class="fas fa-folder-open"></i> Browse
+              </button>
+              <button class="btn-norms-secondary" id="btn-change-location" title="Enable editing / save">
+                <i class="fas fa-pencil-alt"></i> Change
+              </button>
+            </div>
+
+            <!-- Export Folder Path row -->
+            <div class="norms-field-row">
+              <label>Export Path :</label>
+              <input type="text" id="txt-export-path" readonly placeholder="Select or type export folder path…">
+              <button class="btn-norms-secondary" id="btn-browse-export" title="Browse for export folder">
+                <i class="fas fa-folder-open"></i> Browse
+              </button>
+              <button class="btn-norms-secondary" id="btn-change-export" title="Enable editing / save">
+                <i class="fas fa-pencil-alt"></i> Change
+              </button>
+            </div>
+          </div>
+
+          <!-- ── RIGHT COLUMN ── -->
+          <div>
+            <!-- Norms Code dropdown -->
+            <div class="norms-field-row">
+              <label>Norms Code :</label>
+              <select id="dd-norms-code" title="Select Norms Code to auto-fill fields">
+                <option value="">-- Select --</option>
+              </select>
+            </div>
+
+            <!-- Cell Location -->
+            <div class="norms-field-row">
+              <label>Cell Location :</label>
+              <input type="text" id="txt-cell-location" placeholder="e.g. G12 or H12;H13">
+            </div>
+
+            <!-- Cell Values -->
+            <div class="norms-field-row">
+              <label>Cell Values :</label>
+              <input type="text" id="txt-cell-value" placeholder="e.g. 759.79 or 746.46;384.234">
+            </div>
+
+            <!-- Update button -->
+            <div class="norms-field-row">
+              <label></label>
+              <button class="btn-norms-primary" id="btn-update" title="Save Cell Location &amp; Cell Values to database">
+                <i class="fas fa-save"></i> Update
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /norms-form-grid -->
+      </div><!-- /norms-controls -->
+
+      <!-- ── DATA TABLE ─────────────────────────────────────────────────── -->
+      <div class="norms-table-wrap">
+        <h6><i class="fas fa-table mr-1"></i>Norms Details — All Records</h6>
+
+        <div id="table-loading" class="spinner-wrap" style="display: none;">
+          <div class="spinner"></div>
+          <span>Loading norms data…</span>
+        </div>
+
+        <div id="table-container" style="display:none; max-height:380px; overflow-y:auto;">
+          <table id="norms-table">
+            <thead>
+              <tr>
+                <th data-col="Sr_No">Sr No <span class="sort-icon">⇅</span></th>
+                <th data-col="Norms_Code">Norms Code <span class="sort-icon">⇅</span></th>
+                <th data-col="Sheet_Name">Sheet Name <span class="sort-icon">⇅</span></th>
+                <th data-col="Customer_Name">Customer Name <span class="sort-icon">⇅</span></th>
+                <th data-col="Cell_Location">Cell Location <span class="sort-icon">⇅</span></th>
+                <th data-col="Cell_Value">Cell Value <span class="sort-icon">⇅</span></th>
+                <th data-col="Location">Location (File Path) <span class="sort-icon">⇅</span></th>
+                <th data-col="Export_Path">Export Path <span class="sort-icon">⇅</span></th>
+              </tr>
+            </thead>
+            <tbody id="norms-tbody"></tbody>
+          </table>
+        </div>
+
+        <div id="table-empty" style="display:none;" class="table-empty">
+          No records found.
+        </div>
+      </div><!-- /norms-table-wrap -->
+
+    </div><!-- /norms-content-section -->
+
+  </div><!-- /panel-norms -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- INTERNAL CONVERSION TAB PANEL                                      -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-internal">
+
+    <!-- Initial State / Feature Flag Off screen -->
+    <div class="tab-placeholder" id="internal-coming-soon">
+      Internal Conversion — coming soon
+    </div>
+
+    <!-- Active Loaded Content -->
+    <div id="internal-active-content" style="display: none;">
+      
+      <!-- ── CARD 1: Lower Norms ──────────────────────────────────────── -->
+      <div class="ic-card">
+        <div class="ic-card-header">
+          <h5 class="ic-card-title"><i class="fas fa-calculator mr-2"></i>VAIPL Conversion Cost - Norm with Lower Norms</h5>
+          <button class="btn-norms-export" id="btn-ic-export-lower" title="Export Lower Norms table to Excel">
+            <i class="fas fa-file-excel"></i> Export
+          </button>
+        </div>
+        <div class="ic-table-wrap">
+          <table class="ic-table" id="table-lower-norms">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>MHR</th>
+                <th>Run_Time_Sec</th>
+                <th>Per Hour Output</th>
+                <th>Rate/Unit</th>
+                <th>Qnty</th>
+                <th>Total</th>
+                <th>% Contribution</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-lower-norms">
+              <!-- Dynamically populated -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" style="text-align: right; font-weight: 700;">TOTAL</td>
+                <td id="foot-lower-total">0.00</td>
+                <td id="foot-lower-contrib">100.0%</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── CARD 2: Standard Norms ───────────────────────────────────── -->
+      <div class="ic-card">
+        <div class="ic-card-header">
+          <h5 class="ic-card-title"><i class="fas fa-calculator mr-2"></i>VAIPL Conversion Cost - Norm with Standard Norms</h5>
+          <button class="btn-norms-export" id="btn-ic-export-standard" title="Export Standard Norms table to Excel">
+            <i class="fas fa-file-excel"></i> Export
+          </button>
+        </div>
+        <div class="ic-table-wrap">
+          <table class="ic-table" id="table-standard-norms">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>MHR</th>
+                <th>Run_Time_Sec</th>
+                <th>Per Hour Output</th>
+                <th>Rate/Unit</th>
+                <th>Qnty</th>
+                <th>Total</th>
+                <th>% Contribution</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-standard-norms">
+              <!-- Dynamically populated -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" style="text-align: right; font-weight: 700;">TOTAL</td>
+                <td id="foot-standard-total">0.00</td>
+                <td id="foot-standard-contrib">100.0%</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /internal-active-content -->
+
+  </div><!-- /panel-internal -->
+
+  <div class="tab-panel" id="panel-tooling">
+    <div id="child-costing-container">
+      <div style="padding: 24px; text-align: center; color: #6b7280; font-style: italic;">Select Item Creation ID and click Data Tooling to view assignment data.</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="panel-offer">
+    <!-- Offer Sheet Sub-bar -->
+    <div class="offer-sub-bar">
+      <div class="offer-label-group">
+        <span class="offer-title-text">Offer Sheet</span>
+        <div class="offer-arrow-box" title="Offer Sheet Navigation">
+          <svg width="24" height="20" viewBox="0 0 28 24" fill="none">
+            <path d="M5 2 V11 C5 12.5 6 13.5 7.5 13.5 H16 V9.5 L24 15 L16 20.5 V16.5 H7.5 C4.5 16.5 2 14 2 11 V2 H5 Z" 
+                  fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="offer-tabs-list">
+        <!-- BOC -->
+        <button type="button" class="subtab-btn active" data-subtab="boc">
+          <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+            <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+          </svg>
+          <span>BOC</span>
+        </button>
+
+        <!-- RM + Conversion -->
+        <button type="button" class="subtab-btn" data-subtab="rm-conversion">
+          <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+            <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+          </svg>
+          <span>RM + Conversion</span>
+        </button>
+
+        <!-- Tooling Cost -->
+        <button type="button" class="subtab-btn" data-subtab="tooling-cost">
+          <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+            <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+          </svg>
+          <span>Tooling Cost</span>
+        </button>
+
+        <!-- Transport Cost -->
+        <button type="button" class="subtab-btn" data-subtab="transport-cost">
+          <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+            <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+          </svg>
+          <span>Transport Cost</span>
+        </button>
+
+        <!-- Download -->
+        <button type="button" class="subtab-btn" data-subtab="download">
+          <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+            <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+          </svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Blue divider line matching screenshot -->
+    <div class="offer-blue-divider"></div>
+
+    <!-- Sub-tab content areas -->
+    <div class="offer-tab-content-area">
+      <div class="offer-subpanel active" id="subpanel-boc">
+        <div style="padding: 24px 16px; color: #4b5563;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">BOC Cost Details</h4>
+          <p style="font-size: 0.82rem; color: #6b7280;">BOC breakdown and calculations will appear here.</p>
+        </div>
+      </div>
+      <div class="offer-subpanel" id="subpanel-rm-conversion" style="display: none;">
+        <div style="padding: 24px 16px; color: #4b5563;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Raw Material + Conversion</h4>
+          <p style="font-size: 0.82rem; color: #6b7280;">Raw material and conversion costing details will appear here.</p>
+        </div>
+      </div>
+      <div class="offer-subpanel" id="subpanel-tooling-cost" style="display: none;">
+        <div style="padding: 24px 16px; color: #4b5563;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Tooling Cost</h4>
+          <p style="font-size: 0.82rem; color: #6b7280;">Tooling cost summary and details will appear here.</p>
+        </div>
+      </div>
+      <div class="offer-subpanel" id="subpanel-transport-cost" style="display: none;">
+        <div style="padding: 24px 16px; color: #4b5563;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Transport Cost</h4>
+          <p style="font-size: 0.82rem; color: #6b7280;">Logistics and transport cost breakdown will appear here.</p>
+        </div>
+      </div>
+      <div class="offer-subpanel" id="subpanel-download" style="display: none;">
+        <div style="padding: 24px 16px; color: #4b5563;">
+          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Offer Sheet Download</h4>
+          <p style="font-size: 0.82rem; color: #6b7280;">Download generated offer sheet files.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /norms-page -->
+
+<!-- Hidden file inputs (used by Browse buttons) -->
+<input type="file" id="file-picker-location" accept=".xlsx,.xls,.xlsm">
+<input type="file" id="folder-picker-export" webkitdirectory multiple>
+
+<!-- Toast -->
+<div id="norms-toast"></div>
+
+{% endblock content %}
+
+
+{% block extra_scripts %}
+<script>
+/* =========================================================
+   Norms Subform — Interactive Controller
+   All API calls go through the functions at the bottom.
+   ========================================================= */
+
+// ── State ──────────────────────────────────────────────────────────
+const STATE = {
+  allRecords:      [],        // full list from server
+  displayRecords:  [],        // currently rendered (may be filtered)
+  selectedSrNo:    null,      // Sr_No of the highlighted row
+  sortCol:         "Sr_No",
+  sortAsc:         true,
+  locationChanging: false,    // Change-mode flags
+  exportChanging:   false,
+};
+
+// ── URL helpers ─────────────────────────────────────────────────────
+const URLS = {
+  list:       "{% url 'norms_list' %}",
+  dropdowns:  "{% url 'norms_dropdowns' %}",
+  update:     "{% url 'norms_update' %}",
+  changePath: "{% url 'norms_change_path' %}",
+  export:     "{% url 'norms_export' %}",
+};
+
+// ── CSRF helper ──────────────────────────────────────────────────────
+function getCsrfToken() {
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : "";
+}
+
+// ── Toast ────────────────────────────────────────────────────────────
+function showToast(msg, type = "success") {
+  const t = document.getElementById("norms-toast");
+  t.textContent = msg;
+  t.className   = `show ${type}`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ""; }, 3200);
+}
+
+// ── Render table body ─────────────────────────────────────────────────
+function renderTable(records) {
+  const tbody  = document.getElementById("norms-tbody");
+  const empty  = document.getElementById("table-empty");
+  const wrap   = document.getElementById("table-container");
+
+  tbody.innerHTML = "";
+
+  if (!records || records.length === 0) {
+    wrap.style.display  = "none";
+    empty.style.display = "block";
+    return;
+  }
+
+  wrap.style.display  = "block";
+  empty.style.display = "none";
+
+  records.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.dataset.srNo = r.Sr_No;
+    if (r.Sr_No === STATE.selectedSrNo) tr.classList.add("selected");
+    tr.innerHTML = `
+      <td title="${r.Sr_No}">${r.Sr_No}</td>
+      <td title="${r.Norms_Code}">${r.Norms_Code}</td>
+      <td title="${r.Sheet_Name}">${r.Sheet_Name}</td>
+      <td title="${r.Customer_Name}">${r.Customer_Name}</td>
+      <td title="${r.Cell_Location}">${r.Cell_Location}</td>
+      <td title="${r.Cell_Value}">${r.Cell_Value}</td>
+      <td title="${r.Location}">${r.Location}</td>
+      <td title="${r.Export_Path}">${r.Export_Path}</td>
+    `;
+    tr.addEventListener("click", () => selectRecord(r));
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Sort ─────────────────────────────────────────────────────────────
+function sortRecords(col, forceAsc = null) {
+  if (forceAsc !== null) {
+    STATE.sortCol = col;
+    STATE.sortAsc = forceAsc;
+  } else if (STATE.sortCol === col) {
+    STATE.sortAsc = !STATE.sortAsc;
+  } else {
+    STATE.sortCol = col;
+    STATE.sortAsc = true;
+  }
+  STATE.displayRecords.sort((a, b) => {
+    let va = a[col] ?? "", vb = b[col] ?? "";
+    if (col === "Sr_No") { va = Number(va); vb = Number(vb); }
+    if (va < vb) return STATE.sortAsc ? -1 : 1;
+    if (va > vb) return STATE.sortAsc ?  1 : -1;
+    return 0;
+  });
+  renderTable(STATE.displayRecords);
+}
+
+// ── Auto-fill form fields from a record ──────────────────────────────
+function fillFields(r) {
+  document.getElementById("txt-location").value    = r.Location      || "";
+  document.getElementById("txt-export-path").value = r.Export_Path   || "";
+  document.getElementById("txt-cell-location").value = r.Cell_Location || "";
+  document.getElementById("txt-cell-value").value    = r.Cell_Value    || "";
+
+  // Sync Norms Code dropdown to match
+  const ncDd = document.getElementById("dd-norms-code");
+  for (let opt of ncDd.options) {
+    if (opt.dataset.normsCode === r.Norms_Code) { ncDd.value = opt.value; break; }
+  }
+}
+
+// ── Select a record (highlight row + fill fields) ────────────────────
+function selectRecord(r) {
+  STATE.selectedSrNo = r.Sr_No;
+  fillFields(r);
+
+  // Update row highlighting
+  document.querySelectorAll("#norms-tbody tr").forEach(tr => {
+    tr.classList.toggle("selected", parseInt(tr.dataset.srNo) === r.Sr_No);
+  });
+
+  // Scroll the selected row into view
+  const selectedTr = document.querySelector(`#norms-tbody tr[data-sr-no="${r.Sr_No}"]`);
+  if (selectedTr) selectedTr.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+// ── Load records from API in ascending order ─────────────────────────
+async function loadNormsList(customerFilter = "", normsCodeFilter = "") {
+  document.getElementById("table-loading").style.display = "flex";
+  document.getElementById("table-container").style.display = "none";
+  document.getElementById("table-empty").style.display     = "none";
+
+  try {
+    let url = URLS.list;
+    const params = new URLSearchParams();
+    if (customerFilter) params.append("customer", customerFilter);
+    if (normsCodeFilter) params.append("norms_code", normsCodeFilter);
+    if (params.toString()) url += "?" + params.toString();
+
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    STATE.allRecords     = data.records || [];
+    STATE.displayRecords = [...STATE.allRecords];
+    // Force ascending order (1, 2, 3...)
+    sortRecords("Sr_No", true);
+  } catch (e) {
+    console.error("norms_list error:", e);
+    showToast("Failed to load norms data.", "error");
+  } finally {
+    document.getElementById("table-loading").style.display = "none";
+  }
+}
+
+
+
+// ── Load dropdown options from API ────────────────────────────────────
+async function loadDropdowns() {
+  try {
+    const resp = await fetch(URLS.dropdowns);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    // Customer Name dropdown
+    const custDd = document.getElementById("dd-customer-name");
+    custDd.innerHTML = '<option value="">-- All Customers --</option>';
+    (data.customer_options || []).forEach(opt => {
+      const el = document.createElement("option");
+      el.value = opt.label;
+      el.textContent = opt.label;
+      el.dataset.customerName = opt.customer_name;
+      el.dataset.normsCode    = opt.norms_code;
+      el.dataset.srNo         = opt.sr_no;
+      custDd.appendChild(el);
+    });
+
+    // Norms Code dropdown
+    const ncDd = document.getElementById("dd-norms-code");
+    ncDd.innerHTML = '<option value="">-- Select --</option>';
+    (data.norms_code_options || []).forEach(opt => {
+      const el = document.createElement("option");
+      el.value = opt.label;
+      el.textContent = opt.label;
+      el.dataset.normsCode = opt.norms_code;
+      el.dataset.sheetName = opt.sheet_name;
+      el.dataset.srNo      = opt.sr_no;
+      ncDd.appendChild(el);
+    });
+  } catch (e) {
+    console.error("norms_dropdowns error:", e);
+  }
+}
+
+// ── Filter table by customer or norms code ───────────────────────────
+function filterAndSelectByField(fieldKey, fieldValue) {
+  const match = STATE.allRecords.find(r => (r[fieldKey] || "") === fieldValue);
+
+  if (match) {
+    STATE.displayRecords = STATE.allRecords.filter(r => (r[fieldKey] || "") === fieldValue);
+  } else {
+    STATE.displayRecords = [...STATE.allRecords];
+  }
+
+  sortRecords(STATE.sortCol);
+
+  if (match) {
+    selectRecord(match);
+  }
+}
+
+// ── Customer Name dropdown change ─────────────────────────────────────
+document.getElementById("dd-customer-name").addEventListener("change", function () {
+  const selected = this.options[this.selectedIndex];
+  const custName = selected ? (selected.dataset.customerName || "") : "";
+  const ncDd = document.getElementById("dd-norms-code");
+  const ncOpt = ncDd.options[ncDd.selectedIndex];
+  const normsCode = ncOpt ? (ncOpt.dataset.normsCode || "") : "";
+
+  loadNormsList(custName, normsCode);
+});
+
+// ── Norms Code dropdown change ────────────────────────────────────────
+document.getElementById("dd-norms-code").addEventListener("change", function () {
+  const selected = this.options[this.selectedIndex];
+  const normsCode = selected ? (selected.dataset.normsCode || "") : "";
+  const custDd = document.getElementById("dd-customer-name");
+  const custOpt = custDd.options[custDd.selectedIndex];
+  const custName = custOpt ? (custOpt.dataset.customerName || "") : "";
+
+  loadNormsList(custName, normsCode);
+});
+
+
+// ── Table header sort ─────────────────────────────────────────────────
+document.querySelectorAll("#norms-table thead th[data-col]").forEach(th => {
+  th.addEventListener("click", () => sortRecords(th.dataset.col));
+});
+
+// ── Update button ─────────────────────────────────────────────────────
+document.getElementById("btn-update").addEventListener("click", async () => {
+  if (!STATE.selectedSrNo) {
+    showToast("Please select a record from the table first.", "error");
+    return;
+  }
+  const cellLoc = document.getElementById("txt-cell-location").value.trim();
+  const cellVal = document.getElementById("txt-cell-value").value.trim();
+
+  try {
+    const resp = await fetch(URLS.update, {
+      method:  "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken":  getCsrfToken(),
+      },
+      body: JSON.stringify({
+        sr_no:         STATE.selectedSrNo,
+        cell_location: cellLoc,
+        cell_value:    cellVal,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.success) throw new Error(data.error || "Update failed");
+
+    // Update local state
+    const idx = STATE.allRecords.findIndex(r => r.Sr_No === STATE.selectedSrNo);
+    if (idx !== -1) STATE.allRecords[idx] = data.record;
+    const didx = STATE.displayRecords.findIndex(r => r.Sr_No === STATE.selectedSrNo);
+    if (didx !== -1) STATE.displayRecords[didx] = data.record;
+    sortRecords(STATE.sortCol);
+
+    showToast("Record updated successfully.", "success");
+  } catch (e) {
+    console.error("norms_update error:", e);
+    showToast(`Update failed: ${e.message}`, "error");
+  }
+});
+
+// ── Save a path to the server ─────────────────────────────────────────
+async function savePath(field, value) {
+  if (!STATE.selectedSrNo) {
+    showToast("Select a record before saving a path.", "error");
+    return false;
+  }
+  try {
+    const resp = await fetch(URLS.changePath, {
+      method:  "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken":  getCsrfToken(),
+      },
+      body: JSON.stringify({ sr_no: STATE.selectedSrNo, field, value }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.success) throw new Error(data.error || "Save failed");
+
+    // Patch local state
+    const idx = STATE.allRecords.findIndex(r => r.Sr_No === STATE.selectedSrNo);
+    if (idx !== -1) STATE.allRecords[idx] = data.record;
+    const didx = STATE.displayRecords.findIndex(r => r.Sr_No === STATE.selectedSrNo);
+    if (didx !== -1) STATE.displayRecords[didx] = data.record;
+    sortRecords(STATE.sortCol);
+
+    showToast(`${field === "location" ? "Location" : "Export Path"} saved.`, "success");
+    return true;
+  } catch (e) {
+    console.error("change_path error:", e);
+    showToast(`Save failed: ${e.message}`, "error");
+    return false;
+  }
+}
+
+// ── Browse — Location (file picker) ──────────────────────────────────
+document.getElementById("btn-browse-location").addEventListener("click", () => {
+  document.getElementById("file-picker-location").click();
+});
+document.getElementById("file-picker-location").addEventListener("change", function () {
+  if (!this.files.length) return;
+  const path = this.files[0].name;          // browsers only expose the filename, not full path
+  document.getElementById("txt-location").value = path;
+  savePath("location", path);
+});
+
+// ── Change — Location (toggle edit mode + save) ───────────────────────
+document.getElementById("btn-change-location").addEventListener("click", async () => {
+  const input = document.getElementById("txt-location");
+  if (!STATE.locationChanging) {
+    // Enter edit mode
+    input.removeAttribute("readonly");
+    input.classList.add("editable");
+    input.focus();
+    STATE.locationChanging = true;
+    document.getElementById("btn-change-location").innerHTML =
+      '<i class="fas fa-check"></i> Save';
+  } else {
+    // Save
+    const ok = await savePath("location", input.value.trim());
+    if (ok) {
+      input.setAttribute("readonly", true);
+      input.classList.remove("editable");
+      STATE.locationChanging = false;
+      document.getElementById("btn-change-location").innerHTML =
+        '<i class="fas fa-pencil-alt"></i> Change';
+    }
+  }
+});
+
+// ── Browse — Export Folder (folder picker / fallback) ─────────────────
+document.getElementById("btn-browse-export").addEventListener("click", async () => {
+  // Try modern File System Access API first (Chrome/Edge)
+  if (window.showDirectoryPicker) {
+    try {
+      const dirHandle = await window.showDirectoryPicker();
+      const path = dirHandle.name;   // only the folder name is accessible
+      document.getElementById("txt-export-path").value = path;
+      savePath("export_path", path);
+      return;
+    } catch (e) {
+      // User cancelled or API not available — fall through to input fallback
+    }
+  }
+  // Fallback: webkitdirectory input
+  document.getElementById("folder-picker-export").click();
+});
+document.getElementById("folder-picker-export").addEventListener("change", function () {
+  if (!this.files.length) return;
+  // Extract directory portion from the first file's webkitRelativePath
+  const rel  = this.files[0].webkitRelativePath || this.files[0].name;
+  const path = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : rel;
+  document.getElementById("txt-export-path").value = path;
+  savePath("export_path", path);
+});
+
+// ── Change — Export Path (toggle edit mode + save) ───────────────────
+document.getElementById("btn-change-export").addEventListener("click", async () => {
+  const input = document.getElementById("txt-export-path");
+  if (!STATE.exportChanging) {
+    input.removeAttribute("readonly");
+    input.classList.add("editable");
+    input.focus();
+    STATE.exportChanging = true;
+    document.getElementById("btn-change-export").innerHTML =
+      '<i class="fas fa-check"></i> Save';
+  } else {
+    const ok = await savePath("export_path", input.value.trim());
+    if (ok) {
+      input.setAttribute("readonly", true);
+      input.classList.remove("editable");
+      STATE.exportChanging = false;
+      document.getElementById("btn-change-export").innerHTML =
+        '<i class="fas fa-pencil-alt"></i> Change';
+    }
+  }
+});
+
+// ── Export button ─────────────────────────────────────────────────────
+document.getElementById("btn-export").addEventListener("click", () => {
+  const custSel  = document.getElementById("dd-customer-name");
+  const custOpt  = custSel.options[custSel.selectedIndex];
+  const custName = custOpt ? (custOpt.dataset.customerName || "") : "";
+  const url = URLS.export + (custName ? `?customer=${encodeURIComponent(custName)}` : "");
+  window.location.href = url;   // triggers CSV download
+});
+
+// ── Internal Conversion JS Controller ───────────────────────────────
+const IC_URLS = {
+  data:   "{% url 'internal_conversion_data' %}",
+  export: "{% url 'internal_conversion_export' %}",
+};
+
+function renderICTableBody(tbodyId, rows) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = "";
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; font-style:italic; padding:18px;">No records found.</td></tr>';
+    return;
+  }
+
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.description || ""}</td>
+      <td>${r.mhr ? Number(r.mhr).toFixed(2) : "0.00"}</td>
+      <td>${r.run_time_sec ? Number(r.run_time_sec).toFixed(2) : "0.00"}</td>
+      <td>${r.perhouroutput ? Number(r.perhouroutput).toFixed(2) : "0.00"}</td>
+      <td>${r.rateperunit ? Number(r.rateperunit).toFixed(4) : "0.0000"}</td>
+      <td>${r.boq ? Number(r.boq).toFixed(2) : "1.00"}</td>
+      <td><strong>${r.total ? Number(r.total).toFixed(2) : "0.00"}</strong></td>
+      <td><span class="badge badge-info">${r.contributionpercentage ? Number(r.contributionpercentage).toFixed(2) : "0.00"}%</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function loadInternalConversionData() {
+  const customerId = document.getElementById("top-customer-id").value;
+  const itemId     = document.getElementById("top-item-id").value;
+  const year       = document.getElementById("top-year").value;
+
+  const comingSoon    = document.getElementById("internal-coming-soon");
+  const activeContent = document.getElementById("internal-active-content");
+
+  // Initial State: If either Customer ID or Item ID is not selected, show coming-soon screen
+  if (!customerId || !itemId) {
+    comingSoon.style.display    = "flex";
+    activeContent.style.display = "none";
+    return;
+  }
+
+  // Active state: Load data
+  comingSoon.style.display    = "none";
+  activeContent.style.display = "block";
+
+  try {
+    const query = `?customer_id=${encodeURIComponent(customerId)}&item_id=${encodeURIComponent(itemId)}&year=${encodeURIComponent(year)}`;
+    const resp  = await fetch(IC_URLS.data + query);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data  = await resp.json();
+
+    if (data.success) {
+      renderICTableBody("tbody-lower-norms", data.lower_norms);
+      renderICTableBody("tbody-standard-norms", data.standard_norms);
+
+      document.getElementById("foot-lower-total").textContent    = Number(data.lower_sum_total || 0).toFixed(2);
+      document.getElementById("foot-standard-total").textContent = Number(data.standard_sum_total || 0).toFixed(2);
+    }
+  } catch (e) {
+    console.error("internal_conversion_data error:", e);
+    showToast("Failed to load internal conversion data.", "error");
+  }
+}
+
+// ── Export handlers ──────────────────────────────────────────────────
+function exportInternalConversion(normType) {
+  const customerId = document.getElementById("top-customer-id").value;
+  const itemId     = document.getElementById("top-item-id").value;
+  const year       = document.getElementById("top-year").value;
+
+  const url = `${IC_URLS.export}?norm_type=${normType}&customer_id=${encodeURIComponent(customerId)}&item_id=${encodeURIComponent(itemId)}&year=${encodeURIComponent(year)}`;
+  window.location.href = url;
+}
+
+document.getElementById("btn-ic-export-lower").addEventListener("click", () => exportInternalConversion("lower"));
+document.getElementById("btn-ic-export-standard").addEventListener("click", () => exportInternalConversion("standard"));
+
+// ── Closer Action Submit ─────────────────────────────────────────────
+document.getElementById("btn-ic-submit-action").addEventListener("click", () => {
+  const isChecked = document.getElementById("ic-is-completed").checked;
+  if (isChecked) {
+    showToast("Internal Conversion calculation marked as Completed!", "success");
+  } else {
+    showToast("Internal Conversion action saved.", "success");
+  }
+});
+
+function showNormsTab() {
+  const sec = document.getElementById("norms-content-section");
+  if (sec) sec.style.display = "block";
+  const custDd = document.getElementById("dd-customer-name");
+  const custName = custDd && custDd.selectedIndex >= 0 ? (custDd.options[custDd.selectedIndex].dataset.customerName || "") : "";
+  const ncDd = document.getElementById("dd-norms-code");
+  const normsCode = ncDd && ncDd.selectedIndex >= 0 ? (ncDd.options[ncDd.selectedIndex].dataset.normsCode || "") : "";
+  loadNormsList(custName, normsCode);
+}
+
+function hideNormsTab() {
+  const sec = document.getElementById("norms-content-section");
+  if (sec) sec.style.display = "none";
+}
+
+
+// ── Tab switching ─────────────────────────────────────────────────────
+async function loadDataToolingPanel(viewMode = 'dt_entry') {
+  const container = document.getElementById("child-costing-container");
+  if (!container) return;
+
+  const topItem = document.getElementById("top-item-id");
+  const topYear = document.getElementById("top-year");
+  const itemCreationId = topItem ? topItem.value.trim() : "";
+  const assignmentYear = topYear ? topYear.value.trim() : "2026";
+
+  const url = `/CostingBCCal/assignment-year-data/?item_creation_id=${encodeURIComponent(itemCreationId)}&assignment_year=${encodeURIComponent(assignmentYear)}&view_mode=${encodeURIComponent(viewMode)}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const html = await response.text();
+    container.innerHTML = html;
+
+    // Execute scripts inside injected partial so window.switchDTViewMode is registered
+    Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
+    // Auto-fill cost values automatically
+    if (typeof window.autofillDTCostsFromDB === 'function') {
+      window.autofillDTCostsFromDB();
+    }
+  } catch (err) {
+    console.error("Error loading Data Tooling panel:", err);
+    container.innerHTML = `<div style="padding: 20px; color: #dc2626;">Failed to load Data Tooling: ${err.message}</div>`;
+  }
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    const activePanel = document.getElementById(btn.dataset.tab);
+    activePanel.classList.add("active");
+
+    if (btn.id === "tab-norms") {
+      showNormsTab();
+    } else {
+      hideNormsTab();
+    }
+
+    if (btn.id === "tab-internal") {
+      loadInternalConversionData();
+    }
+
+    if (btn.id === "tab-tooling") {
+      loadDataToolingPanel();
+    }
+  });
+});
+
+// ── Offer Sheet Sub-tab Click Handler ─────────────────────────────────
+document.querySelectorAll(".subtab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".subtab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const subtabId = btn.dataset.subtab;
+    document.querySelectorAll(".offer-subpanel").forEach(p => {
+      p.style.display = "none";
+      p.classList.remove("active");
+    });
+    const targetPanel = document.getElementById("subpanel-" + subtabId);
+    if (targetPanel) {
+      targetPanel.style.display = "block";
+      targetPanel.classList.add("active");
+    }
+  });
+});
+
+
+// ── Top dropdown change / submit listeners ───────────────────────────
+document.getElementById("top-customer-id").addEventListener("change", () => {
+  loadInternalConversionData();
+  const activeTab = document.querySelector(".tab-btn.active");
+  if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+});
+
+document.getElementById("top-item-id").addEventListener("change", function () {
+  const hiddenInput = document.getElementById("id_item_creation_id");
+  if (hiddenInput) hiddenInput.value = this.value;
+  loadInternalConversionData();
+  const activeTab = document.querySelector(".tab-btn.active");
+  if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+});
+
+const onYearUpdate = () => {
+  loadInternalConversionData();
+  const activeTab = document.querySelector(".tab-btn.active");
+  if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+};
+document.getElementById("top-year").addEventListener("change", onYearUpdate);
+document.getElementById("top-year").addEventListener("input", onYearUpdate);
+
+document.getElementById("btn-top-submit").addEventListener("click", () => {
+  showToast("Filters applied and data submitted.", "success");
+  loadInternalConversionData();
+  const activeTab = document.querySelector(".tab-btn.active");
+  if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+});
+
+// ── Init ──────────────────────────────────────────────────────────────
+(async () => {
+  // Sync initial Item Creation ID to hidden input
+  const topItem = document.getElementById("top-item-id");
+  const hiddenInput = document.getElementById("id_item_creation_id");
+  if (topItem && hiddenInput) {
+    hiddenInput.value = topItem.value;
+  }
+
+  await loadDropdowns();
+  // Keep Norms table hidden on initial load until a filter is selected
+  document.getElementById("table-loading").style.display = "none";
+  document.getElementById("table-container").style.display = "none";
+  document.getElementById("table-empty").style.display     = "none";
+})();
+</script>
+{% endblock extra_scripts %}

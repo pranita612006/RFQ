@@ -1,18 +1,22 @@
-
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Montserrat', sans-serif;
         margin: 25px;
         font-size: 14px;
+        background-color: #FFFFFF;
+        color: #000000;
     }
 
     .container {
         width: 1000px;
+        background-color: #FFFFFF;
     }
 
     .main-heading {
         font-size: 22px;
         font-weight: bold;
         margin-bottom: 20px;
+        color: #2E266D;
+        font-family: 'Permanent Marker', cursive;
     }
 
     .row {
@@ -24,11 +28,15 @@
     label {
         font-weight: bold;
         margin-right: 10px;
+        color: #2E266D;
     }
 
     select {
         width: 250px;
-        height: 28px;
+        height: 30px;
+        border: 1px solid #DEE2E6;
+        color: #000000;
+        background: #FFFFFF;
     }
 
     .section {
@@ -37,7 +45,7 @@
 
     .section-title {
         font-weight: bold;
-        text-decoration: underline;
+        color: #2E266D;
         margin-bottom: 10px;
     }
 
@@ -49,21 +57,31 @@
 
     .file-row input {
         width: 650px;
-        height: 26px;
+        height: 30px;
+        border: 1px solid #DEE2E6;
+        color: #000000;
+        background: #FFFFFF;
     }
 
     .folder {
         font-size: 20px;
+        color: #2E266D;
         cursor: pointer;
     }
 
     .btn {
-        background-color: #4e5d78;
-        color: white;
+        background-color: #FF3131;
+        color: #FFFFFF;
         border: none;
         padding: 6px 18px;
         border-radius: 4px;
         cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn:hover {
+        background-color: #2E266D;
+        color: #FFFFFF;
     }
 
     .link-group {
@@ -74,14 +92,20 @@
     }
 
     .link-group a {
-        color: purple;
+        color: #FF3131;
         text-decoration: none;
         font-size: 13px;
         cursor: pointer;
+        font-weight: 600;
+    }
+
+    .link-group a:hover {
+        color: #2E266D;
     }
 
     .divider {
         margin-top: 15px;
         border: none;
-        border-top: 2px solid #2c7fb8;
+        border-top: 2px solid #DEE2E6;
     }
+

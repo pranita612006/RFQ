@@ -1,34 +1,148 @@
 /*!
-Custom SCSS
+  Unified Design System SCSS
 */
 
-// Scrollable form body (for Opportunity Creation)
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Permanent+Marker&display=swap');
+
+// Design System Variables
+:root {
+  --primary-accent: #FF3131;
+  --secondary-navy: #2E266D;
+  --bg-white: #FFFFFF;
+  --text-black: #000000;
+  --border-color: #DEE2E6;
+  --font-family-body: 'Montserrat', sans-serif;
+  --font-family-heading: 'Permanent Marker', cursive;
+}
+
+// Global Typography
+body {
+  font-family: var(--font-family-body) !important;
+  font-size: 0.95rem;
+  color: var(--text-black);
+  background-color: #f8f9fa;
+}
+
+h1, h2, h3, .font-heading, .page-title, .card-title {
+  font-family: var(--font-family-heading) !important;
+  color: var(--secondary-navy);
+}
+
+h1, .h1 { font-size: 2rem; }
+h2, .h2 { font-size: 1.75rem; }
+h3, .h3 { font-size: 1.5rem; }
+h4, .h4 { font-size: 1.25rem; font-family: var(--font-family-body) !important; font-weight: 600; }
+h5, .h5 { font-size: 1.1rem; font-family: var(--font-family-body) !important; font-weight: 600; }
+
+// Component Alignment & Form Controls
+.form-control, .form-select, select.form-control {
+  height: 42px !important;
+  font-size: 0.95rem !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border-color) !important;
+  font-family: var(--font-family-body) !important;
+  padding: 0.375rem 0.75rem !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--secondary-navy) !important;
+  box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25) !important;
+}
+
+label, .form-label {
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  color: var(--secondary-navy) !important;
+  margin-bottom: 0.4rem !important;
+}
+
+// Buttons
+.btn {
+  font-family: var(--font-family-body) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  border-radius: 4px !important;
+  padding: 0.45rem 1.2rem !important;
+}
+
+.btn-primary, .btn-submit {
+  background-color: var(--primary-accent) !important;
+  border-color: var(--primary-accent) !important;
+  color: #FFFFFF !important;
+}
+
+.btn-primary:hover, .btn-submit:hover {
+  background-color: darken(#FF3131, 10%) !important;
+  border-color: darken(#FF3131, 10%) !important;
+}
+
+.btn-secondary, .btn-navy {
+  background-color: var(--secondary-navy) !important;
+  border-color: var(--secondary-navy) !important;
+  color: #FFFFFF !important;
+}
+
+.btn-secondary:hover, .btn-navy:hover {
+  background-color: lighten(#2E266D, 10%) !important;
+  border-color: lighten(#2E266D, 10%) !important;
+}
+
+// Tables
+.table {
+  font-family: var(--font-family-body) !important;
+  font-size: 0.9rem !important;
+}
+
+.table thead th {
+  background-color: var(--secondary-navy) !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  border-bottom: none !important;
+  vertical-align: middle !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(46, 38, 109, 0.03) !important;
+}
+
+// Cards & Layout
+.card {
+  border-radius: 6px !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  background-color: var(--bg-white) !important;
+}
+
+.card-header {
+  background-color: var(--bg-white) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 1rem 1.25rem !important;
+}
+
+// Legacy Utility Classes
 .scrollable-form {
-  max-height: 500px;   // adjust height as needed
-  overflow-y: auto;    // adds vertical scrollbar
-  padding-right: 10px; // space for scrollbar
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 
-// Full dashboard layout (for Dashboard page)
 .full-dashboard {
-  min-height: 100vh;   // full viewport height
-  overflow: visible;   // allow charts to expand naturally
+  min-height: 100vh;
+  overflow: visible;
 }
 
-// Fixed-width card (optional)
 .fixed-card {
-  width: 800px;        // set card width
-  margin: 0 auto;      // center horizontally
+  width: 800px;
+  margin: 0 auto;
 }
 
-// Two-column form alignment
 .form-row .form-group {
   margin-bottom: 1rem;
 }
 
-// Card footer buttons alignment
 .card-footer {
   display: flex;
-  justify-content: flex-end; // align buttons to the right
-  gap: 10px;                 // spacing between buttons
+  justify-content: flex-end;
+  gap: 10px;
 }
+

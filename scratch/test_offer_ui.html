@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Offer Sheet UI Test</title>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f5f7;
+  }
+
+  /* ── Tab Bar Mock ── */
+  .tab-bar {
+    display: flex;
+    gap: 3px;
+    padding: 6px 14px 0;
+    background: #FFFFFF;
+    border-bottom: 2px solid #DEE2E6;
+  }
+  .tab-btn {
+    padding: 5px 18px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #DEE2E6;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: #FFFFFF;
+    color: #2E266D;
+  }
+  .tab-btn.active {
+    background: #475569;
+    color: #FFFFFF;
+    border-color: #475569;
+  }
+
+  /* ── Offer Sheet Sub-bar ── */
+  .offer-sub-bar {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: #F8F9FA;
+    gap: 12px;
+  }
+  .offer-label-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .offer-title-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+  }
+  .offer-arrow-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 3px;
+  }
+
+  /* Sub-tab chamfered buttons using SVG background or CSS wrapper */
+  .offer-tabs-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Style option A: SVG background button */
+  .subtab-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #2E266D;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    min-width: 70px;
+    height: 32px;
+  }
+  .subtab-btn svg.tab-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .subtab-btn span {
+    position: relative;
+    z-index: 2;
+  }
+  .subtab-btn:hover span {
+    color: #1e1b4b;
+  }
+  .subtab-btn.active span {
+    color: #ffffff;
+  }
+
+  /* ── Divider Line ── */
+  .offer-blue-divider {
+    height: 2px;
+    background: #2E266D;
+    width: 100%;
+  }
+
+  /* ── Content Container ── */
+  .offer-tab-content-area {
+    background: #FFFFFF;
+    min-height: 400px;
+    padding: 20px;
+  }
+  .offer-subpanel {
+    display: none;
+  }
+  .offer-subpanel.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top tabs demo -->
+  <div class="tab-bar">
+    <button class="tab-btn">Norms</button>
+    <button class="tab-btn">Internal Conversion</button>
+    <button class="tab-btn">Data Tooling</button>
+    <button class="tab-btn active">Offer Sheet</button>
+  </div>
+
+  <!-- Offer Sheet Header Bar -->
+  <div class="offer-sub-bar">
+    <div class="offer-label-group">
+      <span class="offer-title-text">Offer Sheet</span>
+      <div class="offer-arrow-box">
+        <svg width="24" height="20" viewBox="0 0 28 24" fill="none">
+          <path d="M5 2 V11 C5 12.5 6 13.5 7.5 13.5 H16 V9.5 L24 15 L16 20.5 V16.5 H7.5 C4.5 16.5 2 14 2 11 V2 H5 Z" 
+                fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="offer-tabs-list">
+      <!-- BOC -->
+      <button class="subtab-btn" data-target="panel-boc">
+        <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+        </svg>
+        <span>BOC</span>
+      </button>
+
+      <!-- RM + Conversion -->
+      <button class="subtab-btn" data-target="panel-rm-conversion">
+        <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+        </svg>
+        <span>RM + Conversion</span>
+      </button>
+
+      <!-- Tooling Cost -->
+      <button class="subtab-btn" data-target="panel-tooling-cost">
+        <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+        </svg>
+        <span>Tooling Cost</span>
+      </button>
+
+      <!-- Transport Cost -->
+      <button class="subtab-btn" data-target="panel-transport-cost">
+        <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+        </svg>
+        <span>Transport Cost</span>
+      </button>
+
+      <!-- Download -->
+      <button class="subtab-btn" data-target="panel-download">
+        <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
+        </svg>
+        <span>Download</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="offer-blue-divider"></div>
+
+  <div class="offer-tab-content-area">
+    <div class="offer-subpanel active" id="panel-boc">
+      <h3>BOC Content</h3>
+      <p>BOC details and breakdown table will go here.</p>
+    </div>
+    <div class="offer-subpanel" id="panel-rm-conversion">
+      <h3>RM + Conversion Content</h3>
+      <p>Raw Material and Conversion cost breakdown.</p>
+    </div>
+    <div class="offer-subpanel" id="panel-tooling-cost">
+      <h3>Tooling Cost Content</h3>
+      <p>Project Tooling Cost summary.</p>
+    </div>
+    <div class="offer-subpanel" id="panel-transport-cost">
+      <h3>Transport Cost Content</h3>
+      <p>Logistics and Transport Cost details.</p>
+    </div>
+    <div class="offer-subpanel" id="panel-download">
+      <h3>Download Offer Sheet</h3>
+      <p>Generate and download full Offer Sheet.</p>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,328 @@
+- http://127.0.0.1:8000/BOC/
+
+
+
+
+- 
+
+        [Home](http://127.0.0.1:8000/dashboard-v3/)
+
+
+- 
+
+        [Contact](http://127.0.0.1:8000/BOC/)
+
+
+- 
+
+          [Sign In](http://127.0.0.1:8000/accounts/login/)
+
+
+[Home](http://127.0.0.1:8000/dashboard-v3/)
+[Contact](http://127.0.0.1:8000/BOC/)
+[Sign In](http://127.0.0.1:8000/accounts/login/)
+- 
+
+        http://127.0.0.1:8000/BOC/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- 
+
+        [3](http://127.0.0.1:8000/BOC/)
+
+
+
+          [Brad Diesel
+
+
+
+
+
+                Call me whenever you can...
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+
+
+          [John Pierce
+
+
+
+
+
+                I got your message bro
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+
+
+          [Nora Silvester
+
+
+
+
+
+                The subject goes here
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+
+
+          [See All Messages](http://127.0.0.1:8000/BOC/)
+
+
+
+
+- 
+
+        [15](http://127.0.0.1:8000/BOC/)
+
+
+
+          15 Notifications
+
+
+
+          [4 new messages
+
+            3 mins](http://127.0.0.1:8000/BOC/)
+
+
+
+          [8 friend requests
+
+            12 hours](http://127.0.0.1:8000/BOC/)
+
+
+
+          [3 new reports
+
+            2 days](http://127.0.0.1:8000/BOC/)
+
+
+
+          [See All Notifications](http://127.0.0.1:8000/BOC/)
+
+
+
+
+- 
+
+        http://127.0.0.1:8000/BOC/
+
+
+- 
+
+        http://127.0.0.1:8000/BOC/
+
+
+[3](http://127.0.0.1:8000/BOC/)
+[Brad Diesel
+
+
+
+
+
+                Call me whenever you can...
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+### Brad Diesel
+Call me whenever you can...
+4 Hours Ago
+[John Pierce
+
+
+
+
+
+                I got your message bro
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+### John Pierce
+I got your message bro
+4 Hours Ago
+[Nora Silvester
+
+
+
+
+
+                The subject goes here
+
+                 4 Hours Ago](http://127.0.0.1:8000/BOC/)
+
+### Nora Silvester
+The subject goes here
+4 Hours Ago
+[See All Messages](http://127.0.0.1:8000/BOC/)
+[15](http://127.0.0.1:8000/BOC/)
+[4 new messages
+
+            3 mins](http://127.0.0.1:8000/BOC/)
+[8 friend requests
+
+            12 hours](http://127.0.0.1:8000/BOC/)
+[3 new reports
+
+            2 days](http://127.0.0.1:8000/BOC/)
+[See All Notifications](http://127.0.0.1:8000/BOC/)
+[FlowNexis](http://127.0.0.1:8000/)
+[Guest](http://127.0.0.1:8000/BOC/)
+- 
+        [Dashboard](http://127.0.0.1:8000/BOC/)
+
+
+
+                [Dashboard v1](http://127.0.0.1:8000/dashboard/v1/)
+
+
+                [Dashboard v2](http://127.0.0.1:8000/dashboard/v2/)
+
+
+                [Dashboard v3](http://127.0.0.1:8000/dashboard/v3/)
+
+
+
+- 
+                [Dashboard v1](http://127.0.0.1:8000/dashboard/v1/)
+
+- 
+                [Dashboard v2](http://127.0.0.1:8000/dashboard/v2/)
+
+- 
+                [Dashboard v3](http://127.0.0.1:8000/dashboard/v3/)
+
+- 
+        [Customer Selection](http://127.0.0.1:8000/customer_creation/)
+
+- 
+        [Item Creation](http://127.0.0.1:8000/item_creation/)
+
+- 
+        [Opportunity Creation](http://127.0.0.1:8000/opportunity/)
+
+- 
+        [Feasibility Form](http://127.0.0.1:8000/feasibility_form/)
+
+- 
+        [BOM Creation](http://127.0.0.1:8000/BOM/)
+
+- 
+        [BOP Creation](http://127.0.0.1:8000/BOP/)
+
+- 
+        [BOC Creation](http://127.0.0.1:8000/BOC/)
+
+- 
+        [Costing & BC Calculations](http://127.0.0.1:8000/CostingBCCal/)
+
+- 
+        [Blanket Sales Order](http://127.0.0.1:8000/BlanketSales/)
+
+- 
+        [Approve Record](http://127.0.0.1:8000/ApproveRec/)
+
+- 
+        [Report](http://127.0.0.1:8000/Report/)
+
+- 
+        [To-Do List](http://127.0.0.1:8000/todo/)
+
+- 
+        [ERP Data](http://127.0.0.1:8000/erp-data/)
+
+- 
+        [Upload Data](http://127.0.0.1:8000/upload-data/)
+
+- 
+        [User Management](http://127.0.0.1:8000/user-management/)
+
+- 
+        [Register](http://127.0.0.1:8000/accounts/register/)
+
+- 
+        [Logout](http://127.0.0.1:8000/admin/logout/)
+
+[Dashboard](http://127.0.0.1:8000/BOC/)
+Dashboard
+- 
+                [Dashboard v1](http://127.0.0.1:8000/dashboard/v1/)
+
+- 
+                [Dashboard v2](http://127.0.0.1:8000/dashboard/v2/)
+
+- 
+                [Dashboard v3](http://127.0.0.1:8000/dashboard/v3/)
+
+[Dashboard v1](http://127.0.0.1:8000/dashboard/v1/)
+Dashboard v1
+[Dashboard v2](http://127.0.0.1:8000/dashboard/v2/)
+Dashboard v2
+[Dashboard v3](http://127.0.0.1:8000/dashboard/v3/)
+Dashboard v3
+[Customer Selection](http://127.0.0.1:8000/customer_creation/)
+Customer Selection
+[Item Creation](http://127.0.0.1:8000/item_creation/)
+Item Creation
+[Opportunity Creation](http://127.0.0.1:8000/opportunity/)
+Opportunity Creation
+[Feasibility Form](http://127.0.0.1:8000/feasibility_form/)
+Feasibility Form
+[BOM Creation](http://127.0.0.1:8000/BOM/)
+BOM Creation
+[BOP Creation](http://127.0.0.1:8000/BOP/)
+BOP Creation
+[BOC Creation](http://127.0.0.1:8000/BOC/)
+BOC Creation
+[Costing & BC Calculations](http://127.0.0.1:8000/CostingBCCal/)
+Costing & BC Calculations
+[Blanket Sales Order](http://127.0.0.1:8000/BlanketSales/)
+Blanket Sales Order
+[Approve Record](http://127.0.0.1:8000/ApproveRec/)
+Approve Record
+[Report](http://127.0.0.1:8000/Report/)
+Report
+[To-Do List](http://127.0.0.1:8000/todo/)
+To-Do List
+[ERP Data](http://127.0.0.1:8000/erp-data/)
+ERP Data
+[Upload Data](http://127.0.0.1:8000/upload-data/)
+Upload Data
+[User Management](http://127.0.0.1:8000/user-management/)
+User Management
+[Register](http://127.0.0.1:8000/accounts/register/)
+Register
+[Logout](http://127.0.0.1:8000/admin/logout/)
+Logout

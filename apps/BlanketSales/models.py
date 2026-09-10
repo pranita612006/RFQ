@@ -73,4 +73,4 @@ class BSOSalesLine(models.Model):
         managed = False
 
     def __str__(self):
-        return f"Line {self.line_no} for {self.blanket_so}"
+        return f"Line {self.line_no} for {self.blanket_so}"

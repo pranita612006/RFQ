@@ -1,0 +1,1791 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Fonts: Montserrat & Permanent Marker -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/dist/css/adminlte.min.css">
+
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="/static/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/plugins/fontawesome-free/css/all.min.css">
+
+  <!-- Custom styles (compiled from custom.scss) -->
+  <link rel="stylesheet" href="/static/assets/scss/custom.scss">
+  
+</head>
+<body class="">
+<div class="wrapper">
+
+  
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake"
+         src="/static/dist/img/AdminLTELogo.png"
+         alt="AdminLTELogo"
+         height="60"
+         width="60">
+  </div>
+  
+
+  
+      
+
+ 
+
+  <!-- Navbar -->
+
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <!-- Left navbar links -->
+
+    <ul class="navbar-nav">
+
+      <li class="nav-item">
+
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+
+      </li>
+
+      <li class="nav-item d-none d-sm-inline-block">
+
+        <a href="/dashboard-v3/" class="nav-link">Home</a>
+
+      </li>
+
+      <li class="nav-item d-none d-sm-inline-block">
+
+        <a href="#" class="nav-link">Contact</a>
+
+      </li>
+
+      
+
+        <li class="nav-item d-none d-sm-inline-block">
+
+          <a href="/accounts/login/" class="nav-link">Sign In</a>
+
+        </li>
+
+      
+
+    </ul>
+
+
+
+    <!-- Right navbar links -->
+
+    <ul class="navbar-nav ml-auto">
+
+      <!-- Navbar Search -->
+
+      <li class="nav-item">
+
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+
+          <i class="fas fa-search"></i>
+
+        </a>
+
+        <div class="navbar-search-block">
+
+          <form class="form-inline">
+
+            <div class="input-group input-group-sm">
+
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+
+              <div class="input-group-append">
+
+                <button class="btn btn-navbar" type="submit">
+
+                  <i class="fas fa-search"></i>
+
+                </button>
+
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+
+                  <i class="fas fa-times"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </li>
+
+
+
+      <!-- Messages Dropdown Menu -->
+
+      <li class="nav-item dropdown">
+
+        <a class="nav-link" data-toggle="dropdown" href="#">
+
+          <i class="far fa-comments"></i>
+
+          <span class="badge badge-danger navbar-badge">3</span>
+
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
+          <a href="#" class="dropdown-item">
+
+            <!-- Message Start -->
+
+            <div class="media">
+
+              <img src="/static/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+
+              <div class="media-body">
+
+                <h3 class="dropdown-item-title">
+
+                  Brad Diesel
+
+                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+
+                </h3>
+
+                <p class="text-sm">Call me whenever you can...</p>
+
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+
+              </div>
+
+            </div>
+
+            <!-- Message End -->
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+
+            <!-- Message Start -->
+
+            <div class="media">
+
+              <img src="/static/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+
+              <div class="media-body">
+
+                <h3 class="dropdown-item-title">
+
+                  John Pierce
+
+                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+
+                </h3>
+
+                <p class="text-sm">I got your message bro</p>
+
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+
+              </div>
+
+            </div>
+
+            <!-- Message End -->
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+
+            <!-- Message Start -->
+
+            <div class="media">
+
+              <img src="/static/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+
+              <div class="media-body">
+
+                <h3 class="dropdown-item-title">
+
+                  Nora Silvester
+
+                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+
+                </h3>
+
+                <p class="text-sm">The subject goes here</p>
+
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+
+              </div>
+
+            </div>
+
+            <!-- Message End -->
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+
+        </div>
+
+      </li>
+
+      <!-- Notifications Dropdown Menu -->
+
+      <li class="nav-item dropdown">
+
+        <a class="nav-link" data-toggle="dropdown" href="#">
+
+          <i class="far fa-bell"></i>
+
+          <span class="badge badge-warning navbar-badge">15</span>
+
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
+          <span class="dropdown-item dropdown-header">15 Notifications</span>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+
+            <i class="fas fa-envelope mr-2"></i> 4 new messages
+
+            <span class="float-right text-muted text-sm">3 mins</span>
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+
+            <i class="fas fa-users mr-2"></i> 8 friend requests
+
+            <span class="float-right text-muted text-sm">12 hours</span>
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+
+            <i class="fas fa-file mr-2"></i> 3 new reports
+
+            <span class="float-right text-muted text-sm">2 days</span>
+
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+
+        </div>
+
+      </li>
+
+      <li class="nav-item">
+
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+
+          <i class="fas fa-expand-arrows-alt"></i>
+
+        </a>
+
+      </li>
+
+      <li class="nav-item">
+
+        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+
+          <i class="fas fa-th-large"></i>
+
+        </a>
+
+      </li>
+
+    </ul>
+
+  </nav>
+
+  <!-- /.navbar --> 
+  
+
+  
+    
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <a href="/" class="brand-link">
+    <img src="/static/dist/img/AdminLTELogo.png" 
+         alt="FlowNexis Logo" 
+         class="brand-image img-circle elevation-3"
+         style="opacity: .8">
+    <span class="brand-text font-weight-light">FlowNexis</span>
+  </a>
+
+  <div class="sidebar">
+
+    <!-- USER PANEL -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="/static/dist/img/user2-160x160.jpg" 
+             class="img-circle elevation-2" 
+             alt="User Image">
+      </div>
+
+      <div class="info">
+        
+          <a href="#" class="d-block">Guest</a>
+        
+      </div>
+    </div>
+
+    <!-- ACTIVE CUSTOMER PANEL -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="flex-direction: column;">
+      
+          <div class="info text-warning font-weight-bold">
+            <i class="fas fa-exclamation-triangle"></i> No Customer Selected
+          </div>
+          
+      
+    </div>
+
+    <!-- SEARCH -->
+    <div class="form-inline">
+      <div class="input-group" data-widget="sidebar-search">
+        <input class="form-control form-control-sidebar" 
+               type="search" 
+               placeholder="Search FlowNexis..." 
+               aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-sidebar">
+            <i class="fas fa-search fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <nav class="mt-2">
+      
+
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+
+    <!-- DASHBOARD -->
+    <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                Dashboard
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="/dashboard/v1/" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v1</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/dashboard/v2/" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v2</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/dashboard/v3/" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v3</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- OTHER MENU ITEMS -->
+    <li class="nav-item">
+        <a href="/customer_creation/" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>Customer Selection</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/item_creation/" class="nav-link">
+            <i class="nav-icon fas fa-box"></i>
+            <p>Item Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/opportunity/" class="nav-link">
+            <i class="nav-icon fas fa-lightbulb"></i>
+            <p>Opportunity Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/feasibility_form/" class="nav-link">
+            <i class="nav-icon fas fa-file-alt"></i>
+            <p>Feasibility Form</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/BOM/" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>BOM Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/BOP/" class="nav-link">
+            <i class="nav-icon fas fa-industry"></i>
+            <p>BOP Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/BOC/" class="nav-link">
+            <i class="nav-icon fas fa-project-diagram"></i>
+            <p>BOC Creation</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/CostingBCCal/" class="nav-link">
+            <i class="nav-icon fas fa-calculator"></i>
+            <p>Costing & BC Calculations</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/BlanketSales/" class="nav-link">
+            <i class="nav-icon fas fa-file-invoice"></i>
+            <p>Blanket Sales Order</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/ApproveRec/" class="nav-link">
+            <i class="nav-icon fas fa-check"></i>
+            <p>Approve Record</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/Report/" class="nav-link">
+            <i class="nav-icon fas fa-chart-bar"></i>
+            <p>Report</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/todo/" class="nav-link">
+            <i class="nav-icon fas fa-tasks"></i>
+            <p>To-Do List</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/erp-data/" class="nav-link">
+            <i class="nav-icon fas fa-database"></i>
+            <p>ERP Data</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/upload-data/" class="nav-link">
+            <i class="nav-icon fas fa-upload"></i>
+            <p>Upload Data</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/user-management/" class="nav-link">
+            <i class="nav-icon fas fa-user-cog"></i>
+            <p>User Management</p>
+        </a>
+    </li>
+
+    <!-- BOTTOM -->
+    <li class="nav-item mt-3">
+        <a href="/accounts/register/" class="nav-link">
+            <i class="nav-icon fas fa-user-plus"></i>
+            <p>Register</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/admin/logout/" class="nav-link text-danger">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p>Logout</p>
+        </a>
+    </li>
+
+</ul>
+    </nav>
+
+  </div>
+</aside>
+  
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      
+<div class="container-fluid full-dashboard">
+  <h2>Customer Creation</h2>
+
+  <div class="card card-primary mt-3">
+    <div class="card-header">
+      <h3 class="card-title">Customer Information</h3>
+    </div>
+
+    <form method="post">
+      <input type="hidden" name="csrfmiddlewaretoken" value="BIVBJNvNrjhISiQgYNkEyXd7OZLUZvWm9JUq42JGxQyKdQs4TGYOaLJHvWM1ENlX">
+      <div class="card-body">
+        <!-- Customer ID -->
+        <div class="form-group">
+          <label for="customer_id">Customer ID</label>
+          <select id="customer_id" name="customer_id" class="form-control">
+            <option value="">Select ID</option>
+            
+              <option value="CUST-001">CUST-001</option>
+            
+              <option value="CUST-002">CUST-002</option>
+            
+              <option value="CUST-003">CUST-003</option>
+            
+              <option value="CUST-004">CUST-004</option>
+            
+              <option value="CUST-005">CUST-005</option>
+            
+              <option value="CUST-006">CUST-006</option>
+            
+              <option value="CUST-007">CUST-007</option>
+            
+              <option value="CUST-008">CUST-008</option>
+            
+              <option value="CUST-009">CUST-009</option>
+            
+              <option value="CUST-010">CUST-010</option>
+            
+              <option value="CUST-011">CUST-011</option>
+            
+              <option value="CUST-012">CUST-012</option>
+            
+              <option value="CUST-013">CUST-013</option>
+            
+              <option value="CUST-014">CUST-014</option>
+            
+              <option value="CUST-015">CUST-015</option>
+            
+              <option value="CUST-016">CUST-016</option>
+            
+              <option value="CUST-017">CUST-017</option>
+            
+              <option value="CUST-018">CUST-018</option>
+            
+              <option value="CUST-019">CUST-019</option>
+            
+              <option value="CUST-020">CUST-020</option>
+            
+              <option value="CUST-021">CUST-021</option>
+            
+              <option value="CUST-022">CUST-022</option>
+            
+              <option value="CUST-023">CUST-023</option>
+            
+              <option value="CUST-024">CUST-024</option>
+            
+              <option value="CUST-025">CUST-025</option>
+            
+              <option value="CUST-026">CUST-026</option>
+            
+              <option value="CUST-027">CUST-027</option>
+            
+              <option value="CUST-028">CUST-028</option>
+            
+              <option value="CUST-029">CUST-029</option>
+            
+              <option value="CUST-030">CUST-030</option>
+            
+              <option value="CUST-031">CUST-031</option>
+            
+              <option value="CUST-032">CUST-032</option>
+            
+              <option value="CUST-033">CUST-033</option>
+            
+              <option value="CUST-034">CUST-034</option>
+            
+              <option value="CUST-035">CUST-035</option>
+            
+              <option value="CUST-036">CUST-036</option>
+            
+              <option value="CUST-037">CUST-037</option>
+            
+              <option value="CUST-038">CUST-038</option>
+            
+              <option value="CUST-039">CUST-039</option>
+            
+              <option value="CUST-040">CUST-040</option>
+            
+              <option value="CUST-041">CUST-041</option>
+            
+              <option value="CUST-042">CUST-042</option>
+            
+              <option value="CUST-043">CUST-043</option>
+            
+              <option value="CUST-044">CUST-044</option>
+            
+              <option value="CUST-045">CUST-045</option>
+            
+              <option value="CUST-046">CUST-046</option>
+            
+              <option value="CUST-047">CUST-047</option>
+            
+              <option value="CUST-048">CUST-048</option>
+            
+              <option value="CUST-049">CUST-049</option>
+            
+              <option value="CUST-050">CUST-050</option>
+            
+              <option value="CUST-051">CUST-051</option>
+            
+              <option value="CUST-052">CUST-052</option>
+            
+              <option value="CUST-053">CUST-053</option>
+            
+              <option value="CUST-054">CUST-054</option>
+            
+              <option value="CUST-055">CUST-055</option>
+            
+              <option value="CUST-056">CUST-056</option>
+            
+              <option value="CUST-057">CUST-057</option>
+            
+              <option value="CUST-058">CUST-058</option>
+            
+              <option value="CUST-059">CUST-059</option>
+            
+              <option value="CUST-060">CUST-060</option>
+            
+              <option value="CUST-061">CUST-061</option>
+            
+              <option value="CUST-062">CUST-062</option>
+            
+              <option value="CUST-063">CUST-063</option>
+            
+              <option value="CUST-064">CUST-064</option>
+            
+              <option value="CUST-065">CUST-065</option>
+            
+              <option value="CUST-066">CUST-066</option>
+            
+              <option value="CUST-067">CUST-067</option>
+            
+              <option value="CUST-068">CUST-068</option>
+            
+              <option value="CUST-069">CUST-069</option>
+            
+              <option value="CUST-070">CUST-070</option>
+            
+              <option value="CUST-071">CUST-071</option>
+            
+              <option value="CUST-072">CUST-072</option>
+            
+              <option value="CUST-073">CUST-073</option>
+            
+              <option value="CUST-074">CUST-074</option>
+            
+              <option value="CUST-075">CUST-075</option>
+            
+              <option value="CUST-076">CUST-076</option>
+            
+              <option value="CUST-077">CUST-077</option>
+            
+              <option value="CUST-078">CUST-078</option>
+            
+              <option value="CUST-079">CUST-079</option>
+            
+              <option value="CUST-080">CUST-080</option>
+            
+              <option value="CUST-081">CUST-081</option>
+            
+              <option value="CUST-082">CUST-082</option>
+            
+              <option value="CUST-083">CUST-083</option>
+            
+              <option value="CUST-084">CUST-084</option>
+            
+              <option value="CUST-085">CUST-085</option>
+            
+              <option value="CUST-086">CUST-086</option>
+            
+              <option value="CUST-087">CUST-087</option>
+            
+              <option value="CUST-088">CUST-088</option>
+            
+              <option value="CUST-089">CUST-089</option>
+            
+              <option value="CUST-090">CUST-090</option>
+            
+              <option value="CUST-091">CUST-091</option>
+            
+              <option value="CUST-092">CUST-092</option>
+            
+              <option value="CUST-093">CUST-093</option>
+            
+              <option value="CUST-094">CUST-094</option>
+            
+              <option value="CUST-095">CUST-095</option>
+            
+              <option value="CUST-096">CUST-096</option>
+            
+              <option value="CUST-097">CUST-097</option>
+            
+              <option value="CUST-098">CUST-098</option>
+            
+              <option value="CUST-099">CUST-099</option>
+            
+              <option value="CUST-100">CUST-100</option>
+            
+              <option value="CUST-101">CUST-101</option>
+            
+              <option value="CUST-102">CUST-102</option>
+            
+              <option value="CUST-103">CUST-103</option>
+            
+              <option value="CUST-104">CUST-104</option>
+            
+              <option value="CUST-105">CUST-105</option>
+            
+              <option value="CUST-107">CUST-107</option>
+            
+              <option value="CUST-108">CUST-108</option>
+            
+              <option value="CUST-109">CUST-109</option>
+            
+              <option value="CUST-110">CUST-110</option>
+            
+              <option value="CUST-111">CUST-111</option>
+            
+              <option value="CUST-112">CUST-112</option>
+            
+              <option value="CUST-113">CUST-113</option>
+            
+              <option value="CUST-114">CUST-114</option>
+            
+              <option value="CUST-115">CUST-115</option>
+            
+              <option value="CUST-116">CUST-116</option>
+            
+              <option value="CUST-117">CUST-117</option>
+            
+              <option value="CUST-118">CUST-118</option>
+            
+              <option value="CUST-119">CUST-119</option>
+            
+              <option value="CUST-120">CUST-120</option>
+            
+              <option value="CUST-121">CUST-121</option>
+            
+              <option value="CUST-122">CUST-122</option>
+            
+              <option value="CUST-123">CUST-123</option>
+            
+              <option value="CUST-124">CUST-124</option>
+            
+              <option value="CUST-125">CUST-125</option>
+            
+              <option value="CUST-126">CUST-126</option>
+            
+              <option value="CUST-127">CUST-127</option>
+            
+              <option value="CUST-128">CUST-128</option>
+            
+              <option value="CUST-129">CUST-129</option>
+            
+              <option value="CUST-130">CUST-130</option>
+            
+              <option value="CUST-131">CUST-131</option>
+            
+              <option value="CUST-132">CUST-132</option>
+            
+              <option value="CUST-133">CUST-133</option>
+            
+              <option value="CUST-134">CUST-134</option>
+            
+              <option value="CUST-135">CUST-135</option>
+            
+              <option value="CUST-136">CUST-136</option>
+            
+              <option value="CUST-137">CUST-137</option>
+            
+              <option value="CUST-138">CUST-138</option>
+            
+              <option value="CUST-139">CUST-139</option>
+            
+              <option value="CUST-140">CUST-140</option>
+            
+              <option value="CUST-141">CUST-141</option>
+            
+              <option value="CUST-142">CUST-142</option>
+            
+              <option value="CUST-143">CUST-143</option>
+            
+              <option value="CUST-144">CUST-144</option>
+            
+              <option value="CUST-145">CUST-145</option>
+            
+              <option value="CUST-146">CUST-146</option>
+            
+              <option value="CUST-147">CUST-147</option>
+            
+              <option value="CUST-148">CUST-148</option>
+            
+              <option value="CUST-149">CUST-149</option>
+            
+              <option value="CUST-150">CUST-150</option>
+            
+              <option value="CUST-151">CUST-151</option>
+            
+              <option value="CUST-152">CUST-152</option>
+            
+              <option value="CUST-153">CUST-153</option>
+            
+              <option value="CUST-154">CUST-154</option>
+            
+              <option value="CUST-155">CUST-155</option>
+            
+              <option value="CUST-156">CUST-156</option>
+            
+              <option value="CUST-157">CUST-157</option>
+            
+              <option value="CUST-158">CUST-158</option>
+            
+              <option value="CUST-159">CUST-159</option>
+            
+              <option value="CUST-160">CUST-160</option>
+            
+              <option value="CUST-161">CUST-161</option>
+            
+              <option value="CUST-162">CUST-162</option>
+            
+              <option value="CUST-163">CUST-163</option>
+            
+              <option value="CUST-164">CUST-164</option>
+            
+              <option value="CUST-165">CUST-165</option>
+            
+              <option value="CUST-166">CUST-166</option>
+            
+              <option value="CUST-167">CUST-167</option>
+            
+              <option value="CUST-168">CUST-168</option>
+            
+              <option value="CUST-169">CUST-169</option>
+            
+              <option value="CUST-170">CUST-170</option>
+            
+              <option value="CUST-171">CUST-171</option>
+            
+              <option value="CUST-172">CUST-172</option>
+            
+              <option value="CUST-173">CUST-173</option>
+            
+              <option value="CUST-174">CUST-174</option>
+            
+              <option value="CUST-175">CUST-175</option>
+            
+              <option value="CUST-176">CUST-176</option>
+            
+              <option value="CUST-177">CUST-177</option>
+            
+              <option value="CUST-178">CUST-178</option>
+            
+              <option value="CUST-179">CUST-179</option>
+            
+              <option value="CUST-180">CUST-180</option>
+            
+              <option value="CUST-181">CUST-181</option>
+            
+              <option value="CUST-182">CUST-182</option>
+            
+              <option value="CUST-183">CUST-183</option>
+            
+              <option value="CUST-184">CUST-184</option>
+            
+              <option value="CUST-185">CUST-185</option>
+            
+              <option value="CUST-186">CUST-186</option>
+            
+              <option value="CUST-187">CUST-187</option>
+            
+              <option value="CUST-188">CUST-188</option>
+            
+              <option value="CUST-189">CUST-189</option>
+            
+              <option value="CUST-190">CUST-190</option>
+            
+              <option value="CUST-191">CUST-191</option>
+            
+              <option value="CUST-192">CUST-192</option>
+            
+              <option value="CUST-193">CUST-193</option>
+            
+              <option value="CUST-194">CUST-194</option>
+            
+              <option value="CUST-195">CUST-195</option>
+            
+              <option value="CUST-196">CUST-196</option>
+            
+              <option value="CUST-197">CUST-197</option>
+            
+              <option value="CUST-198">CUST-198</option>
+            
+              <option value="CUST-199">CUST-199</option>
+            
+              <option value="CUST-200">CUST-200</option>
+            
+              <option value="CUST-201">CUST-201</option>
+            
+              <option value="CUST-202">CUST-202</option>
+            
+              <option value="CUST-203">CUST-203</option>
+            
+              <option value="CUST-204">CUST-204</option>
+            
+              <option value="CUST-205">CUST-205</option>
+            
+              <option value="CUST-206">CUST-206</option>
+            
+              <option value="CUST-207">CUST-207</option>
+            
+              <option value="CUST-208">CUST-208</option>
+            
+              <option value="CUST-209">CUST-209</option>
+            
+              <option value="CUST-210">CUST-210</option>
+            
+              <option value="CUST-211">CUST-211</option>
+            
+              <option value="CUST-212">CUST-212</option>
+            
+              <option value="CUST-213">CUST-213</option>
+            
+              <option value="CUST-214">CUST-214</option>
+            
+              <option value="CUST-215">CUST-215</option>
+            
+              <option value="CUST-216">CUST-216</option>
+            
+              <option value="CUST-217">CUST-217</option>
+            
+              <option value="CUST-218">CUST-218</option>
+            
+              <option value="CUST-219">CUST-219</option>
+            
+              <option value="CUST-220">CUST-220</option>
+            
+              <option value="CUST-221">CUST-221</option>
+            
+              <option value="CUST-222">CUST-222</option>
+            
+              <option value="CUST-223">CUST-223</option>
+            
+              <option value="CUST-224">CUST-224</option>
+            
+              <option value="CUST-225">CUST-225</option>
+            
+              <option value="CUST-226">CUST-226</option>
+            
+              <option value="CUST-227">CUST-227</option>
+            
+              <option value="CUST-228">CUST-228</option>
+            
+              <option value="CUST-229">CUST-229</option>
+            
+              <option value="CUST-230">CUST-230</option>
+            
+              <option value="CUST-231">CUST-231</option>
+            
+              <option value="CUST-232">CUST-232</option>
+            
+              <option value="CUST-233">CUST-233</option>
+            
+              <option value="CUST-234">CUST-234</option>
+            
+              <option value="CUST-235">CUST-235</option>
+            
+              <option value="CUST-236">CUST-236</option>
+            
+              <option value="CUST-237">CUST-237</option>
+            
+              <option value="CUST-238">CUST-238</option>
+            
+              <option value="CUST-239">CUST-239</option>
+            
+              <option value="CUST-240">CUST-240</option>
+            
+              <option value="CUST-241">CUST-241</option>
+            
+              <option value="CUST-242">CUST-242</option>
+            
+              <option value="CUST-243">CUST-243</option>
+            
+              <option value="CUST-244">CUST-244</option>
+            
+              <option value="CUST-245">CUST-245</option>
+            
+              <option value="CUST-246">CUST-246</option>
+            
+              <option value="CUST-247">CUST-247</option>
+            
+              <option value="CUST-248">CUST-248</option>
+            
+              <option value="CUST-249">CUST-249</option>
+            
+              <option value="CUST-250">CUST-250</option>
+            
+              <option value="CUST-251">CUST-251</option>
+            
+              <option value="CUST-252">CUST-252</option>
+            
+              <option value="CUST-253">CUST-253</option>
+            
+              <option value="CUST-254">CUST-254</option>
+            
+              <option value="CUST-255">CUST-255</option>
+            
+              <option value="CUST-256">CUST-256</option>
+            
+              <option value="CUST-257">CUST-257</option>
+            
+              <option value="CUST-258">CUST-258</option>
+            
+              <option value="CUST-259">CUST-259</option>
+            
+              <option value="CUST-260">CUST-260</option>
+            
+              <option value="CUST-261">CUST-261</option>
+            
+              <option value="CUST-262">CUST-262</option>
+            
+              <option value="CUST-263">CUST-263</option>
+            
+              <option value="CUST-264">CUST-264</option>
+            
+              <option value="CUST-265">CUST-265</option>
+            
+              <option value="CUST-266">CUST-266</option>
+            
+              <option value="CUST-267">CUST-267</option>
+            
+              <option value="CUST-268">CUST-268</option>
+            
+              <option value="CUST-269">CUST-269</option>
+            
+              <option value="CUST-270">CUST-270</option>
+            
+              <option value="CUST-271">CUST-271</option>
+            
+              <option value="CUST-272">CUST-272</option>
+            
+              <option value="CUST-273">CUST-273</option>
+            
+              <option value="CUST-274">CUST-274</option>
+            
+              <option value="CUST-275">CUST-275</option>
+            
+              <option value="CUST-276">CUST-276</option>
+            
+              <option value="CUST-277">CUST-277</option>
+            
+              <option value="CUST-278">CUST-278</option>
+            
+              <option value="CUST-279">CUST-279</option>
+            
+              <option value="CUST-999">CUST-999</option>
+            
+          </select>
+        </div>
+
+        <!-- Customer Name -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
+        </div>
+
+        <!-- Search Name -->
+        <div class="form-group">
+          <label for="search_name">Search Name</label>
+          <select id="search_name" name="search_name" class="form-control">
+            <option value="">Select Search Name</option>
+            
+              <option value="ALBONAIR GMBH">ALBONAIR GMBH</option>
+            
+              <option value="ASIA POWER EQUIPMENT">ASIA POWER EQUIPMENT</option>
+            
+              <option value="AUTOMOBILE CORPORATION OF GOA LTD.">AUTOMOBILE CORPORATION OF GOA LTD.</option>
+            
+              <option value="AVTEC LIMITED">AVTEC LIMITED</option>
+            
+              <option value="COOPER CORPORATION PVT.LTD.">COOPER CORPORATION PVT.LTD.</option>
+            
+              <option value="COROB INDIA PVT. LTD">COROB INDIA PVT. LTD</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT. LTD. (FTWZ)">DAIMLER INDIA COMMERCIAL VEHICLES PVT. LTD. (FTWZ)</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (MAIN)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (MAIN)</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (SPARE)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (SPARE)</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (R&amp;D)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (R&amp;D)</option>
+            
+              <option value="DALI &amp; SAMIR ENGG. PVT. LTD.">DALI &amp; SAMIR ENGG. PVT. LTD.</option>
+            
+              <option value="DALI &amp; SAMIR ENGG. PVT. LTD. HOSUR">DALI &amp; SAMIR ENGG. PVT. LTD. HOSUR</option>
+            
+              <option value="DC DESIGN PVT LTD">DC DESIGN PVT LTD</option>
+            
+              <option value="DEFENCE LAND SYSTEMS INDIA LIMITED">DEFENCE LAND SYSTEMS INDIA LIMITED</option>
+            
+              <option value="DEFIANCE TECHNOLOGIES LIMITED">DEFIANCE TECHNOLOGIES LIMITED</option>
+            
+              <option value="EXOTECH ZANINI INDUSTRIES PVT.LTD.">EXOTECH ZANINI INDUSTRIES PVT.LTD.</option>
+            
+              <option value="FIAT INDIA AUTOMOBILES PVT.LTD.">FIAT INDIA AUTOMOBILES PVT.LTD.</option>
+            
+              <option value="FORCE MOTORS LIMITED (SPD)">FORCE MOTORS LIMITED (SPD)</option>
+            
+              <option value="FORCE MOTORS LTD.-PITHAMPUR">FORCE MOTORS LTD.-PITHAMPUR</option>
+            
+              <option value="FORCE MOTORS LTD.-PUNE">FORCE MOTORS LTD.-PUNE</option>
+            
+              <option value="GREAVES COTTON LTD.">GREAVES COTTON LTD.</option>
+            
+              <option value="JAGUAR LAND ROVER LTD.">JAGUAR LAND ROVER LTD.</option>
+            
+              <option value="MAGNAKRAFT AUTOMATION SYSTEM">MAGNAKRAFT AUTOMATION SYSTEM</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA- KANHE SPD">MAHINDRA &amp; MAHINDRA- KANHE SPD</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD , MRV DIVISION">MAHINDRA &amp; MAHINDRA LTD , MRV DIVISION</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD- TRUCK &amp; BUS DIVISION">MAHINDRA &amp; MAHINDRA LTD- TRUCK &amp; BUS DIVISION</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.">MAHINDRA &amp; MAHINDRA LTD.</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.">MAHINDRA &amp; MAHINDRA LTD.</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.">MAHINDRA &amp; MAHINDRA LTD.</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. - HARIDWAR">MAHINDRA &amp; MAHINDRA LTD. - HARIDWAR</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (JAIPUR)">MAHINDRA &amp; MAHINDRA LTD. (JAIPUR)</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. NASHIK (DM128VR)">MAHINDRA &amp; MAHINDRA LTD. NASHIK (DM128VR)</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. SPARES BUSINESS UNIT">MAHINDRA &amp; MAHINDRA LTD. SPARES BUSINESS UNIT</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. TRUCK AND BUS DIV .">MAHINDRA &amp; MAHINDRA LTD. TRUCK AND BUS DIV .</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-IGATPURI">MAHINDRA &amp; MAHINDRA LTD.-IGATPURI</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-MUMBAI">MAHINDRA &amp; MAHINDRA LTD.-MUMBAI</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-NASHIK">MAHINDRA &amp; MAHINDRA LTD.-NASHIK</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-NASHIK">MAHINDRA &amp; MAHINDRA LTD.-NASHIK</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-TRUCK AND BUS DIVISION">MAHINDRA &amp; MAHINDRA LTD.-TRUCK AND BUS DIVISION</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.-ZAHIRABAD">MAHINDRA &amp; MAHINDRA LTD.-ZAHIRABAD</option>
+            
+              <option value="MAHINDRA AUTOMOBILE DISTRIBUTOR PVT.LTD.">MAHINDRA AUTOMOBILE DISTRIBUTOR PVT.LTD.</option>
+            
+              <option value="MAHINDRA ELECTRIC MOBILITY LIMITED">MAHINDRA ELECTRIC MOBILITY LIMITED</option>
+            
+              <option value="MAHINDRA NAVISTAR AUTO LTD. -ANDHRA PRADESH">MAHINDRA NAVISTAR AUTO LTD. -ANDHRA PRADESH</option>
+            
+              <option value="MAHINDRA RENAULT PVT.LTD.-NASHIK">MAHINDRA RENAULT PVT.LTD.-NASHIK</option>
+            
+              <option value="MAHINDRA TRUCKS AND BUSES LIMITED -VADGAON">MAHINDRA TRUCKS AND BUSES LIMITED -VADGAON</option>
+            
+              <option value="MAHINDRA TRUCKS AND BUSES LTD - HYDRABAD">MAHINDRA TRUCKS AND BUSES LTD - HYDRABAD</option>
+            
+              <option value="MAHINDRA TRUCKS AND BUSES LTD. -ZAHIRABAD">MAHINDRA TRUCKS AND BUSES LTD. -ZAHIRABAD</option>
+            
+              <option value="MAHINDRA VEHICLE MANUFACTURERS LIMITED">MAHINDRA VEHICLE MANUFACTURERS LIMITED</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD">MAN TRUCKS INDIA PVT. LTD</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD - R&amp;D">MAN TRUCKS INDIA PVT. LTD - R&amp;D</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD (SPD)">MAN TRUCKS INDIA PVT. LTD (SPD)</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD.PUNE">MAN TRUCKS INDIA PVT. LTD.PUNE</option>
+            
+              <option value="MARUTI SUZUKI INDIA LTD.">MARUTI SUZUKI INDIA LTD.</option>
+            
+              <option value="NISSAN MOTOR INDIA PVT LTD - (SPD)">NISSAN MOTOR INDIA PVT LTD - (SPD)</option>
+            
+              <option value="NISSAN MOTOR INDIA PVT. LTD.">NISSAN MOTOR INDIA PVT. LTD.</option>
+            
+              <option value="NISSAN MOTOR INDIA PVT. LTD.-N">NISSAN MOTOR INDIA PVT. LTD.-N</option>
+            
+              <option value="NISSAN SOUTH AFRICA ( PTY) LTD.">NISSAN SOUTH AFRICA ( PTY) LTD.</option>
+            
+              <option value="NISSAN SOUTH AFRICA ( PTY) LTD.">NISSAN SOUTH AFRICA ( PTY) LTD.</option>
+            
+              <option value="PANDIT AUTOMOTIVE LTD.">PANDIT AUTOMOTIVE LTD.</option>
+            
+              <option value="PLASTIC OMNIUM AUTO INERGY MANUFACTURING INDIA">PLASTIC OMNIUM AUTO INERGY MANUFACTURING INDIA</option>
+            
+              <option value="RASANDIK ENGINEERING INDUSTRIES INDIA LTD.">RASANDIK ENGINEERING INDUSTRIES INDIA LTD.</option>
+            
+              <option value="RENAULT INDIA PVT.LTD.">RENAULT INDIA PVT.LTD.</option>
+            
+              <option value="RENAULT INDIA PVT.LTD.">RENAULT INDIA PVT.LTD.</option>
+            
+              <option value="RENAULT INDIA PVT.LTD.TALEGOAN">RENAULT INDIA PVT.LTD.TALEGOAN</option>
+            
+              <option value="RENAULT NISSAN AUTOMOTIVE INDIA PVT LTD">RENAULT NISSAN AUTOMOTIVE INDIA PVT LTD</option>
+            
+              <option value="RENAULT NISSAN TECHNOLOGY &amp; BUSS CENTRE IND P.LTD.">RENAULT NISSAN TECHNOLOGY &amp; BUSS CENTRE IND P.LTD.</option>
+            
+              <option value="RENAULT NISSAN TECHNOLOGY &amp; BUSS CENTRE IND P.LTD.">RENAULT NISSAN TECHNOLOGY &amp; BUSS CENTRE IND P.LTD.</option>
+            
+              <option value="RENAULT NISSAN TECHNOLOGY &amp; BUSS. CENTRE IND PVT">RENAULT NISSAN TECHNOLOGY &amp; BUSS. CENTRE IND PVT</option>
+            
+              <option value="RENAULT NISSAN TECHNOLOGY &amp; BUSS. CENTRE">RENAULT NISSAN TECHNOLOGY &amp; BUSS. CENTRE</option>
+            
+              <option value="RENAULT TECHNOLOGIE ROUMANIE,">RENAULT TECHNOLOGIE ROUMANIE,</option>
+            
+              <option value="SINTEX-BAPL LTD">SINTEX-BAPL LTD</option>
+            
+              <option value="SINTEX-BAPL LTD NASHIK">SINTEX-BAPL LTD NASHIK</option>
+            
+              <option value="SKH METAL LTD.">SKH METAL LTD.</option>
+            
+              <option value="SKH SHEET METALS COMPONENTS LTD.">SKH SHEET METALS COMPONENTS LTD.</option>
+            
+              <option value="TATA INTERNATIONAL DLT PVT. LTD.">TATA INTERNATIONAL DLT PVT. LTD.</option>
+            
+              <option value="TATA MARCOPOLO MOTORS LTD.">TATA MARCOPOLO MOTORS LTD.</option>
+            
+              <option value="TATA MOTORS LTD DHARWAD">TATA MOTORS LTD DHARWAD</option>
+            
+              <option value="TATA MOTORS LTD PCBU PUNE">TATA MOTORS LTD PCBU PUNE</option>
+            
+              <option value="TATA MOTORS LTD SPD PALWAL ( HARYANA)">TATA MOTORS LTD SPD PALWAL ( HARYANA)</option>
+            
+              <option value="TATA MOTORS LTD, CHINCHWAD">TATA MOTORS LTD, CHINCHWAD</option>
+            
+              <option value="TATA MOTORS LTD.- PANTNAGAR">TATA MOTORS LTD.- PANTNAGAR</option>
+            
+              <option value="TATA MOTORS LTD. PCBU SPARES DIVISION GURGAON">TATA MOTORS LTD. PCBU SPARES DIVISION GURGAON</option>
+            
+              <option value="TATA MOTORS LTD.- SPD BHIWANDI">TATA MOTORS LTD.- SPD BHIWANDI</option>
+            
+              <option value="TATA MOTORS LTD.- SPD SANAND ( PCBU)">TATA MOTORS LTD.- SPD SANAND ( PCBU)</option>
+            
+              <option value="TATA MOTORS LTD.-AHMEDABAD">TATA MOTORS LTD.-AHMEDABAD</option>
+            
+              <option value="TATA MOTORS LTD.-JAMSHEDPUR">TATA MOTORS LTD.-JAMSHEDPUR</option>
+            
+              <option value="TATA MOTORS LTD.-LUCKNOW">TATA MOTORS LTD.-LUCKNOW</option>
+            
+              <option value="TATA MOTORS LTD.PVBU SPARES DIVISION CHAKAN">TATA MOTORS LTD.PVBU SPARES DIVISION CHAKAN</option>
+            
+              <option value="TATA MOTORS LTD.-SPD CHAKAN">TATA MOTORS LTD.-SPD CHAKAN</option>
+            
+              <option value="TATA MOTORS LTD.-SPD CHAKAN (NEW)">TATA MOTORS LTD.-SPD CHAKAN (NEW)</option>
+            
+              <option value="TATA MOTORS LTD.-SPD HINJEWADI">TATA MOTORS LTD.-SPD HINJEWADI</option>
+            
+              <option value="TATA MOTORS LTD.-SPD JAMSHEDPUR">TATA MOTORS LTD.-SPD JAMSHEDPUR</option>
+            
+              <option value="TATA MOTORS PIMPRI">TATA MOTORS PIMPRI</option>
+            
+              <option value="TATA MOTORS WAREHOUSE ( SANTOSH NAGAR)">TATA MOTORS WAREHOUSE ( SANTOSH NAGAR)</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD.">VE COMMERCIAL VEHICLES LTD.</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD. (VEPT)">VE COMMERCIAL VEHICLES LTD. (VEPT)</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD. SPARES PARTS PLANT">VE COMMERCIAL VEHICLES LTD. SPARES PARTS PLANT</option>
+            
+              <option value="VEERA VAHANA UDYOG PRIVATE LIMITED">VEERA VAHANA UDYOG PRIVATE LIMITED</option>
+            
+              <option value="VOSS AUTOMOTIVE IND. PVT. LTD.-UTK">VOSS AUTOMOTIVE IND. PVT. LTD.-UTK</option>
+            
+              <option value="VOSS AUTOMOTIVE INDIA PVT. LTD, CHENNAI">VOSS AUTOMOTIVE INDIA PVT. LTD, CHENNAI</option>
+            
+              <option value="VOSS EXOTECH AUTOMOTIVE PVT. LTD.">VOSS EXOTECH AUTOMOTIVE PVT. LTD.</option>
+            
+              <option value="WHEELS INDIA LIMITED">WHEELS INDIA LIMITED</option>
+            
+              <option value="YAPP INDIA AUTOMOTIVE SYSTEMS PRIVATE LIMITED">YAPP INDIA AUTOMOTIVE SYSTEMS PRIVATE LIMITED</option>
+            
+              <option value="TATA MOTORS PUNE( SPD)">TATA MOTORS PUNE( SPD)</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES- (R&amp;D-PROTOSHOP)">DAIMLER INDIA COMMERCIAL VEHICLES- (R&amp;D-PROTOSHOP)</option>
+            
+              <option value="ALAM SCRAP TRADERS">ALAM SCRAP TRADERS</option>
+            
+              <option value="SAHYADRI PACKAGING">SAHYADRI PACKAGING</option>
+            
+              <option value="GHATGE TRUCKING">GHATGE TRUCKING</option>
+            
+              <option value="VIJAY FIRE VEHICLES AND PUMPS LTD">VIJAY FIRE VEHICLES AND PUMPS LTD</option>
+            
+              <option value="A.K. ASSOCIATES">A.K. ASSOCIATES</option>
+            
+              <option value="VOSS AUTOMOTIVE INDIA PVT.LTD.  ( 3 T LOGISTICS)">VOSS AUTOMOTIVE INDIA PVT.LTD.  ( 3 T LOGISTICS)</option>
+            
+              <option value="R.K.TRADERS">R.K.TRADERS</option>
+            
+              <option value="ASHOK LEYLAND DEFENCE SYSTEMS LTD">ASHOK LEYLAND DEFENCE SYSTEMS LTD</option>
+            
+              <option value="MAHINDRA&amp;MAHINDRA LTD-TRUCK AND BUS DIVISION-CHINC">MAHINDRA&amp;MAHINDRA LTD-TRUCK AND BUS DIVISION-CHINC</option>
+            
+              <option value="MAHINDRA HEAVY ENGINES">MAHINDRA HEAVY ENGINES</option>
+            
+              <option value="RENAULT INDIA PRIVATE LTD (CHENNAI)">RENAULT INDIA PRIVATE LTD (CHENNAI)</option>
+            
+              <option value="VIJAY FIRE VEHICLES AND PUMPS LTD.">VIJAY FIRE VEHICLES AND PUMPS LTD.</option>
+            
+              <option value="SHAYADRI PACKAGING">SHAYADRI PACKAGING</option>
+            
+              <option value="ISUZU MOTORS INDIA PVT.LTD">ISUZU MOTORS INDIA PVT.LTD</option>
+            
+              <option value="VOSS AUTOMOTIVE INDIA PVT LTD-PUNE">VOSS AUTOMOTIVE INDIA PVT LTD-PUNE</option>
+            
+              <option value="SRI BALAJI ENTERPRISES- ( SCRAP SALES)">SRI BALAJI ENTERPRISES- ( SCRAP SALES)</option>
+            
+              <option value="STAR ENTERPRISES">STAR ENTERPRISES</option>
+            
+              <option value="SUNDARAM MOTORS LTD">SUNDARAM MOTORS LTD</option>
+            
+              <option value="VOSS AUTOMOTIVE GMBH">VOSS AUTOMOTIVE GMBH</option>
+            
+              <option value="AJAY TRADER&#x27;S &amp; CONTRACTOR">AJAY TRADER&#x27;S &amp; CONTRACTOR</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (CKD)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (CKD)</option>
+            
+              <option value="BUNDY INDIA LIMITED">BUNDY INDIA LIMITED</option>
+            
+              <option value="MOTORSENSE LTD">MOTORSENSE LTD</option>
+            
+              <option value="CHALLENGER SWEEPERS PVT. LTD">CHALLENGER SWEEPERS PVT. LTD</option>
+            
+              <option value="TRAFO FILTER SERVICES">TRAFO FILTER SERVICES</option>
+            
+              <option value="EXCEL POLYMERS">EXCEL POLYMERS</option>
+            
+              <option value="VOSS AUTOMOTIVE LTD, BRAZIL">VOSS AUTOMOTIVE LTD, BRAZIL</option>
+            
+              <option value="MARUTI SUZUKI INDIA LTD.-MANESAR">MARUTI SUZUKI INDIA LTD.-MANESAR</option>
+            
+              <option value="NISSAN TRADING INDIA PRIVATE LIMITED">NISSAN TRADING INDIA PRIVATE LIMITED</option>
+            
+              <option value="VOLVO EAST ASIA (PTE) LTD">VOLVO EAST ASIA (PTE) LTD</option>
+            
+              <option value="VOLVO DO BRASIL VEICULOS LTDA">VOLVO DO BRASIL VEICULOS LTDA</option>
+            
+              <option value="STAR AUTO INDUSTRIES">STAR AUTO INDUSTRIES</option>
+            
+              <option value="ESCORTS LIMITED">ESCORTS LIMITED</option>
+            
+              <option value="INTERNATIONAL TRACTORS LTD">INTERNATIONAL TRACTORS LTD</option>
+            
+              <option value="CNH CE (I) PVT LTD">CNH CE (I) PVT LTD</option>
+            
+              <option value="RENAULT TRUCKS">RENAULT TRUCKS</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD.-PUNE">MAN TRUCKS INDIA PVT. LTD.-PUNE</option>
+            
+              <option value="PIAGGIO VEHICLES PVT LTD">PIAGGIO VEHICLES PVT LTD</option>
+            
+              <option value="RENAULT TRUCKS">RENAULT TRUCKS</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD, NAGPUR">MAHINDRA &amp; MAHINDRA LTD, NAGPUR</option>
+            
+              <option value="BAJAJ AUTO LTD">BAJAJ AUTO LTD</option>
+            
+              <option value="CNH INDUSTRIAL INDIA (PVT) LTD">CNH INDUSTRIAL INDIA (PVT) LTD</option>
+            
+              <option value="VOLKSWAGEN INDIA PVT. LTD">VOLKSWAGEN INDIA PVT. LTD</option>
+            
+              <option value="MG AUTOMOTIVES (BUS &amp; COACH) PVT. LTD">MG AUTOMOTIVES (BUS &amp; COACH) PVT. LTD</option>
+            
+              <option value="JAGUAR LAND ROVER LTD.">JAGUAR LAND ROVER LTD.</option>
+            
+              <option value="VOLVO GROUP INDIA PRIVATE LIMITED">VOLVO GROUP INDIA PRIVATE LIMITED</option>
+            
+              <option value="VOLVO GROUP INDIA PRIVATE LIMITED">VOLVO GROUP INDIA PRIVATE LIMITED</option>
+            
+              <option value="ADITYA AUTO PRODUCTS &amp; ENGINEERING (I) PVT LTD.">ADITYA AUTO PRODUCTS &amp; ENGINEERING (I) PVT LTD.</option>
+            
+              <option value="KIA MOTORS INDIA PRIVATE LIMITED">KIA MOTORS INDIA PRIVATE LIMITED</option>
+            
+              <option value="MAN TRUCKS INDIA PVT. LTD.">MAN TRUCKS INDIA PVT. LTD.</option>
+            
+              <option value="POCLAIN HYDRAULICS PVT LTD">POCLAIN HYDRAULICS PVT LTD</option>
+            
+              <option value="AB VOLVO PENTA INDIA">AB VOLVO PENTA INDIA</option>
+            
+              <option value="RENAULT TRUCKS-ACH-015">RENAULT TRUCKS-ACH-015</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LIMITED FES-CE-CHAKAN">MAHINDRA &amp; MAHINDRA LIMITED FES-CE-CHAKAN</option>
+            
+              <option value="VOLVO GROUP SINGAPORE (PTE) LTD">VOLVO GROUP SINGAPORE (PTE) LTD</option>
+            
+              <option value="KAMAL MOTORS">KAMAL MOTORS</option>
+            
+              <option value="CANON INDIA PVT LTD.">CANON INDIA PVT LTD.</option>
+            
+              <option value="BAPL ROTOTECH PVT.LTD.">BAPL ROTOTECH PVT.LTD.</option>
+            
+              <option value="MINERVA SPECIAL PURPOSE VEHICLE PVT LTD">MINERVA SPECIAL PURPOSE VEHICLE PVT LTD</option>
+            
+              <option value="VOSS AUTOMOTIVE COMPONENTS (JINAN) CO., LTD">VOSS AUTOMOTIVE COMPONENTS (JINAN) CO., LTD</option>
+            
+              <option value="OCTILLION POWER SYSTEMS">OCTILLION POWER SYSTEMS</option>
+            
+              <option value="BUNDY INDIA LIMITED">BUNDY INDIA LIMITED</option>
+            
+              <option value="SML ISUZU LTD">SML ISUZU LTD</option>
+            
+              <option value="STERLITE TECHNOLOGIES LIMITED">STERLITE TECHNOLOGIES LIMITED</option>
+            
+              <option value="UGC SUPPLY CHAIN SOLUTIONS P.LTD">UGC SUPPLY CHAIN SOLUTIONS P.LTD</option>
+            
+              <option value="AB VOLVO PENTA">AB VOLVO PENTA</option>
+            
+              <option value="MAN TRUCK &amp; BUS INDIA PVT.LTD.">MAN TRUCK &amp; BUS INDIA PVT.LTD.</option>
+            
+              <option value="KBK FABRICATOR">KBK FABRICATOR</option>
+            
+              <option value="SEALLENCE">SEALLENCE</option>
+            
+              <option value="KIRLOSKAR OIL ENGINES LTD">KIRLOSKAR OIL ENGINES LTD</option>
+            
+              <option value="VARDHMAN METALS">VARDHMAN METALS</option>
+            
+              <option value="SENIOR INDIA PVT.LTD.">SENIOR INDIA PVT.LTD.</option>
+            
+              <option value="FORCE MTU POWER SYSTEMS PRIVATE LIMITED">FORCE MTU POWER SYSTEMS PRIVATE LIMITED</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD., HOOGHLY">VE COMMERCIAL VEHICLES LTD., HOOGHLY</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD (RDC)">VE COMMERCIAL VEHICLES LTD (RDC)</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LTD.MANESAR">VE COMMERCIAL VEHICLES LTD.MANESAR</option>
+            
+              <option value="TATA MOTORS LTD - ERC">TATA MOTORS LTD - ERC</option>
+            
+              <option value="TADANO ESCORTS INDIA LTD.">TADANO ESCORTS INDIA LTD.</option>
+            
+              <option value="FORD MOTOR PRIVATE LIMITED">FORD MOTOR PRIVATE LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. KANHE SPARES WH - 1">MAHINDRA &amp; MAHINDRA LTD. KANHE SPARES WH - 1</option>
+            
+              <option value="VARDHMAN METALS">VARDHMAN METALS</option>
+            
+              <option value="CUMMINS EMISSION SOLUTIONS">CUMMINS EMISSION SOLUTIONS</option>
+            
+              <option value="SANOH INDIA PRIVATE LIMITED">SANOH INDIA PRIVATE LIMITED</option>
+            
+              <option value="EMS-CHEMIE AG">EMS-CHEMIE AG</option>
+            
+              <option value="MAHINDRA DEFENCE SYSTEMS LIMITED">MAHINDRA DEFENCE SYSTEMS LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.(F037)">MAHINDRA &amp; MAHINDRA LTD.(F037)</option>
+            
+              <option value="RENAULT INDIA PRIVATE LIMITED">RENAULT INDIA PRIVATE LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (F039)">MAHINDRA &amp; MAHINDRA LTD. (F039)</option>
+            
+              <option value="KAILASH VAHAN UDYOG LTD">KAILASH VAHAN UDYOG LTD</option>
+            
+              <option value="UFI FILTERS INDIA PVT. LTD">UFI FILTERS INDIA PVT. LTD</option>
+            
+              <option value="TATA MOTORS LTD - HOWRAH">TATA MOTORS LTD - HOWRAH</option>
+            
+              <option value="VOLVO TRUCK CORPORATION">VOLVO TRUCK CORPORATION</option>
+            
+              <option value="ACER INDUSTRIES-WAGHOLI">ACER INDUSTRIES-WAGHOLI</option>
+            
+              <option value="TATA MOTORS LTD SPD PALWAL ( HARYANA)">TATA MOTORS LTD SPD PALWAL ( HARYANA)</option>
+            
+              <option value="BEML LIMITED">BEML LIMITED</option>
+            
+              <option value="VE COMMERCIAL VEHICLES LIMITED-BHOPAL">VE COMMERCIAL VEHICLES LIMITED-BHOPAL</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. CHAKAN">MAHINDRA &amp; MAHINDRA LTD. CHAKAN</option>
+            
+              <option value="KNORR-BREMSE FOR CVS INDIA PVT. LTD">KNORR-BREMSE FOR CVS INDIA PVT. LTD</option>
+            
+              <option value="HINDUJA TECH LIMITED">HINDUJA TECH LIMITED</option>
+            
+              <option value="ACTION CONSTRUCTION EQUIPMENT LTD">ACTION CONSTRUCTION EQUIPMENT LTD</option>
+            
+              <option value="TATA AUTOCOMP SYSTEMS LTD">TATA AUTOCOMP SYSTEMS LTD</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (SWARAJ DIVISION)">MAHINDRA &amp; MAHINDRA LTD. (SWARAJ DIVISION)</option>
+            
+              <option value="MAHINDRA TWO WHEELERS  LIMITED- VADGAON">MAHINDRA TWO WHEELERS  LIMITED- VADGAON</option>
+            
+              <option value="MAHINDRA TWO WHEELERS  LIMITED-HYDERABAD">MAHINDRA TWO WHEELERS  LIMITED-HYDERABAD</option>
+            
+              <option value="MAHINDRA TWO WHEELERS  LIMITED-DINDORI">MAHINDRA TWO WHEELERS  LIMITED-DINDORI</option>
+            
+              <option value="WUHAN HUIPU NEW CHEMICAL MATERIALS CO.,LTD.">WUHAN HUIPU NEW CHEMICAL MATERIALS CO.,LTD.</option>
+            
+              <option value="SRINIVASA TOOLS">SRINIVASA TOOLS</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (F048)">MAHINDRA &amp; MAHINDRA LTD. (F048)</option>
+            
+              <option value="L&amp;T CONSTRUCTION MACHINERY LIMITED">L&amp;T CONSTRUCTION MACHINERY LIMITED</option>
+            
+              <option value="GENIE AUTO PRODUCTS PVT LTD.">GENIE AUTO PRODUCTS PVT LTD.</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (A008)">MAHINDRA &amp; MAHINDRA LTD. (A008)</option>
+            
+              <option value="TATA MOTORS LTD.- PANTNAGAR">TATA MOTORS LTD.- PANTNAGAR</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. TRUCK AND BUS DIVISION">MAHINDRA &amp; MAHINDRA LTD. TRUCK AND BUS DIVISION</option>
+            
+              <option value="BHARAT FORGE LTD">BHARAT FORGE LTD</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (F017)-FD VADGAON">MAHINDRA &amp; MAHINDRA LTD. (F017)-FD VADGAON</option>
+            
+              <option value="RENAULT INDIA PVT LTD">RENAULT INDIA PVT LTD</option>
+            
+              <option value="VOLVO CONSTRUCTION EQUIPMENT AB">VOLVO CONSTRUCTION EQUIPMENT AB</option>
+            
+              <option value="TATA ADVANCED SYSTEMS LIMITED">TATA ADVANCED SYSTEMS LIMITED</option>
+            
+              <option value="UD TRUCKS INDIA PRIVATE LIMITED">UD TRUCKS INDIA PRIVATE LIMITED</option>
+            
+              <option value="REVATHI ENTERPRISES">REVATHI ENTERPRISES</option>
+            
+              <option value="JAGUAR LAND ROVER LTD">JAGUAR LAND ROVER LTD</option>
+            
+              <option value="CONVOI INDIA PVT. LTD">CONVOI INDIA PVT. LTD</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. POWEROL BUSINESS ( F047 )">MAHINDRA &amp; MAHINDRA LTD. POWEROL BUSINESS ( F047 )</option>
+            
+              <option value="TIRUPATI ENGINEERS AND SERVICES">TIRUPATI ENGINEERS AND SERVICES</option>
+            
+              <option value="IAC INTERNATIONAL AUTOMOTIVE INDIA PVT. LTD">IAC INTERNATIONAL AUTOMOTIVE INDIA PVT. LTD</option>
+            
+              <option value="JAGUAR LAND ROVER LIMITED">JAGUAR LAND ROVER LIMITED</option>
+            
+              <option value="JAGUAR LAND ROVER LTD,">JAGUAR LAND ROVER LTD,</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. (A017)">MAHINDRA &amp; MAHINDRA LTD. (A017)</option>
+            
+              <option value="SCHWING STETTER (INDIA) PVT. LTD.,">SCHWING STETTER (INDIA) PVT. LTD.,</option>
+            
+              <option value="NISARG ENGINEERING PVT LTD">NISARG ENGINEERING PVT LTD</option>
+            
+              <option value="SANOH INDIA PRIVATE LIMITED">SANOH INDIA PRIVATE LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD.  ( F046 )">MAHINDRA &amp; MAHINDRA LTD.  ( F046 )</option>
+            
+              <option value="L&amp;T CONSTRUCTION EQUIPMENT LIMITED">L&amp;T CONSTRUCTION EQUIPMENT LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD. ,TRUCK AND BUS DIVISION">MAHINDRA &amp; MAHINDRA LTD. ,TRUCK AND BUS DIVISION</option>
+            
+              <option value="MAHINDRA TWO WHEELERS LTD. ( AT31 )">MAHINDRA TWO WHEELERS LTD. ( AT31 )</option>
+            
+              <option value="ION MOBILITY PRIVATE LIMITED">ION MOBILITY PRIVATE LIMITED</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LIMITED-( CK01 )">MAHINDRA &amp; MAHINDRA LIMITED-( CK01 )</option>
+            
+              <option value="RNETC -1">RNETC -1</option>
+            
+              <option value="Terex India Private Ltd">Terex India Private Ltd</option>
+            
+              <option value="Amperehour Solar Technology Pvt. Ltd.">Amperehour Solar Technology Pvt. Ltd.</option>
+            
+              <option value="Raicam Automotive Private Limited">Raicam Automotive Private Limited</option>
+            
+              <option value="BRP-Rotax GmbH &amp; Co KG">BRP-Rotax GmbH &amp; Co KG</option>
+            
+              <option value="MARUTI SUZUKI INDIA LIMITED – BENGALURU">MARUTI SUZUKI INDIA LIMITED – BENGALURU</option>
+            
+              <option value="TOYOTA KIRLOSKAR MOTOR PRIVATE LIMITED">TOYOTA KIRLOSKAR MOTOR PRIVATE LIMITED</option>
+            
+              <option value="PLASTIC OMNIUM AUTO INERGY INDIA PVT LTD RANIPET">PLASTIC OMNIUM AUTO INERGY INDIA PVT LTD RANIPET</option>
+            
+              <option value="HYVA INDIA PVT. LTD.">HYVA INDIA PVT. LTD.</option>
+            
+              <option value="PROPEL INDUSTRIES PVT. LTD">PROPEL INDUSTRIES PVT. LTD</option>
+            
+              <option value="VOLVO PARTS CORPORATION">VOLVO PARTS CORPORATION</option>
+            
+              <option value="SAILAASYA ENTERPRISES">SAILAASYA ENTERPRISES</option>
+            
+              <option value="SAVITA ENTERPRISES">SAVITA ENTERPRISES</option>
+            
+              <option value="TATA AUTOCOMP SYSTEMS LIMITED">TATA AUTOCOMP SYSTEMS LIMITED</option>
+            
+              <option value="MAHINDRA ELECTRIC MOBILITY LIMITED PUNE">MAHINDRA ELECTRIC MOBILITY LIMITED PUNE</option>
+            
+              <option value="TATA MOTORS PASSENGER VEHICLES LIMITED">TATA MOTORS PASSENGER VEHICLES LIMITED</option>
+            
+              <option value="TATA MOTORS PASSENGER VEHICLES LIMITED">TATA MOTORS PASSENGER VEHICLES LIMITED</option>
+            
+              <option value="TATA MOTORS PASSENGER VEHICLES LIMITED">TATA MOTORS PASSENGER VEHICLES LIMITED</option>
+            
+              <option value="B.M.S. TRADERS">B.M.S. TRADERS</option>
+            
+              <option value="JCB POWER PRODUCTS INDIA PRIVATE LIMITED">JCB POWER PRODUCTS INDIA PRIVATE LIMITED</option>
+            
+              <option value="TIRTH AGRO TECHNOLOGY PVT LTD.">TIRTH AGRO TECHNOLOGY PVT LTD.</option>
+            
+              <option value="RENAULT NISSAN TECHNOLOGY &amp; BUSINESS CENTER INDIA">RENAULT NISSAN TECHNOLOGY &amp; BUSINESS CENTER INDIA</option>
+            
+              <option value="TATA MOTORS PIMPRI-ERC">TATA MOTORS PIMPRI-ERC</option>
+            
+              <option value="VIVA ENGINEERING">VIVA ENGINEERING</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (MAIN)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD (MAIN)</option>
+            
+              <option value="MICRO PRECISION TECHNOLOGY">MICRO PRECISION TECHNOLOGY</option>
+            
+              <option value="TATA MOTORS LTD DHARWAD">TATA MOTORS LTD DHARWAD</option>
+            
+              <option value="DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (SPARE)">DAIMLER INDIA COMMERCIAL VEHICLES PVT.LTD. (SPARE)</option>
+            
+              <option value="MEENA ELASTOMERS PVT.LTD.">MEENA ELASTOMERS PVT.LTD.</option>
+            
+              <option value="ISHAN DEVELOPERS">ISHAN DEVELOPERS</option>
+            
+              <option value="MARUTI SUZUKI INDIA LIMITED">MARUTI SUZUKI INDIA LIMITED</option>
+            
+              <option value="TATA AUTOCOMP SYSTEMS LIMITED TECHNICAL CENTER">TATA AUTOCOMP SYSTEMS LIMITED TECHNICAL CENTER</option>
+            
+              <option value="None">None</option>
+            
+              <option value="KOSH INNOVATIONS">KOSH INNOVATIONS</option>
+            
+              <option value="MAHINDRA &amp; MAHINDRA LTD">MAHINDRA &amp; MAHINDRA LTD</option>
+            
+              <option value="ASHOK LEYLAND LIMITED">ASHOK LEYLAND LIMITED</option>
+            
+              <option value="Test">Test</option>
+            
+          </select>
+        </div>
+      </div>
+
+      <div class="card-footer text-right">
+        <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  document.getElementById('btn-back')?.addEventListener('click', function() {
+    window.history.back();
+  });
+console.log("Script loaded");
+document.addEventListener("DOMContentLoaded", function() {
+    const customerSelect = document.getElementById("customer_id");
+    customerSelect.addEventListener("change", function() {
+        const selectedId = this.value;
+        console.log("Customer ID changed:", selectedId);  // debug log
+
+        if (selectedId) {
+            fetch("/get_customer_info/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "BIVBJNvNrjhISiQgYNkEyXd7OZLUZvWm9JUq42JGxQyKdQs4TGYOaLJHvWM1ENlX",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "customer_id=" + encodeURIComponent(selectedId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Returned search_name:", data.search_name);
+
+                if (data.name) {
+                    document.getElementById("name").value = data.name;
+                }
+                if (data.search_name) {
+                    const searchDropdown = document.getElementById("search_name");
+                    const returnedValue = data.search_name.trim().toLowerCase();
+                    for (let i = 0; i < searchDropdown.options.length; i++) {
+                        const optionValue = searchDropdown.options[i].value.trim().toLowerCase();
+                        console.log("Comparing option:", optionValue); // debug log
+                        if (optionValue === returnedValue) {
+                            searchDropdown.selectedIndex = i;
+                            console.log("Match found at index:", i); // debug log
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
+
+    </section>
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+    
+
+<footer class="main-footer">
+</footer>
+  
+
+  
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+  
+
+</div>
+
+
+
+<!-- jQuery -->
+<script src="/static/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/static/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+
+</body>
+</html>

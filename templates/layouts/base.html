@@ -5,9 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Google Fonts: Montserrat & Permanent Marker -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
@@ -19,7 +20,7 @@
   <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
 
   <!-- Custom styles (compiled from custom.scss) -->
-<link rel="stylesheet" href="{% static 'assets/scss/custom.scss' %}">
+  <link rel="stylesheet" href="{% static 'assets/scss/custom.scss' %}">
   {% block extrastyle %}{% endblock extrastyle %}
 </head>
 <body class="{% block bodyclass %}{% endblock bodyclass %}">

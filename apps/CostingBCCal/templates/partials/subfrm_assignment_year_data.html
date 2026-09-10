@@ -1,0 +1,334 @@
+{% load static %}
+{# default_view_mode: dt_entry unless explicitly set to consolidate #}
+{% with eff_mode=view_mode|default:"dt_entry" %}
+<div style="padding: 16px; font-family: 'Inter', 'Segoe UI', sans-serif;">
+
+  <!-- Sub Tabs: Consolidate View & DT Entry — DT Entry is always shown first/active by default -->
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; border-bottom: 2px solid #DEE2E6; padding-bottom: 10px;">
+    <button type="button"
+            id="subtab-btn-consolidate"
+            data-subtab="consolidate"
+            onclick="window.switchDTViewMode('consolidate')"
+            style="cursor: pointer; padding: 5px 16px; font-size: 0.78rem; font-weight: {% if eff_mode == 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: {% if eff_mode == 'consolidate' %}2px solid #1e3a8a{% else %}1px solid #1e3a8a{% endif %}; background: {% if eff_mode == 'consolidate' %}#ffffff{% else %}#f3f4f6{% endif %}; color: {% if eff_mode == 'consolidate' %}#172554{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      Consolidate View
+    </button>
+    <button type="button"
+            id="subtab-btn-dtentry"
+            data-subtab="dt_entry"
+            onclick="window.switchDTViewMode('dt_entry')"
+            style="cursor: pointer; padding: 5px 16px; font-size: 0.78rem; font-weight: {% if eff_mode != 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: {% if eff_mode != 'consolidate' %}2px solid #172554{% else %}1px solid #d1d5db{% endif %}; background: {% if eff_mode != 'consolidate' %}#172554{% else %}#f3f4f6{% endif %}; color: {% if eff_mode != 'consolidate' %}#ffffff{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      DT Entry
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- 1. CONSOLIDATE VIEW                                                 -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <div id="dt-view-consolidate" style="display: {% if view_mode != 'consolidate' %}none{% else %}block{% endif %};">
+
+    <!-- Top Parameters & Export Bar -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <!-- Discount Rate & Life Cycle Info Box -->
+      <div style="border: 1px solid #9ca3af; background: #ffffff; font-size: 0.75rem;">
+        <div style="display: flex; border-bottom: 1px solid #9ca3af;">
+          <div style="padding: 4px 12px; background: #eff6ff; border-right: 1px solid #9ca3af; font-weight: 600; color: #1f2937; min-width: 150px;">
+            Discount Rate(in %) :
+          </div>
+          <div style="padding: 4px 16px; font-weight: 700; color: #111827; text-align: center; min-width: 60px;">
+            {{ discount_rate|default:"10" }}
+          </div>
+        </div>
+        <div style="display: flex;">
+          <div style="padding: 4px 12px; background: #eff6ff; border-right: 1px solid #9ca3af; font-weight: 600; color: #1f2937; min-width: 150px;">
+            Life Cycle(Years) :
+          </div>
+          <div style="padding: 4px 16px; font-weight: 700; color: #111827; text-align: center; min-width: 60px;">
+            {{ life_cycle|default:"5" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Button -->
+      <button type="button"
+              id="btn-export-consolidate"
+              onclick="window.exportDTConsolidate()"
+              style="cursor: pointer; padding: 5px 22px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: 1px solid #1e3a8a; background: #ffffff; color: #172554; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        Export
+      </button>
+    </div>
+
+    <!-- Multi-Year Consolidate Table -->
+    <div style="overflow-x: auto;">
+      <table style="border-collapse: collapse; border: 1px solid #9ca3af; font-size: 0.75rem; background: #ffffff; min-width: 100%;">
+        <thead>
+          <tr style="background-color: #9cbde4;">
+            <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 320px;">
+              Category
+            </th>
+            <th style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 80px;">
+              Currency
+            </th>
+            {% for y in consolidate_years %}
+            <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 105px;">
+              {{ y }}
+            </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in consolidate_assignments %}
+          <tr style="background: {% cycle '#ffffff' '#f8fafc' %};">
+            <td style="border: 1px solid #9ca3af; padding: 8px 12px; color: #111827; font-weight: 500; white-space: nowrap;">
+              {{ row.category_name }}
+            </td>
+            <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; color: #1f2937; font-weight: 600;">
+              {{ row.currency|default:"INR" }}
+            </td>
+            {% for yc in row.year_costs %}
+            <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: right; font-weight: 500; color: #111827; white-space: nowrap;">
+              {{ yc.formatted_cost }}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+          {% if not consolidate_assignments %}
+          <tr>
+            <td colspan="10" style="border: 1px solid #9ca3af; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
+              No data available. Select an Item Creation ID to load data.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- 2. DT ENTRY VIEW                                                    -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <div id="dt-view-entry" style="display: {% if view_mode == 'consolidate' %}none{% else %}block{% endif %};">
+
+    <form id="dt-year-assignment-form"
+          action="{% url 'update_assignment_category' %}"
+          method="POST"
+          onsubmit="return window.submitDTAssignmentForm(event)">
+      {% csrf_token %}
+      <input type="hidden" name="item_creation_id" id="hidden-dt-item-id" value="{{ item_creation_id }}">
+      <input type="hidden" name="customer_id" id="hidden-dt-customer-id" value="">
+      <input type="hidden" name="assignment_year" id="hidden-dt-year" value="{{ assignment_year|default:'2026' }}">
+      <input type="hidden" name="view_mode" value="dt_entry">
+
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 16px;">
+
+        <!-- Table with Year Centered Header -->
+        <div style="display: inline-block;">
+          <table style="border-collapse: collapse; border: 1px solid #9ca3af; font-size: 0.75rem; background: #ffffff; min-width: 540px;">
+            <thead>
+              <!-- Year label row -->
+              <tr>
+                <th colspan="2" style="border: none; background: transparent; padding: 0;"></th>
+                <th style="border: none; background: transparent; text-align: center; font-weight: 700; color: #111827; font-size: 0.875rem; padding-bottom: 6px; padding-top: 0;">
+                  {{ assignment_year|default:"2026" }}
+                </th>
+              </tr>
+              <!-- Column headings -->
+              <tr style="background-color: #9cbde4;">
+                <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 320px;">
+                  Category
+                </th>
+                <th style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 70px;">
+                  INR
+                </th>
+                <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 150px;">
+                  Cost
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in assignments %}
+              <tr style="background: {% cycle '#ffffff' '#f8fafc' %};" data-category="{{ item.category_name }}">
+                <td style="border: 1px solid #9ca3af; padding: 8px 12px; color: #111827; font-weight: 500; white-space: nowrap;">
+                  {{ item.category_name }}
+                  <input type="hidden" name="categories[]" value="{{ item.category_name }}">
+                </td>
+                <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; color: #1f2937; font-weight: 600;">
+                  {{ item.currency|default:"INR" }}
+                </td>
+                <td style="border: 1px solid #9ca3af; padding: 6px; text-align: right; font-weight: 500; color: #111827;">
+                  <span class="dt-cost-display" data-category="{{ item.category_name }}" style="display: {% if is_editing %}none{% else %}inline{% endif %}; padding: 4px 8px;">
+                    {% if item.assigned_value is not None %}{{ item.assigned_value|floatformat:2 }}{% else %}—{% endif %}
+                  </span>
+                  <input type="number"
+                         step="0.01"
+                         name="costs[]"
+                         value="{% if item.assigned_value is not None %}{{ item.assigned_value|floatformat:2 }}{% endif %}"
+                         placeholder="0.00"
+                         class="dt-cost-input"
+                         data-category="{{ item.category_name }}"
+                         style="display: {% if is_editing %}block{% else %}none{% endif %}; width: 100%; text-align: right; padding: 4px 8px; font-size: 0.75rem; border: 1px solid #60a5fa; border-radius: 3px; background: #ffffff; color: #111827; box-sizing: border-box;">
+                </td>
+              </tr>
+              {% endfor %}
+              {% if not assignments %}
+              <tr>
+                <td colspan="3" style="border: 1px solid #9ca3af; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
+                  No categories found. Please configure DT Category List first.
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; align-items: center; gap: 12px; align-self: flex-end; padding-right: 16px; margin-top: 8px;">
+          <button type="button"
+                  id="btn-dt-edit"
+                  onclick="window.toggleDTEditMode(true)"
+                  style="cursor: pointer; padding: 5px 22px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: #2E266D; color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+            Edit
+          </button>
+          <button type="submit"
+                  id="btn-dt-save"
+                  style="cursor: pointer; padding: 5px 22px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: #2E266D; color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+            Save
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+
+</div>
+{% endwith %}
+
+<script>
+// ── Autofill cost column from tbl_dtassigmentyeardata via API ─────────────
+window.autofillDTCostsFromDB = async function() {
+  const topItem = document.getElementById("top-item-id");
+  const topYear  = document.getElementById("top-year");
+  const itemCreationId = (topItem && topItem.value.trim()) ? topItem.value.trim() : "{{ item_creation_id|default:'' }}";
+  const year           = (topYear && topYear.value.trim()) ? topYear.value.trim() : "{{ assignment_year|default:'2026' }}";
+
+  if (!itemCreationId) return;
+
+  try {
+    const url = `/CostingBCCal/get-cost/?item_creation_id=${encodeURIComponent(itemCreationId)}&year=${encodeURIComponent(year)}`;
+    const resp = await fetch(url);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const costs = data.costs || {};
+
+    // Populate cost displays and inputs by matching data-category attribute
+    document.querySelectorAll("tr[data-category]").forEach(row => {
+      const cat = row.getAttribute("data-category") || "";
+      let costVal = costs[cat];
+      if (costVal === undefined) {
+        const catLower = cat.toLowerCase();
+        for (const [k, v] of Object.entries(costs)) {
+          if (k.toLowerCase() === catLower) { costVal = v; break; }
+        }
+      }
+      if (costVal !== undefined && costVal !== null && costVal !== "") {
+        const display = row.querySelector(".dt-cost-display");
+        const input   = row.querySelector(".dt-cost-input");
+        const formatted = parseFloat(costVal).toFixed(2);
+        if (display) display.textContent = formatted;
+        if (input)   input.value = formatted;
+      }
+    });
+  } catch (err) {
+    console.error("autofillDTCostsFromDB error:", err);
+  }
+};
+function autofillDTCostsFromDB() { window.autofillDTCostsFromDB(); }
+
+window.toggleDTEditMode = function(enable) {
+  document.querySelectorAll(".dt-cost-display").forEach(d => { d.style.display = enable ? "none" : "inline"; });
+  document.querySelectorAll(".dt-cost-input").forEach(i => { i.style.display = enable ? "block" : "none"; });
+  const inputs = document.querySelectorAll(".dt-cost-input");
+  if (enable && inputs.length > 0) inputs[0].focus();
+};
+function toggleDTEditMode(enable) { window.toggleDTEditMode(enable); }
+
+window.switchDTViewMode = function(mode) {
+  const cv = document.getElementById("dt-view-consolidate");
+  const ev = document.getElementById("dt-view-entry");
+  const bc = document.getElementById("subtab-btn-consolidate");
+  const be = document.getElementById("subtab-btn-dtentry");
+  if (mode === "consolidate") {
+    if (cv) cv.style.display = "block";
+    if (ev) ev.style.display = "none";
+    if (bc) { bc.style.background="#ffffff"; bc.style.color="#172554"; bc.style.border="2px solid #1e3a8a"; bc.style.fontWeight="700"; }
+    if (be) { be.style.background="#f3f4f6"; be.style.color="#374151"; be.style.border="1px solid #d1d5db"; be.style.fontWeight="600"; }
+  } else {
+    if (cv) cv.style.display = "none";
+    if (ev) ev.style.display = "block";
+    if (be) { be.style.background="#172554"; be.style.color="#ffffff"; be.style.border="2px solid #172554"; be.style.fontWeight="700"; }
+    if (bc) { bc.style.background="#f3f4f6"; bc.style.color="#374151"; bc.style.border="1px solid #1e3a8a"; bc.style.fontWeight="600"; }
+  }
+};
+function switchDTViewMode(mode) { window.switchDTViewMode(mode); }
+
+window.exportDTConsolidate = function() {
+  const topItem = document.getElementById("top-item-id");
+  const itemCreationId = topItem ? topItem.value.trim() : "";
+  const topYear = document.getElementById("top-year");
+  const assignmentYear = topYear ? topYear.value.trim() : "2026";
+  window.location.href = `/CostingBCCal/assignment-year-data/export/?item_creation_id=${encodeURIComponent(itemCreationId)}&assignment_year=${encodeURIComponent(assignmentYear)}`;
+};
+function exportDTConsolidate() { window.exportDTConsolidate(); }
+
+window.submitDTAssignmentForm = async function(event) {
+  if (event) event.preventDefault();
+  const form = document.getElementById("dt-year-assignment-form");
+  if (!form) return false;
+
+  const topItem = document.getElementById("top-item-id");
+  const topCustomer = document.getElementById("top-customer-id");
+  const topYear = document.getElementById("top-year");
+  const hiddenItem = document.getElementById("hidden-dt-item-id");
+  const hiddenCustomer = document.getElementById("hidden-dt-customer-id");
+  const hiddenYear = document.getElementById("hidden-dt-year");
+
+  if (topItem && hiddenItem) hiddenItem.value = topItem.value.trim();
+  if (topCustomer && hiddenCustomer) hiddenCustomer.value = topCustomer.value.trim();
+  if (topYear && hiddenYear) hiddenYear.value = topYear.value.trim();
+
+  const formData = new FormData(form);
+  const btnSave = document.getElementById("btn-dt-save");
+  if (btnSave) { btnSave.disabled = true; btnSave.textContent = "Saving..."; }
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const html = await response.text();
+    const container = document.getElementById("child-costing-container");
+    if (container) {
+      container.innerHTML = html;
+      Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+        const newScript = document.createElement("script");
+        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+      });
+    }
+  } catch (err) {
+    console.error("Save error:", err);
+    alert("Failed to save data: " + err.message);
+  } finally {
+    if (btnSave) { btnSave.disabled = false; btnSave.textContent = "Save"; }
+  }
+  return false;
+};
+function submitDTAssignmentForm(event) { return window.submitDTAssignmentForm(event); }
+
+// Trigger automatic autofill on load
+setTimeout(function() { window.autofillDTCostsFromDB(); }, 50);
+</script>
