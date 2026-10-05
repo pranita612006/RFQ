@@ -1,0 +1,238 @@
+{% load static %}
+<div class="boc-layout" id="boc-tab-root" data-item-id="{{ item_creation_id }}" data-year="{{ assignment_year }}">
+  <!-- ── Left Column ── -->
+  <div class="boc-left-column">
+
+    <!-- 1. BOM : LOCAL BOC -->
+    <div class="boc-section-block">
+      <div class="boc-header-bar">
+        <span class="boc-section-title">BOM : LOCAL BOC</span>
+        <button type="button" class="boc-btn-save" id="btn-save-local-boc">Save Details</button>
+      </div>
+      <div class="boc-table-container table-fixed-h">
+        <table class="boc-data-table" id="table-boc-local">
+          <thead>
+            <tr>
+              <th style="min-width: 95px;">Part_Number</th>
+              <th style="min-width: 170px;">Description</th>
+              <th style="min-width: 80px;">UOM_Code</th>
+              <th class="text-right" style="min-width: 75px;">Quantity</th>
+              <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+              <th class="text-right" style="min-width: 90px;">Settle Price</th>
+              <th class="text-right" style="min-width: 90px;">Cost</th>
+            </tr>
+          </thead>
+          <tbody id="boc-local-bom-tbody">
+            {% for item in local_boms %}
+            <tr data-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="local">
+              <td>{{ item.part_number|default:"" }}</td>
+              <td>{{ item.description|default:"" }}</td>
+              <td>{{ item.uom_code|default:"" }}</td>
+              <td class="text-right">
+                <input type="number" step="any" class="boc-input-control boc-qty-input qty-input" data-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="local" value="{{ item.quantity|default:'0' }}" style="text-align: right;">
+              </td>
+              <td class="text-right">
+                <input type="number" step="any" class="boc-input-control boc-rate-input rate-input" data-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="local" value="{{ item.internal_rate|floatformat:4 }}" style="text-align: right;">
+              </td>
+              <td class="text-right">{{ item.settle_price|default:"-" }}</td>
+              <td class="text-right">{{ item.cost|floatformat:2|default:"0.00" }}</td>
+            </tr>
+            {% empty %}
+            <tr class="boc-empty-row">
+              <td colspan="7" class="text-center" style="padding: 10px; color: #64748B; font-style: italic;">No local BOM records found</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. BOM : IMPORTED BOC -->
+    <div class="boc-section-block">
+      <div class="boc-header-bar">
+        <span class="boc-section-title">BOM : IMPORTED BOC</span>
+        <button type="button" class="boc-btn-save" id="btn-save-imported-boc">Save Details</button>
+      </div>
+      <div class="boc-table-container table-fixed-h">
+        <table class="boc-data-table" id="table-boc-imported">
+          <thead>
+            <tr>
+              <th style="min-width: 45px; text-align: center;">Sr No</th>
+              <th style="min-width: 95px;">Part_Number</th>
+              <th style="min-width: 170px;">Description</th>
+              <th style="min-width: 80px;">UOM_Code</th>
+              <th class="text-right" style="min-width: 75px;">Quantity</th>
+              <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+              <th class="text-right" style="min-width: 90px;">Settle Price</th>
+              <th class="text-right" style="min-width: 90px;">Cost</th>
+              <th class="text-center" style="min-width: 65px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="boc-imported-bom-tbody">
+            {% for item in imported_boms %}
+            <tr data-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="imported_bom">
+              <td style="text-align: center;" class="col-srno">{{ forloop.counter }}</td>
+              <td>{{ item.part_number|default:"" }}</td>
+              <td>{{ item.description|default:"" }}</td>
+              <td>{{ item.uom_code|default:"" }}</td>
+              <td class="text-right col-qty">{{ item.quantity|default:"0.00" }}</td>
+              <td class="text-right col-ir">{{ item.internal_rate|floatformat:2|default:"0.00" }}</td>
+              <td class="text-right col-sp">{{ item.settle_price|floatformat:2|default:"0.00" }}</td>
+              <td class="text-right col-cost">{{ item.cost|floatformat:2|default:"0.00" }}</td>
+              <td style="text-align: center;">
+                <button type="button" class="btn-edit-row" style="padding:2px 8px; font-size:12px; cursor:pointer; background:#2563eb; color:#fff; border:none; border-radius:4px;">Edit</button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr class="boc-empty-row">
+              <td colspan="9" class="text-center" style="padding: 10px; color: #64748B; font-style: italic;">No imported BOM records found</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. Data Entry : IMPORTED BOC -->
+    <div class="boc-section-block">
+      <div class="boc-header-bar">
+        <span class="boc-section-title">Data Entry : IMPORTED BOC</span>
+      </div>
+      <div class="boc-table-container">
+        <table class="boc-data-table" id="table-boc-entry">
+          <thead>
+            <tr>
+              <th style="min-width: 170px;">Description</th>
+              <th style="min-width: 75px;">Tube Size</th>
+              <th style="min-width: 60px;">Unit</th>
+              <th class="text-right" style="min-width: 75px;">Rate/Unit</th>
+              <th class="text-right" style="min-width: 70px;">Quantity</th>
+              <th class="text-right" style="min-width: 75px;">Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 2px 4px;">
+                <input type="text" id="boc-entry-desc" class="boc-input-control" placeholder="Enter Description">
+              </td>
+              <td style="padding: 2px 4px;">
+                <input type="text" id="boc-entry-tubesize" class="boc-input-control" placeholder="Size">
+              </td>
+              <td style="padding: 2px 4px;">
+                <input type="text" id="boc-entry-unit" class="boc-input-control" placeholder="PCS">
+              </td>
+              <td style="padding: 2px 4px;">
+                <input type="number" step="any" id="boc-entry-rate" class="boc-input-control rate-input" style="text-align: right;" value="0.0000">
+              </td>
+              <td style="padding: 2px 4px;">
+                <input type="number" step="any" id="boc-entry-qty" class="boc-input-control qty-input" style="text-align: right;" value="0">
+              </td>
+              <td style="padding: 2px 4px;">
+                <input type="number" step="any" id="boc-entry-total" class="boc-input-control" style="text-align: right;" readonly value="0.00">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+        <button type="button" class="boc-btn-add" id="btn-boc-add-entry" style="padding: 4px 18px;">Add</button>
+      </div>
+    </div>
+
+  </div><!-- /boc-left-column -->
+
+  <!-- ── Right Column ── -->
+  <div class="boc-right-column">
+
+    <!-- Overview Section Header -->
+    <div class="boc-overview-header">
+      <span class="boc-overview-link">Over View</span>
+    </div>
+
+    <!-- Over View Table 1 (Local Summary) -->
+    <div class="boc-section-block">
+      <div class="boc-table-container table-overview-h">
+        <table class="boc-data-table" id="table-boc-overview-local">
+          <thead>
+            <tr>
+              <th style="min-width: 170px;">Raw_Material Description</th>
+              <th style="min-width: 75px;">Tube Size</th>
+              <th style="min-width: 50px;">Unit</th>
+              <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+              <th class="text-right" style="min-width: 65px;">Qnty</th>
+              <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+              <th style="width: 24px; text-align: center; border-right: none;"></th>
+            </tr>
+          </thead>
+          <tbody id="boc-overview-local-tbody">
+            {% for item in local_overview %}
+            <tr data-overview-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="local">
+              <td>{{ item.description }}</td>
+              <td>{{ item.tube_size }}</td>
+              <td>{{ item.unit }}</td>
+              <td class="text-right rate-cell">{{ item.rate_per_unit|floatformat:4 }}</td>
+              <td class="text-right qty-cell">{{ item.quantity|floatformat:2 }}</td>
+              <td class="text-right total-cell">{{ item.total_cost|floatformat:2 }}</td>
+              <td class="text-center" style="border-right: none;">
+                <button type="button" class="boc-action-del" data-id="{{ item.id }}" data-type="local" title="Delete row">&times;!</button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr class="overview-empty-row">
+              <td colspan="7" class="text-center" style="padding: 8px; color: #94A3B8; font-style: italic;">No local items in overview</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="boc-subtotal-bar">
+        <span class="boc-subtotal-label">Sub Total</span>
+        <input type="text" id="boc-local-subtotal" class="boc-subtotal-field" readonly value="{{ local_subtotal|floatformat:2 }}">
+      </div>
+    </div>
+
+    <!-- Over View Table 2 (Imported Summary) -->
+    <div class="boc-section-block">
+      <div class="boc-table-container table-overview-h">
+        <table class="boc-data-table" id="table-boc-overview-imported">
+          <thead>
+            <tr>
+              <th style="min-width: 170px;">Raw_Material Description</th>
+              <th style="min-width: 75px;">Tube Size</th>
+              <th style="min-width: 50px;">Unit</th>
+              <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+              <th class="text-right" style="min-width: 65px;">Qnty</th>
+              <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+              <th style="width: 24px; text-align: center; border-right: none;"></th>
+            </tr>
+          </thead>
+          <tbody id="boc-overview-imported-tbody">
+            {% for item in imported_overview %}
+            <tr data-overview-id="{{ item.id }}" data-row-id="{{ item.id }}" data-type="{{ item.type }}">
+              <td>{{ item.description }}</td>
+              <td>{{ item.tube_size }}</td>
+              <td>{{ item.unit }}</td>
+              <td class="text-right rate-cell">{{ item.rate_per_unit|floatformat:4 }}</td>
+              <td class="text-right qty-cell">{{ item.quantity|floatformat:2 }}</td>
+              <td class="text-right total-cell">{{ item.total_cost|floatformat:2 }}</td>
+              <td class="text-center" style="border-right: none;">
+                <button type="button" class="boc-action-del" data-id="{{ item.id }}" data-type="{{ item.type }}" title="Delete row">&times;!</button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr class="overview-empty-row">
+              <td colspan="7" class="text-center" style="padding: 8px; color: #94A3B8; font-style: italic;">No imported items in overview</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="boc-subtotal-bar">
+        <span class="boc-subtotal-label">Sub Total</span>
+        <input type="text" id="boc-imported-subtotal" class="boc-subtotal-field" readonly value="{{ imported_subtotal|floatformat:2 }}">
+      </div>
+    </div>
+
+
+  </div><!-- /boc-right-column -->
+</div><!-- /boc-layout -->

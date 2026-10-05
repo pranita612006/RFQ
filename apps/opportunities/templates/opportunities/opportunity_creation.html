@@ -7,101 +7,111 @@
   <div class="card card-primary">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3 class="card-title mb-0">Opportunity Creation</h3>
-<button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
-</div>
+      <button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
+    </div>
 
-<form method="post" novalidate>
-{% csrf_token %}
- {% if messages %}
- <div class="px-3 pt-3">
- {% for message in messages %}
- <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">
- {{ message }}
-</div>
-{% endfor %}
-</div>
-{% endif %}
-<div class="card-body scrollable-form p-3">
-<div class="row gx-3">
- <!-- LEFT COLUMN -->
- <div class="col-md-4">
- <h6 class="mb-2">Opportunity Details</h6>
+    {% if messages %}
+    <div class="px-3 pt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
-            
-<div class="form-group mb-2"> <label for="searchOpportunityNo">Search Opportunity No</label>
-   <select id="searchOpportunityNo" class="form-control">
-    <option value="">Select Opportunity</option>
-</select>
- </div>
-<div class="form-group mb-2"> <label for="lastEcnNo">Last ECN No</label>
- <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
-</div>
+    <!-- RFQ Lock Banner (hidden by default, shown when locked) -->
+    <div id="rfq-locked-banner" class="alert alert-danger mx-3 mt-3 d-none" role="alert">
+      <strong>&#x1F512; RFQ is Closed!</strong> This item's RFQ has been completed. Add, Update, Delete, and Complete actions are disabled.
+    </div>
 
+    <!-- Toast notification -->
+    <div id="toast-msg" class="alert mx-3 mt-2 d-none" role="alert"></div>
 
-<div class="form-group mb-2">
- <label for="itemNo">Item No / Part Number</label>
-<select id="itemNo" name="itemNo" class="form-control">
-<option value="">Select Item No</option>
-</select>
- </div>
-<div class="form-group mb-2">
-<label for="projectName">Project Name</label>
- <input type="text" class="form-control" id="projectName" name="projectName">
-  </div>
-<div class="form-group mb-2">
- <label for="opportunityReceivedDate">Opportunity Received Date</label>
- <input type="date" class="form-control" id="opportunityReceivedDate" name="opportunityReceivedDate">
- </div>
- <div class="form-group mb-2">
-    <label for="salespersonCode">Salesperson Code</label>
-    <select id="salespersonCode" name="salespersonCode" class="form-control">
-       <option value="">Select Salesperson Code</option>
-  </select>
-</div>
+    <form id="opp-form" novalidate>
+      {% csrf_token %}
+      <div class="card-body scrollable-form p-3">
+        <div class="row gx-3">
 
- <div class="form-group mb-2">
-  <label for="contactNo">Contact No</label>
- <input type="text" class="form-control" id="contactNo" name="contactNo">
-</div>
+          <!-- LEFT COLUMN -->
+          <div class="col-md-4">
+            <h6 class="mb-2">Opportunity Details</h6>
 
- <div class="form-group mb-2">
-  <label for="contactName">Contact Name</label>
-<input type="text" class="form-control" id="contactName" name="contactName">
- </div>
-  <div class="form-group mb-2">
-    <label for="salesCycleCode">Sales Cycle Code</label>
-    <select id="salesCycleCode" name="salesCycleCode" class="form-control">
-        <option value="">Select Sales Cycle Code</option>
-    </select>
-</div>
-
-
- <div class="form-group mb-2">
-  <label for="creationDate">Creation Date</label>
- <input type="date" class="form-control" id="creationDate" name="creationDate" value="{{ creation_date|default:'' }}">
- </div>
-
- <div class="form-group mb-2">
-<label for="status">Status</label>
- <select id="status" name="status" class="form-control">
- <option value="">Select Status</option>
-        <option value="Not Started">Not Started</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Won">Won</option>
-        <option value="Lost">Lost</option>
-    </select>
+            <div class="form-group mb-2">
+              <label for="searchOpportunityNo">Search Opportunity No</label>
+              <input type="text" id="searchOpportunityNo" class="form-control" list="searchOppList" placeholder="Type or select opportunity no..." autocomplete="off">
+              <datalist id="searchOppList"></datalist>
             </div>
 
             <div class="form-group mb-2">
-                <label for="reason">Reason</label>
-                <select id="reason" name="reason" class="form-control">
-                    <option value="">Select Reason</option>
-        <option value="Technical">Technical</option>
-        <option value="Price">Price</option>
-        <option value="Absolute">Absolute</option>
-        <option value="ECN">ECN</option>
-        <option value="Other">Other</option>
-                </select>
+              <label for="lastEcnNo">Last ECN No</label>
+              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo" readonly>
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="itemNo">Item No / Part Number</label>
+              <input type="text" id="itemNo" name="itemNo" class="form-control" list="itemNoList" placeholder="Type or select item no..." autocomplete="off">
+              <datalist id="itemNoList"></datalist>
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="projectName">Project Name</label>
+              <input type="text" class="form-control" id="projectName" name="projectName">
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="opportunityReceivedDate">Opportunity Received Date</label>
+              <input type="date" class="form-control" id="opportunityReceivedDate" name="opportunityReceivedDate">
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="salespersonCode">Salesperson Code</label>
+              <select id="salespersonCode" name="salespersonCode" class="form-control">
+                <option value="">Select Salesperson Code</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="contactNo">Contact No</label>
+              <input type="text" class="form-control" id="contactNo" name="contactNo">
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="contactName">Contact Name</label>
+              <input type="text" class="form-control" id="contactName" name="contactName">
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="salesCycleCode">Sales Cycle Code</label>
+              <select id="salesCycleCode" name="salesCycleCode" class="form-control">
+                <option value="">Select Sales Cycle Code</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="creationDate">Creation Date</label>
+              <input type="date" class="form-control" id="creationDate" name="creationDate">
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="status">Status</label>
+              <select id="status" name="status" class="form-control">
+                <option value="">Select Status</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Won">Won</option>
+                <option value="Lost">Lost</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="reason">Reason <span class="text-danger">*</span></label>
+              <select id="reason" name="reason" class="form-control">
+                <option value="">Select Reason</option>
+                <option value="Technical">Technical</option>
+                <option value="Price">Price</option>
+                <option value="Absolute">Absolute</option>
+                <option value="ECN">ECN</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div class="form-group mb-2">
@@ -116,8 +126,8 @@
 
             <div class="form-group mb-2">
               <label for="custId">Cust ID</label>
-<input type="text" class="form-control" id="custId" name="custId"
-       value="{{ global_customer_id }}" {% if has_active_customer %}readonly{% endif %}>
+              <input type="text" class="form-control" id="custId" name="custId"
+                     value="{{ customer_id }}" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -126,17 +136,16 @@
             </div>
 
             <div class="form-group mb-2">
-    <label for="segmentNo">Segment No</label>
-    <select id="segmentNo" name="segmentNo" class="form-control">
-        <option value="">Select Segment No</option>
-    </select>
-</div>
+              <label for="segmentNo">Segment No</label>
+              <select id="segmentNo" name="segmentNo" class="form-control">
+                <option value="">Select Segment No</option>
+              </select>
+            </div>
 
             <div class="form-group mb-2">
               <label for="segmentDesc">Segment Description</label>
-              <input type="text" class="form-control" id="segmentDesc" name="segmentDesc">
+              <input type="text" class="form-control" id="segmentDesc" name="segmentDesc" readonly>
             </div>
-
 
             <div class="form-group mb-2">
               <label for="partName">Part Name</label>
@@ -156,37 +165,35 @@
             <div class="form-group mb-2">
               <label for="application">Application</label>
               <select id="application" name="application" class="form-control">
-                    <option value="">Select Application</option>
-        <option value="SCR">SCR</option>
-        <option value="Pneumatic">Pneumatic</option>
-        <option value="Coolant">Coolant</option>
-        <option value="Fuel">Fuel</option>
-        <option value="Other">Other</option>
-                </select>
-            </div>
-
-
-            <div class="form-group mb-2">
-                <label for="business">Business</label>
-                <select id="business" name="business" class="form-control">
-                    <option value="">Select Business</option>
-        <option value="New">New</option>
-        <option value="Pneumatic">Pneumatic</option>
-                </select>
+                <option value="">Select Application</option>
+                <option value="SCR">SCR</option>
+                <option value="Pneumatic">Pneumatic</option>
+                <option value="Coolant">Coolant</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div class="form-group mb-2">
-                <label for="plantLocation">Voss Plant Location</label>
-                <select id="plantLocation" name="plantLocation" class="form-control">
-                    <option value="">Select VOSS Plant Location</option>
-        <option value="Pune-1">Pune-1</option>
-        <option value="Pune-2">Pune-2</option>
-        <option value="Chennai">Chennai</option>
-        <option value="UTK">UTK</option>
-        <option value="Unit-3">Unit-3</option>
-                </select>
+              <label for="business">Business</label>
+              <select id="business" name="business" class="form-control">
+                <option value="">Select Business</option>
+                <option value="New">New</option>
+                <option value="Pneumatic">Pneumatic</option>
+              </select>
             </div>
 
+            <div class="form-group mb-2">
+              <label for="plantLocation">Voss Plant Location</label>
+              <select id="plantLocation" name="plantLocation" class="form-control">
+                <option value="">Select VOSS Plant Location</option>
+                <option value="Pune-1">Pune-1</option>
+                <option value="Pune-2">Pune-2</option>
+                <option value="Chennai">Chennai</option>
+                <option value="UTK">UTK</option>
+                <option value="Unit-3">Unit-3</option>
+              </select>
+            </div>
 
             <div class="form-group mb-2">
               <label for="salesGoaheadDate">Sales Goahead Date</label>
@@ -200,17 +207,17 @@
 
             <div class="form-group mb-2">
               <label for="customer_name">Customer Name</label>
-<input type="text" class="form-control" id="customer_name" name="customer_name"
-       value="{{ global_customer_name }}" {% if has_active_customer %}readonly{% endif %}>
-                  </div>
+              <input type="text" class="form-control" id="customer_name" name="customer_name"
+                     value="{{ customer_name }}" readonly>
+            </div>
 
             <div class="form-group mb-2">
-              <label for="estimatedSalesPrice">Estimated Sales Price</label>
+              <label for="estimatedSalesPrice">Estimated Sales Price (Part Price 1)</label>
               <input type="number" step="0.01" class="form-control" id="estimatedSalesPrice" name="estimatedSalesPrice" value="0">
             </div>
 
             <div class="form-group mb-2">
-              <label for="nominatedPrice">Nominated Price</label>
+              <label for="nominatedPrice">Nominated Price (Part Price 2)</label>
               <input type="number" step="0.01" class="form-control" id="nominatedPrice" name="nominatedPrice" value="0">
             </div>
 
@@ -270,8 +277,8 @@
             </div>
 
             <div class="form-group mb-2">
-              <label for="estimatedValuePa">Estimated Value (PA)</label>
-              <input type="number" step="0.01" class="form-control" id="estimatedValuePa" name="estimatedValuePa" value="0">
+              <label for="estimatedValuePa">Estimated Value (PA) <small class="text-muted">auto-calculated</small></label>
+              <input type="number" step="0.01" class="form-control" id="estimatedValuePa" name="estimatedValuePa" value="0" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -280,8 +287,8 @@
             </div>
 
             <div class="form-group mb-2">
-              <label for="estimatedValueEuro">Estimated Value Euro</label>
-              <input type="number" step="0.01" class="form-control" id="estimatedValueEuro" name="estimatedValueEuro" value="0">
+              <label for="estimatedValueEuro">Estimated Value Euro <small class="text-muted">auto-calculated</small></label>
+              <input type="number" step="0.01" class="form-control" id="estimatedValueEuro" name="estimatedValueEuro" value="0" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -294,277 +301,462 @@
               <textarea class="form-control" id="remarks" name="remarks" rows="1"></textarea>
             </div>
 
-
             <div class="form-group mb-2">
-                <label for="quoteStatus">Quote Status</label>
-                <select id="quoteStatus" name="quoteStatus" class="form-control">
-                    <option value="">Select Quote Status</option>
-        <option value="Sent">Sent</option>
-        <option value="Not Sent">Not Sent</option>
-                </select>
+              <label for="quoteStatus">Quote Status</label>
+              <select id="quoteStatus" name="quoteStatus" class="form-control">
+                <option value="">Select Quote Status</option>
+                <option value="Sent">Sent</option>
+                <option value="Not Sent">Not Sent</option>
+              </select>
             </div>
-            
 
-          
             <div class="form-group mb-2">
-                <label for="categoryType">Category Type</label>
-                <select id="categoryType" name="categoryType" class="form-control">
-                    <option value="">Select Quote Status</option>
-        <option value="NBO A">NBO A</option>
-        <option value="NBO B1">NBO B1</option>
-        <option value="NBO B2">NBO B2</option>
-        <option value="NBO C">NBO C</option>
-        <option value="NBO">NBO</option>
-                </select>
+              <label for="categoryType">Category Type</label>
+              <select id="categoryType" name="categoryType" class="form-control">
+                <option value="">Select Category Type</option>
+                <option value="NBO A">NBO A</option>
+                <option value="NBO B1">NBO B1</option>
+                <option value="NBO B2">NBO B2</option>
+                <option value="NBO C">NBO C</option>
+                <option value="NBO">NBO</option>
+              </select>
             </div>
 
             <div class="form-group mb-2">
               <label for="lastModifiedDate">Last Modified Date</label>
-              <input type="date" class="form-control" id="lastModifiedDate" name="lastModifiedDate">
+              <input type="date" class="form-control" id="lastModifiedDate" name="lastModifiedDate" readonly>
             </div>
           </div>
+
         </div>
       </div>
 
-      <div class="card-footer text-right">
-        <button type="submit" name="action" value="add" class="btn btn-primary">Add</button>
-        <button type="button" class="btn btn-warning">Update</button>
-        <a href="{% url 'opportunitycreation_ecn' %}?customer_id={{ selected_customer_id }}&customer_name={{ selected_name }}"
-   class="btn btn-primary">
-   ECN Request
-</a>
+      <div class="card-footer d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-primary" id="btn-add">Add</button>
+        <button type="button" class="btn btn-warning" id="btn-update">Update</button>
+        <a href="{% url 'opportunitycreation_ecn' %}" class="btn btn-info" id="btn-ecn">ECN Request</a>
+        <button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+        <button type="button" class="btn btn-success" id="btn-complete">Complete</button>
+      </div>
 
-<button type="button" class="btn btn-danger">Delete</button>
-<button type="button" class="btn btn-success">Complete</button>
-</div>
-<div class="px-3 pb-3">
- <details>
-   <summary class="btn btn-outline-primary mt-2">Send Email</summary>
- <div class="border rounded p-3 mt-2">
-<div class="form-group mb-2">
- <label for="recipient_email">Recipient Email</label>
- <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
- </div>
-  <button type="submit" class="btn btn-primary" formaction="{% url 'send_item_email' %}">Send Email
- </button>
- </div>
-</details>
-</div>
-<a href="/feasibility_form/" class="btn btn-primary">
-    Go to Feasibility
-</a>
- </form>
-</div>
+    </form>
+
+    <div class="px-3 pb-3">
+      <details>
+        <summary class="btn btn-outline-primary mt-2">Send Email</summary>
+        <div class="border rounded p-3 mt-2">
+          <form method="post" action="{% url 'send_item_email' %}">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+              <label for="recipient_email">Recipient Email</label>
+              <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
+            </div>
+            <!-- Pass current form fields as hidden for email -->
+            <input type="hidden" name="itemNo" id="email-itemNo">
+            <input type="hidden" name="projectName" id="email-projectName">
+            <input type="hidden" name="customer_name" id="email-custName">
+            <input type="hidden" name="contactName" id="email-contactName">
+            <input type="hidden" name="contactNo" id="email-contactNo">
+            <input type="hidden" name="status" id="email-status">
+            <input type="hidden" name="remarks" id="email-remarks">
+            <button type="submit" class="btn btn-primary">Send Email</button>
+          </form>
+        </div>
+      </details>
+    </div>
+
+    <div class="px-3 pb-3">
+      <a href="/feasibility_form/" class="btn btn-primary">Go to Feasibility</a>
+    </div>
+  </div>
 </div>
 
 <script>
+const CUSTOMER_ID = "{{ customer_id }}";
+const CSRF_TOKEN = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-// 🔙 Back button
-document.getElementById('btn-back')?.addEventListener('click', function() {
-    window.history.back();
-});
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+document.getElementById('btn-back')?.addEventListener('click', () => window.history.back());
 
 function setDropdownValue(id, value) {
     const el = document.getElementById(id);
-    if (!el || !value) return;
-
+    if (!el || value === null || value === undefined || value === '') return;
     let exists = [...el.options].some(opt => opt.value == value);
-
-    if (!exists) {
-        let opt = new Option(value, value);
-        el.add(opt);
-    }
-
+    if (!exists) el.add(new Option(value, value));
     el.value = value;
 }
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
-
-    // already correct
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-
-    const months = {
-        Jan: "01", Feb: "02", Mar: "03", Apr: "04",
-        May: "05", Jun: "06", Jul: "07", Aug: "08",
-        Sep: "09", Oct: "10", Nov: "11", Dec: "12"
-    };
-
+    const months = {Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
     try {
-        // 03-May-24
         if (dateStr.includes("-") && isNaN(dateStr.split("-")[1])) {
             let [day, mon, year] = dateStr.split("-");
             if (!months[mon]) return "";
             if (year.length === 2) year = "20" + year;
-            return `${year}-${months[mon]}-${day.padStart(2, "0")}`;
+            return `${year}-${months[mon]}-${day.padStart(2,"0")}`;
         }
-
-        // 22-05-2024
         if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
             let [day, month, year] = dateStr.split("-");
             return `${year}-${month}-${day}`;
         }
-
         let d = new Date(dateStr);
         if (!isNaN(d)) return d.toISOString().split("T")[0];
-
-    } catch (e) {
-        console.error("Date error:", dateStr);
-    }
-
+    } catch(e) {}
     return "";
 }
 
-const fill = (id, val) => {
+function fill(id, val) {
     const el = document.getElementById(id);
     if (!el) return;
+    if (el.type === "date") el.value = formatDate(val);
+    else el.value = (val === null || val === undefined) ? "" : val;
+}
 
-    if (el.type === "date") {
-        el.value = formatDate(val);   // ✅ FIXED
+function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+}
+
+function showToast(msg, type="success") {
+    const t = document.getElementById("toast-msg");
+    t.className = `alert mx-3 mt-2 alert-${type}`;
+    t.textContent = msg;
+    t.classList.remove("d-none");
+    setTimeout(() => t.classList.add("d-none"), 4000);
+}
+
+// ─── RFQ Lock ────────────────────────────────────────────────────────────────
+
+let _rfqLocked = false;
+const ACTION_BTNS = ['btn-add','btn-update','btn-delete','btn-complete'];
+
+function applyRfqLock(locked) {
+    _rfqLocked = locked;
+    const banner = document.getElementById('rfq-locked-banner');
+    if (locked) {
+        banner.classList.remove('d-none');
+        ACTION_BTNS.forEach(id => {
+            const b = document.getElementById(id);
+            if (b) { b.disabled = true; b.classList.add('disabled'); }
+        });
+        document.getElementById('btn-ecn')?.classList.add('disabled');
     } else {
-        el.value = (val === null || val === undefined) ? "" : val;
+        banner.classList.add('d-none');
+        ACTION_BTNS.forEach(id => {
+            const b = document.getElementById(id);
+            if (b) { b.disabled = false; b.classList.remove('disabled'); }
+        });
+        document.getElementById('btn-ecn')?.classList.remove('disabled');
     }
-};
+}
 
-// 📌 3. Load Opportunity List
-document.getElementById("searchOpportunityNo").addEventListener("focus", function () {
-    const customerId = "{{ global_customer_id }}";
+function checkRfqLock(itemNo) {
+    if (!itemNo || !CUSTOMER_ID) { applyRfqLock(false); return; }
+    fetch(`/check_rfq_lock/?customer_id=${encodeURIComponent(CUSTOMER_ID)}&item_no=${encodeURIComponent(itemNo)}`)
+        .then(r => r.json())
+        .then(data => applyRfqLock(data.locked))
+        .catch(() => applyRfqLock(false));
+}
 
-    fetch(`/get_item_numbers/?customer_id=${customerId}`)
-        .then(res => res.json())
-        .then(data => {
-            let dropdown = document.getElementById("searchOpportunityNo");
-            dropdown.innerHTML = '<option value="">Select Opportunity</option>';
+// ─── Calculations (mirrors VBA) ───────────────────────────────────────────────
 
-            data.data.forEach(no => {
-                let opt = document.createElement("option");
-                opt.value = no;
-                opt.text = no;
-                dropdown.appendChild(opt);
-            });
-        })
-        .catch(err => console.error("Error loading dropdown:", err));
+function recalcEstimatedValue() {
+    const vol1 = parseFloat(getVal('annualVolume1')) || 0;
+    const vol2 = parseFloat(getVal('annualVolume2')) || 0;
+    const vol3 = parseFloat(getVal('annualVolume3')) || 0;
+    const vol4 = parseFloat(getVal('annualVolume4')) || 0;
+    const vol5 = parseFloat(getVal('annualVolume5')) || 0;
+    const maxVol = Math.max(vol1, vol2, vol3, vol4, vol5);
+
+    const price1 = parseFloat(getVal('estimatedSalesPrice')) || 0;
+    const price2 = parseFloat(getVal('nominatedPrice')) || 0;
+    const price = (price2 > 0) ? price2 : price1;
+
+    const estVal = maxVol * price;
+    fill('estimatedValuePa', estVal.toFixed(2));
+
+    const euro = parseFloat(getVal('euroConversion')) || 0;
+    fill('estimatedValueEuro', (estVal * euro).toFixed(2));
+}
+
+// When Vol1 changes, auto-fill volumes 2-5 if they are 0 (mirrors VBA)
+document.getElementById('annualVolume1').addEventListener('change', function() {
+    const v = parseFloat(this.value) || 0;
+    ['annualVolume2','annualVolume3','annualVolume4','annualVolume5'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && (parseFloat(el.value) || 0) === 0) el.value = v;
+    });
+    recalcEstimatedValue();
 });
 
+['annualVolume2','annualVolume3','annualVolume4','annualVolume5',
+ 'estimatedSalesPrice','nominatedPrice','euroConversion'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', recalcEstimatedValue);
+});
 
-// 📌 4. Autofill
-document.getElementById("searchOpportunityNo").addEventListener("change", function () {
+// SOP Date → Year1..5 (mirrors VBA: Year1=SOP, Year2=SOP+365, ...)
+document.getElementById('sopDate').addEventListener('change', function() {
+    const v = this.value;
+    if (!v) return;
+    const base = new Date(v);
+    fill('annualYear1', base.toISOString().split('T')[0]);
+    for (let i = 1; i <= 4; i++) {
+        const d = new Date(base);
+        d.setFullYear(d.getFullYear() + i);
+        fill(`annualYear${i+1}`, d.toISOString().split('T')[0]);
+    }
+});
 
+// Status → Status Date + Sales Goahead Date (mirrors VBA: Cmb_Status_AfterUpdate)
+document.getElementById('status').addEventListener('change', function() {
+    const today = new Date().toISOString().split('T')[0];
+    fill('statusDate', today);
+    if (this.value === 'Won') {
+        fill('salesGoaheadDate', today);
+    } else {
+        fill('salesGoaheadDate', '');
+    }
+});
+
+// Segment No → Segment Description (mirrors VBA: Cmb_Segment_No_AfterUpdate)
+document.getElementById('segmentNo').addEventListener('change', function() {
+    const selected = this.options[this.selectedIndex];
+    // Description is embedded in option text after " - "
+    const text = selected ? selected.text : '';
+    const parts = text.split(' - ');
+    fill('segmentDesc', parts.length > 1 ? parts.slice(1).join(' - ') : '');
+});
+
+// ─── Load Item No Datalist ────────────────────────────────────────────────────
+
+function loadItemDatalist() {
+    if (!CUSTOMER_ID) return;
+    fetch(`/get_item_numbers/?customer_id=${CUSTOMER_ID}`)
+        .then(r => r.json())
+        .then(data => {
+            const dl = document.getElementById('itemNoList');
+            dl.innerHTML = '';
+            data.data.forEach(no => {
+                const opt = document.createElement('option');
+                opt.value = no; opt.textContent = no;
+                dl.appendChild(opt);
+            });
+            // Also populate searchOppList from same list
+            const dl2 = document.getElementById('searchOppList');
+            dl2.innerHTML = '';
+            data.data.forEach(no => {
+                const opt = document.createElement('option');
+                opt.value = no; opt.textContent = no;
+                dl2.appendChild(opt);
+            });
+        }).catch(e => console.error("Error loading item list:", e));
+}
+loadItemDatalist();
+
+// ─── itemNo AfterUpdate → get part name + RFQ lock check ─────────────────────
+
+document.getElementById('itemNo').addEventListener('change', function() {
+    const itemNo = this.value.trim();
+    if (!itemNo) return;
+    checkRfqLock(itemNo);
+    fetch(`/get_item_info/?item_no=${encodeURIComponent(itemNo)}`)
+        .then(r => r.json())
+        .then(data => { fill('partName', data.description); })
+        .catch(() => {});
+});
+
+// ─── Search Opportunity No → Autofill ────────────────────────────────────────
+
+document.getElementById('searchOpportunityNo').addEventListener('change', function() {
     const selectedItemNo = this.value.trim();
     if (!selectedItemNo) return;
 
-    let itemField = document.getElementById("itemNo");
+    fill('itemNo', selectedItemNo);
+    checkRfqLock(selectedItemNo);
 
-    if (itemField) {
-        if (itemField.tagName === "SELECT") {
-            let opt = document.createElement("option");
-            opt.value = selectedItemNo;
-            opt.text = selectedItemNo;
-            itemField.appendChild(opt);
-        }
-        itemField.value = selectedItemNo;
-    }
-
-    console.log("Fetching details for:", selectedItemNo);
-
-    fetch(`/get_opportunity_details/?item_no=${selectedItemNo}`)
-        .then(res => res.json())
+    fetch(`/get_opportunity_details/?item_no=${encodeURIComponent(selectedItemNo)}`)
+        .then(r => r.json())
         .then(result => {
-           
-           if (result.status === "success") {
-                const d = result.data;
-                console.log(result.data);
-
-                setDropdownValue("salespersonCode", d.salesperson_code);
-                setDropdownValue("salesCycleCode", d.sales_cycle_code);
-                setDropdownValue("segmentNo", d.segment_no);
-
-
-                fill("lastEcnNo", d.last_ecn_no);
-                fill("projectName", d.part_name);
-                fill("opportunityReceivedDate", d.opp_received_date);
-                fill("contactName", d.contact_name);
-                
-                fill("creationDate", d.creation_date);
-                fill("status", d.status);
-                fill("reason", d.reason);
-                fill("statusDate", d.status_date);
-
-                fill("nominatedPrice", d.est_price); 
-                fill("estimatedValuePa", d.est_val); 
-                fill("quoteStatus", d.quote_status);
-                fill("custId", d.customer_id);
-               
-                fill("segmentDesc", d.segment_desc);
-                fill("partName", d.part_name);
-                fill("sopDate", d.sop_date);
-                fill("drawingRev", d.drawing_rev);
-                fill("application", d.application);
-                fill("business", d.business);
-                fill("plantLocation", d.plant_loc);
-                fill("salesGoaheadDate", d.sales_goahead);
-                fill("customer_name", d.customer_name_db);
-                fill("estimatedSalesPrice", d.est_price);
-
-                fill("annualVolume1", d.vol1); fill("annualYear1", d.year1);
-                fill("annualVolume2", d.vol2); fill("annualYear2", d.year2);
-                fill("annualVolume3", d.vol3); fill("annualYear3", d.year3);
-                fill("annualVolume4", d.vol4); fill("annualYear4", d.year4);
-                fill("annualVolume5", d.vol5); fill("annualYear5", d.year5);
-
-                fill("euroConversion", d.euro_conv);
-                fill("lifeCycleYears", d.life_cycle);
-                fill("remarks", d.remarks);
-                fill("categoryType", d.cat_type);
-                fill("lastModifiedDate", d.modified_date);
-
-                fetch(`/get_item_numbers/?customer_id=${d.customer_id}`)
-                .then(res => res.json())
-                .then(data => {
-                    fill("supplyLocation", data.city);
-                    fill("contactNo", data.contact); // optional overwrite
-                });
-
-                console.log("✅ Autofill successful");
+            if (result.status !== "success") {
+                showToast("Opportunity not found.", "warning");
+                return;
             }
+            const d = result.data;
+
+            setDropdownValue("salespersonCode", d.salesperson_code);
+            setDropdownValue("salesCycleCode", d.sales_cycle_code);
+            setDropdownValue("segmentNo", d.segment_no);
+            setDropdownValue("status", d.status);
+            setDropdownValue("reason", d.reason);
+            setDropdownValue("quoteStatus", d.quote_status);
+            setDropdownValue("categoryType", d.cat_type);
+            setDropdownValue("application", d.application);
+            setDropdownValue("business", d.business);
+            setDropdownValue("plantLocation", d.plant_loc);
+
+            fill("lastEcnNo", d.last_ecn_no);
+            fill("projectName", d.project_name_db);
+            fill("opportunityReceivedDate", d.opp_received_date);
+            fill("contactName", d.contact_name);
+            fill("contactNo", d.contact_no);
+            fill("creationDate", d.creation_date);
+            fill("statusDate", d.status_date);
+            fill("estimatedSalesPrice", d.est_price);
+            fill("nominatedPrice", d.est_price);
+            fill("estimatedValuePa", d.est_val);
+            fill("segmentDesc", d.segment_desc);
+            fill("partName", d.part_name);
+            fill("sopDate", d.sop_date);
+            fill("drawingRev", d.drawing_rev);
+            fill("salesGoaheadDate", d.sales_goahead);
+            fill("customer_name", d.customer_name_db);
+            fill("custId", d.customer_id || CUSTOMER_ID);
+            fill("supplyLocation", d.plant_loc);
+            fill("annualVolume1", d.vol1); fill("annualYear1", d.year1);
+            fill("annualVolume2", d.vol2); fill("annualYear2", d.year2);
+            fill("annualVolume3", d.vol3); fill("annualYear3", d.year3);
+            fill("annualVolume4", d.vol4); fill("annualYear4", d.year4);
+            fill("annualVolume5", d.vol5); fill("annualYear5", d.year5);
+            fill("euroConversion", d.euro_conv);
+            fill("lifeCycleYears", d.life_cycle);
+            fill("remarks", d.remarks);
+            fill("lastModifiedDate", d.modified_date);
+
+            console.log("✅ Autofill successful");
         })
-        .catch(err => alert("Error: " + err.message));
+        .catch(err => showToast("Error loading opportunity: " + err.message, "danger"));
 });
 
+// ─── Dropdowns (lazy load) ────────────────────────────────────────────────────
 
-// 📌 Dropdowns
 document.getElementById("salespersonCode").addEventListener("focus", function () {
-    fetch("/get_salespersons/")
-        .then(res => res.json())
-        .then(data => {
-            this.innerHTML = '<option value="">Select Salesperson</option>';
-            data.data.forEach(item => {
-                this.add(new Option(item.code + " - " + item.name, item.code));
-            });
-        });
+    if (this.options.length > 1) return;
+    fetch("/get_salespersons/").then(r => r.json()).then(data => {
+        this.innerHTML = '<option value="">Select Salesperson</option>';
+        data.data.forEach(item => this.add(new Option(item.code + " - " + item.name, item.code)));
+    });
 });
 
 document.getElementById("salesCycleCode").addEventListener("focus", function () {
-    fetch("/get_sales_cycles/")
-        .then(res => res.json())
-        .then(data => {
-            this.innerHTML = '<option value="">Select Sales Cycle</option>';
-            data.data.forEach(item => {
-                this.add(new Option(`${item.code} - ${item.description}`, item.code));
-            });
-        });
+    if (this.options.length > 1) return;
+    fetch("/get_sales_cycles/").then(r => r.json()).then(data => {
+        this.innerHTML = '<option value="">Select Sales Cycle</option>';
+        data.data.forEach(item => this.add(new Option(`${item.code} - ${item.description}`, item.code)));
+    });
 });
 
 document.getElementById("segmentNo").addEventListener("focus", function () {
-    fetch("/get_segments/")
-        .then(res => res.json())
-        .then(data => {
-            this.innerHTML = '<option value="">Select Segment</option>';
-            data.data.forEach(item => {
-                this.add(new Option(item.no + " - " + item.description, item.no));
-            });
-        });
+    if (this.options.length > 1) return;
+    fetch("/get_segments/").then(r => r.json()).then(data => {
+        this.innerHTML = '<option value="">Select Segment</option>';
+        data.data.forEach(item => this.add(new Option(item.no + " - " + item.description, item.no)));
+    });
 });
 
+// ─── Collect form data as FormData ───────────────────────────────────────────
+
+function collectFormData() {
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', CSRF_TOKEN);
+    const ids = [
+        'itemNo','custId','customer_name','opportunityReceivedDate','salespersonCode',
+        'contactNo','contactName','salesCycleCode','creationDate','status','reason',
+        'statusDate','supplyLocation','segmentNo','segmentDesc','partName','sopDate',
+        'drawingRev','application','business','plantLocation','salesGoaheadDate',
+        'estimatedSalesPrice','nominatedPrice','estimatedValuePa','euroConversion',
+        'estimatedValueEuro','lifeCycleYears','remarks','quoteStatus','categoryType',
+        'annualVolume1','annualYear1','annualVolume2','annualYear2',
+        'annualVolume3','annualYear3','annualVolume4','annualYear4',
+        'annualVolume5','annualYear5','lastModifiedDate','projectName'
+    ];
+    ids.forEach(id => fd.append(id, getVal(id)));
+    // For update, also send the searched item no as searchItemNo
+    fd.append('searchItemNo', getVal('searchOpportunityNo') || getVal('itemNo'));
+    return fd;
+}
+
+async function postAction(url, fd) {
+    const resp = await fetch(url, {method: 'POST', body: fd});
+    return await resp.json();
+}
+
+// ─── Add ──────────────────────────────────────────────────────────────────────
+
+document.getElementById('btn-add').addEventListener('click', async function() {
+    if (_rfqLocked) { showToast("RFQ is closed. Cannot add.", "danger"); return; }
+    const reason = getVal('reason');
+    if (!reason) { showToast("Please select the reason to save the opportunity!", "danger"); return; }
+    const fd = collectFormData();
+    const res = await postAction('/opportunity/add/', fd);
+    showToast(res.message, res.status === 'success' ? 'success' : 'danger');
+    if (res.status === 'success') {
+        loadItemDatalist();
+    }
+});
+
+// ─── Update ───────────────────────────────────────────────────────────────────
+
+document.getElementById('btn-update').addEventListener('click', async function() {
+    if (_rfqLocked) { showToast("RFQ is closed. Cannot update.", "danger"); return; }
+    const itemNo = getVal('searchOpportunityNo') || getVal('itemNo');
+    if (!itemNo) { showToast("Please select an opportunity first.", "warning"); return; }
+    const fd = collectFormData();
+    const res = await postAction('/opportunity/update/', fd);
+    showToast(res.message, res.status === 'success' ? 'success' : 'danger');
+});
+
+// ─── Delete ───────────────────────────────────────────────────────────────────
+
+document.getElementById('btn-delete').addEventListener('click', async function() {
+    if (_rfqLocked) { showToast("RFQ is closed. Cannot delete.", "danger"); return; }
+    const itemNo = getVal('itemNo') || getVal('searchOpportunityNo');
+    if (!itemNo) { showToast("Please select an opportunity first.", "warning"); return; }
+    if (!confirm(`Delete opportunity for item "${itemNo}"? This cannot be undone.`)) return;
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', CSRF_TOKEN);
+    fd.append('itemNo', itemNo);
+    fd.append('custId', CUSTOMER_ID);
+    const res = await postAction('/opportunity/delete/', fd);
+    showToast(res.message, res.status === 'success' ? 'success' : 'danger');
+    if (res.status === 'success') loadItemDatalist();
+});
+
+// ─── Complete ─────────────────────────────────────────────────────────────────
+
+document.getElementById('btn-complete').addEventListener('click', async function() {
+    if (_rfqLocked) { showToast("RFQ is closed. Cannot complete.", "danger"); return; }
+    const itemNo = getVal('itemNo') || getVal('searchOpportunityNo');
+    if (!itemNo) { showToast("Please select an opportunity first.", "warning"); return; }
+    if (!confirm(`Mark opportunity "${itemNo}" as completed?`)) return;
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', CSRF_TOKEN);
+    fd.append('itemNo', itemNo);
+    fd.append('custId', CUSTOMER_ID);
+    const res = await postAction('/opportunity/complete/', fd);
+    showToast(res.message, res.status === 'success' ? 'success' : 'danger');
+});
+
+// ─── Sync email hidden fields ─────────────────────────────────────────────────
+
+document.querySelector('details')?.addEventListener('toggle', function(e) {
+    if (this.open) {
+        document.getElementById('email-itemNo').value = getVal('itemNo');
+        document.getElementById('email-projectName').value = getVal('projectName');
+        document.getElementById('email-custName').value = getVal('customer_name');
+        document.getElementById('email-contactName').value = getVal('contactName');
+        document.getElementById('email-contactNo').value = getVal('contactNo');
+        document.getElementById('email-status').value = getVal('status');
+        document.getElementById('email-remarks').value = getVal('remarks');
+    }
+});
+
+// Set today as creation date on load
+(function() {
+    const cd = document.getElementById('creationDate');
+    if (cd && !cd.value) cd.value = new Date().toISOString().split('T')[0];
+})();
 </script>
 {% endblock %}

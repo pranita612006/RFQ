@@ -2,380 +2,662 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid mt-4">
-  <div class="card card-primary">
+<div class="container-fluid mt-3">
+
+  <!-- RFQ Locked Banner (hidden by default, shown via JS) -->
+  <div id="rfq-locked-banner" class="alert alert-danger d-none" role="alert">
+    <strong>⚠ RFQ Completed &amp; Locked.</strong> This item's RFQ is closed. No further changes are allowed.
+  </div>
+
+  <div class="card card-primary shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3 class="card-title mb-0">Item Creation</h3>
-      <button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
+      <div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-back">← Back</button>
+      </div>
     </div>
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% if messages %}
-      <div class="px-3 pt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">
-          {{ message }}
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      <div class="card-body scrollable-form p-3">
-        <div class="row gx-3">
-          <!-- LEFT COLUMN -->
-          <div class="col-md-4">
 
-            <div class="form-group">
-              <label>Customer ID</label>
-              <input type="text" name="customer_id" id="customer_id" class="form-control"
-                value="{{ selected_customer_id|default:global_customer_id }}" readonly>
-            </div>
+    {% if messages %}
+    <div class="px-3 pt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
+    <div class="card-body p-3">
+      <div class="row gx-3">
 
-            <div class="form-group mb-2">
-              <label for="lastEcnNo">Last ECN No</label>
-              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo">
-            </div>
+        <!-- ══ LEFT COLUMN ══ -->
+        <div class="col-md-4">
 
-            <div class="form-group mb-2">
-              <label for="customer_name">Customer Name</label>
-              <input type="text" id="customer_name" name="customer_name" class="form-control"
-                value="{{ selected_name|default:global_customer_name }}" readonly>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="s_item">Search Item</label>
-              <select id="s_item" name="s_item" class="form-control">
-                <option value="">Select Item</option>
-                {% for item in s_item %}
-                <option value="{{ item }}">{{ item }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="no">No</label>
-              <input type="text" class="form-control" id="no" name="no">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="templatename">Template Name</label>
-              <select id="templatename" name="templatename" class="form-control">
-                <option value="">Select Template Name</option>
-                {% for t in template_name %}
-                <option value="{{ t }}">{{ t }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="form-group mb-2">
-              <label for="description">Description</label>
-              <input type="text" class="form-control" id="description" name="description">
-            </div>
-            <div class="form-group mb-2">
-              <label for="base_unit_of_measure">Base Unit of Measure</label>
-              <select id="base_unit_of_measure" name="base_unit_of_measure" class="form-control">
-                <option value="">Select Unit</option>
-                {% for u in uoms %}
-                <option value="{{ u.code }}">{{ u.code }} - {{ u.description }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="shelf_no">Shelf No</label>
-              <!-- Use text if shelf numbers can include letters/codes -->
-              <input type="text" class="form-control" id="shelf_no" name="shelf_no">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="cell">Cell</label>
-              <select id="cell" name="cell" class="form-control">
-                <option value="">Select Cell</option>
-                {% for c in cells %}
-                <option value="{{ c.code }}">{{ c.code }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="cell_type">Cell Type</label>
-              <select id="cell_type" name="cell_type" class="form-control">
-                <option value="">Select Cell Type</option>
-                {% for ct in cell_types %}
-                <option value="{{ ct.code }}">{{ ct.code }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="item_category_code">Item Category Code</label>
-              <select id="item_category_code" name="item_category_code" class="form-control">
-                <option value="">Select Item Category</option>
-                {% for c in item_categories %}
-                <option value="{{ c.code }}">
-                  {{ c.code }} - {{ c.description }}
-                </option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="product_group_code">Product Group Code</label>
-              <select id="product_group_code" name="product_group_code" class="form-control">
-                <option value="">Select Product Group</option>
-                {% for p in product_groups %}
-                <option value="{{ p.code }}">{{ p.code }}</option>
-                {% endfor %}
-              </select>
-            </div>
+          <div class="form-group mb-2">
+            <label>Customer ID</label>
+            <input type="text" id="customer_id" name="customer_id" class="form-control form-control-sm"
+              value="{{ selected_customer_id|default:global_customer_id }}" readonly>
           </div>
 
-          <!-- MIDDLE COLUMN -->
-          <div class="col-md-4">
-
-            <div class="form-group mb-2">
-              <label for="status">Status</label>
-              <select id="status" name="status" class="form-control">
-                <option value="">Select Status</option>
-                <option value="Pending For Approval">Pending For Approval</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Completed by Sales">Completed by Sales</option>
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="fixture">Fixture No</label>
-              <input type="text" class="form-control" id="fixture" name="fixture">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="noofmeet">No Of Meet</label>
-              <input type="text" class="form-control" id="noofmeet" name="noofmeet">
-            </div>
-
-
-            <div class="form-group mb-2">
-              <label for="noofparts">No Of Parts</label>
-              <input type="text" class="form-control" id="noofparts" name="noofparts">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="revision">Revision No</label>
-              <input type="number" class="form-control" id="revision" name="revision">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="custVenderCode">Customer Vender Code</label>
-              <input type="text" class="form-control" id="custVenderCode" name="custVenderCode">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="hsn">HSN/SAC Code</label>
-              <select id="hsn" name="hsn" class="form-control">
-                <option value="">Select HSN Code</option>
-                {% for h in hsn_codes %}
-                <option value="{{ h.code }}">{{ h.code }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="costingmethod">Costing Method</label>
-              <input type="text" class="form-control" id="costingmethod" name="costingmethod">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="inventory">Inventory Posting Group</label>
-              <input type="text" class="form-control" id="inventory" name="inventory">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="priceprofit">Price Profit Calculation</label>
-              <input type="text" class="form-control" id="priceprofit" name="priceprofit">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="lastModifiedDate">Last Modified Date</label>
-              <input type="Date" class="form-control" id="lastModifiedDate" name="lastModifiedDate">
-            </div>
-
+          <div class="form-group mb-2">
+            <label>Customer Name</label>
+            <input type="text" id="customer_name" name="customer_name" class="form-control form-control-sm"
+              value="{{ selected_name|default:global_customer_name }}" readonly>
           </div>
 
-          <!-- RIGHT COLUMN -->
-          <div class="col-md-4">
-
-            <div class="form-group mb-2">
-              <label for="genpro">Gen Prod Posting Group</label>
-              <input type="text" class="form-control" id="genpro" name="genpro">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="replenishment">Replenishment System</label>
-              <input type="text" class="form-control" id="replenishment" name="replenishment">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="qc">QC Applicable</label>
-              <input type="text" class="form-control" id="qc" name="qc">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="manu">Manufacturing Policy</label>
-              <input type="text" class="form-control" id="manu" name="manu">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="assembly">Assembly Policy</label>
-              <input type="text" class="form-control" id="assembly" name="assembly">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="reordering">Reordering Policy</label>
-              <input type="text" class="form-control" id="reordering" name="reordering">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="inventoryinclude">Include Inventory</label>
-              <input type="text" class="form-control" id="inventoryinclude" name="inventoryinclude">
-            </div>
-            <div class="form-group mb-2">
-              <label for="gst">GST Credit</label>
-              <input type="text" class="form-control" id="gst" name="gst">
-            </div>
-            <div class="form-group mb-2">
-              <label for="flushing">Flushing Method</label>
-              <input type="text" class="form-control" id="flushing" name="flushing">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="template_applied">Template Applied</label>
-              <input type="text" class="form-control" id="template_applied" name="template_applied">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="rounding">Rounding Precision</label>
-              <input type="text" class="form-control" id="rounding" name="rounding">
-            </div>
-
-            <div class="form-group mb-2">
-              <label for="gstgroup">GST Group Code</label>
-              <input type="text" class="form-control" id="gstgroup" name="gstgroup">
-            </div>
-
+          <div class="form-group mb-2">
+            <label for="s_item">Search Item</label>
+            <input type="text" id="s_item" name="s_item" list="s_item_list" class="form-control form-control-sm"
+                   placeholder="— Type or Select Item —" autocomplete="off">
+            <datalist id="s_item_list">
+              {% for item in s_item %}
+              <option value="{{ item }}"></option>
+              {% endfor %}
+            </datalist>
           </div>
-        </div>
+
+          <div class="form-group mb-2">
+            <label for="lastEcnNo">Last ECN No</label>
+            <input type="text" class="form-control form-control-sm" id="lastEcnNo" name="lastEcnNo" readonly>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="no">Item No <span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm" id="no" name="no">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="templatename">Template Name <span class="text-danger">*</span></label>
+            <select id="templatename" name="templatename" class="form-control form-control-sm">
+              <option value="">— Select Template —</option>
+              {% for t in template_name %}
+              <option value="{{ t }}">{{ t }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="description">Description</label>
+            <input type="text" class="form-control form-control-sm" id="description" name="description">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="base_unit_of_measure">Base Unit of Measure <span class="text-danger">*</span></label>
+            <select id="base_unit_of_measure" name="base_unit_of_measure" class="form-control form-control-sm">
+              <option value="">— Select Unit —</option>
+              {% for u in uoms %}
+              <option value="{{ u.code }}">{{ u.code }} – {{ u.description }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="shelf_no">Shelf No</label>
+            <input type="text" class="form-control form-control-sm" id="shelf_no" name="shelf_no">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="cell">Cell</label>
+            <select id="cell" name="cell" class="form-control form-control-sm">
+              <option value="">— Select Cell —</option>
+              {% for c in cells %}
+              <option value="{{ c.code }}">{{ c.code }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="cell_type">Cell Type</label>
+            <select id="cell_type" name="cell_type" class="form-control form-control-sm">
+              <option value="">— Select Cell Type —</option>
+              {% for ct in cell_types %}
+              <option value="{{ ct.code }}">{{ ct.code }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="item_category_code">Item Category Code <span class="text-danger">*</span></label>
+            <select id="item_category_code" name="item_category_code" class="form-control form-control-sm">
+              <option value="">— Select Category —</option>
+              {% for c in item_categories %}
+              <option value="{{ c.code }}">{{ c.code }} – {{ c.description }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="product_group_code">Product Group Code <span class="text-danger">*</span></label>
+            <select id="product_group_code" name="product_group_code" class="form-control form-control-sm">
+              <option value="">— Select Group —</option>
+              {% for p in product_groups %}
+              <option value="{{ p.code }}">{{ p.code }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+        </div><!-- /LEFT -->
+
+        <!-- ══ MIDDLE COLUMN ══ -->
+        <div class="col-md-4">
+
+          <div class="form-group mb-2">
+            <label for="status">Status</label>
+            <select id="status" name="status" class="form-control form-control-sm">
+              <option value="">— Select Status —</option>
+              <option value="Pending For Approval">Pending For Approval</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Completed by Sales">Completed by Sales</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="lastModifiedDate">Last Modified Date</label>
+            <input type="date" class="form-control form-control-sm" id="lastModifiedDate" name="lastModifiedDate">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="fixture">Fixture No</label>
+            <input type="text" class="form-control form-control-sm" id="fixture" name="fixture">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="noofmeet">No Of MEFT</label>
+            <input type="text" class="form-control form-control-sm" id="noofmeet" name="noofmeet">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="noofparts">No Of Parts</label>
+            <input type="text" class="form-control form-control-sm" id="noofparts" name="noofparts">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="custname_short">Customer Name (Short)</label>
+            <input type="text" class="form-control form-control-sm" id="custname_short" name="custname_short"
+              value="{{ cust_short_name }}">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="revision">Revision No</label>
+            <input type="text" class="form-control form-control-sm" id="revision" name="revision">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="custVenderCode">Customer Vendor Code</label>
+            <input type="text" class="form-control form-control-sm" id="custVenderCode" name="custVenderCode"
+              value="{{ cust_vendor_code }}">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="hsn">HSN/SAC Code <span class="text-danger">*</span></label>
+            <select id="hsn" name="hsn" class="form-control form-control-sm">
+              <option value="">— Select HSN Code —</option>
+              {% for h in hsn_codes %}
+              <option value="{{ h.code }}">{{ h.code }}{% if h.description %} – {{ h.description }}{% endif %}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="costingmethod">Costing Method</label>
+            <input type="text" class="form-control form-control-sm" id="costingmethod" name="costingmethod">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="inventory">Inventory Posting Group</label>
+            <input type="text" class="form-control form-control-sm" id="inventory" name="inventory">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="priceprofit">Price Profit Calculation</label>
+            <input type="text" class="form-control form-control-sm" id="priceprofit" name="priceprofit">
+          </div>
+
+        </div><!-- /MIDDLE -->
+
+        <!-- ══ RIGHT COLUMN ══ -->
+        <div class="col-md-4">
+
+          <div class="form-group mb-2">
+            <label for="genpro">Gen Prod Posting Group</label>
+            <input type="text" class="form-control form-control-sm" id="genpro" name="genpro">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="replenishment">Replenishment System</label>
+            <input type="text" class="form-control form-control-sm" id="replenishment" name="replenishment">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="qc">QC Applicable</label>
+            <input type="text" class="form-control form-control-sm" id="qc" name="qc">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="manu">Manufacturing Policy</label>
+            <input type="text" class="form-control form-control-sm" id="manu" name="manu">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="assembly">Assembly Policy</label>
+            <input type="text" class="form-control form-control-sm" id="assembly" name="assembly">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="reordering">Reordering Policy</label>
+            <input type="text" class="form-control form-control-sm" id="reordering" name="reordering">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="inventoryinclude">Include Inventory</label>
+            <input type="text" class="form-control form-control-sm" id="inventoryinclude" name="inventoryinclude">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="gst">GST Credit</label>
+            <input type="text" class="form-control form-control-sm" id="gst" name="gst">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="flushing">Flushing Method</label>
+            <input type="text" class="form-control form-control-sm" id="flushing" name="flushing">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="template_applied">Template Applied</label>
+            <input type="text" class="form-control form-control-sm" id="template_applied" name="template_applied">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="rounding">Rounding Precision</label>
+            <input type="text" class="form-control form-control-sm" id="rounding" name="rounding">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="gstgroup">GST Group Code</label>
+            <input type="text" class="form-control form-control-sm" id="gstgroup" name="gstgroup">
+          </div>
+
+        </div><!-- /RIGHT -->
+
+      </div><!-- /row -->
+    </div><!-- /card-body -->
+
+    <!-- ══ ACTION BUTTONS ══ -->
+    <div class="card-footer d-flex flex-wrap gap-2 align-items-center">
+      <button type="button" class="btn btn-primary btn-sm" id="btn-add">➕ Add</button>
+      <button type="button" class="btn btn-warning btn-sm" id="btn-update">✏ Update</button>
+      <button type="button" class="btn btn-danger btn-sm" id="btn-delete">🗑 Delete</button>
+      <a id="btn-ecn" href="{% url 'ecn_request_page' %}" class="btn btn-info btn-sm">📋 ECN Request</a>
+
+      <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+        <input type="email" class="form-control form-control-sm" id="recipient_email"
+          placeholder="Recipient email" style="width:240px">
+        <button type="button" class="btn btn-success btn-sm" id="btn-email">✉ Send Email</button>
       </div>
+    </div>
 
-      <div class="card-footer text-right">
-        <button type="submit" class="btn btn-primary">Add</button>
-        <button type="button" class="btn btn-warning">Update</button>
-        <a href="{% url 'ecn_request_page' %}?customer_id={{ global_customer_id }}&customer_name={{ global_customer_name }}"
-          class="btn btn-info">
-          ECN Request
-        </a>
+  </div><!-- /card -->
 
-
-        <button type="button" class="btn btn-danger">Delete</button>
-        <div class="mt-3 d-flex justify-content-end align-items-center flex-wrap">
-          <label for="recipient_email" class="mb-0 mr-2 font-weight-bold">Recipient Email</label>
-          <input type="email" class="form-control d-inline-block mr-2" id="recipient_email" name="recipient_email"
-            placeholder="Enter recipient email address" style="width: 320px;" required>
-          <button type="submit" class="btn btn-success" formaction="/item_creation/send-item-email/">
-            Send Email
-          </button>
-        </div>
+  <!-- ══ Items Grid ══ -->
+  <div class="card mt-3 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">Items for Customer</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered table-hover mb-0" id="items-table">
+          <thead class="table-dark">
+            <tr>
+              <th>Item No</th>
+              <th>Description</th>
+              <th>Template</th>
+              <th>Status</th>
+              <th>HSN Code</th>
+              <th>Last Modified</th>
+            </tr>
+          </thead>
+          <tbody id="items-tbody">
+            <tr><td colspan="6" class="text-center text-muted py-3">Select or add an item to see it here.</td></tr>
+          </tbody>
+        </table>
       </div>
-      <a href="/opportunity_creation/?customer_id={{ global_customer_id }}&name={{ global_customer_name }}"
-        class="btn btn-primary">Opportunity Creation</a>
+    </div>
   </div>
-  </form>
-</div>
-</div>
+
+</div><!-- /container -->
+
+{% csrf_token %}
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const sItemSelect = document.getElementById("s_item");
-    const customerIdInput = document.getElementById("customer_id");
+(function () {
+  "use strict";
 
-    sItemSelect.addEventListener("change", function () {
-      const selectedItemNo = this.value;
-      const customerId = customerIdInput ? customerIdInput.value : "";
-      if (selectedItemNo) {
-        fetch(`/get_item_details/?item_no=${encodeURIComponent(selectedItemNo)}&customer_id=${encodeURIComponent(customerId)}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.error) {
-              console.error(data.error);
-              return;
-            }
-            if (data.no) document.getElementById("no").value = data.no;
-            if (data.description) document.getElementById("description").value = data.description;
+  const CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || "";
 
-            const setVal = (id, val) => {
-              const el = document.getElementById(id);
-              if (el) el.value = val || "";
-            };
+  // ── Helpers ──────────────────────────────────────────────────────────────
 
-            setVal("base_unit_of_measure", data.base_unit_of_measure);
-            setVal("shelf_no", data.shelf_no);
-            setVal("cell", data.cell);
-            setVal("cell_type", data.cell_type);
-            setVal("item_category_code", data.item_category_code);
-            setVal("product_group_code", data.product_group_code);
-            setVal("status", data.status);
-            setVal("fixture", data.fixture);
-            setVal("noofparts", data.noofparts);
-            setVal("noofmeet", data.noofmeet);
-            setVal("revision", data.revision);
-            setVal("custVenderCode", data.custVenderCode);
-            setVal("hsn", data.hsn);
-            setVal("lastModifiedDate", data.lastModifiedDate);
-          })
-          .catch(error => console.error("Error fetching item details:", error));
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.value = val ?? "";
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+  }
+
+  function collectFormData() {
+    const ids = [
+      "no","customer_id","customer_name","templatename","description",
+      "base_unit_of_measure","shelf_no","cell","cell_type",
+      "item_category_code","product_group_code","status","lastModifiedDate",
+      "fixture","noofmeet","noofparts","custname_short","revision",
+      "custVenderCode","hsn","costingmethod","inventory","priceprofit",
+      "genpro","replenishment","qc","manu","assembly","reordering",
+      "inventoryinclude","gst","flushing","template_applied","rounding","gstgroup"
+    ];
+    const fd = new FormData();
+    fd.append("csrfmiddlewaretoken", CSRF);
+    ids.forEach(id => fd.append(id, getVal(id)));
+    return fd;
+  }
+
+  function clearForm() {
+    const skipIds = new Set(["customer_id","customer_name","custname_short","custVenderCode"]);
+    const allInputs = document.querySelectorAll(".card-body input, .card-body select");
+    allInputs.forEach(el => {
+      if (!skipIds.has(el.id)) el.value = "";
+    });
+    setVal("lastEcnNo", "");
+    document.getElementById("rfq-locked-banner").classList.add("d-none");
+    setLocked(false);
+  }
+
+  function setLocked(locked) {
+    const lockBtns = ["btn-add","btn-update","btn-delete","btn-email","btn-ecn"];
+    lockBtns.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === "btn-ecn") {
+        el.classList.toggle("disabled", locked);
+        el.setAttribute("aria-disabled", locked);
+      } else {
+        el.disabled = locked;
       }
     });
+  }
 
-    const templateNameSelect = document.getElementById("templatename");
-    if (templateNameSelect) {
-      templateNameSelect.addEventListener("change", function () {
-        const selectedTemplate = this.value;
-        if (selectedTemplate) {
-          fetch(`/get_template_data/?template_name=${encodeURIComponent(selectedTemplate)}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.error) {
-                console.error(data.error);
-                return;
-              }
-              const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.value = val || "";
-              };
-              setVal("item_category_code", data.item_category_code);
-              setVal("costingmethod", data.costing_method);
-              setVal("inventory", data.inventory_posting_group);
-              setVal("priceprofit", data.price_profit_calculation);
-              setVal("genpro", data.gen_prod_posting_group);
-              setVal("replenishment", data.replenishment_system);
-              setVal("qc", data.qc_applicable);
-              setVal("manu", data.manufacturing_policy);
-              setVal("assembly", data.assembly_policy);
-              setVal("reordering", data.reordering_policy);
-              setVal("inventoryinclude", data.include_inventory);
-              setVal("gst", data.gst_credit);
-              setVal("flushing", data.flushing_method);
-              setVal("template_applied", data.template_applied);
-              setVal("rounding", data.rounding_precision);
-              setVal("gstgroup", data.gst_group_code);
-            })
-            .catch(error => console.error("Error fetching template data:", error));
+  function showAlert(msg, type = "success") {
+    const div = document.createElement("div");
+    div.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    div.style.cssText = "top:20px;right:20px;z-index:9999;min-width:300px";
+    div.innerHTML = `${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
+  }
+
+  function postJSON(url, formData, onSuccess) {
+    fetch(url, { method: "POST", body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showAlert(data.message || "Done!", "success");
+          onSuccess && onSuccess(data);
+        } else {
+          const errs = data.errors ? data.errors.join("<br>") : "An error occurred.";
+          showAlert(errs, "danger");
+        }
+      })
+      .catch(() => showAlert("Network error. Please try again.", "danger"));
+  }
+
+  // ── Reload items grid ─────────────────────────────────────────────────────
+
+  function reloadItemsGrid() {
+    const custId = getVal("customer_id");
+    fetch(`/get_item_list/?customer_id=${encodeURIComponent(custId)}`)
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.getElementById("items-tbody");
+        const datalist = document.getElementById("s_item_list");
+        const sItemInput = document.getElementById("s_item");
+
+        // Rebuild datalist
+        if (datalist) datalist.innerHTML = "";
+        tbody.innerHTML = "";
+
+        if (!data.items || data.items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No items found.</td></tr>';
+          return;
+        }
+
+        data.items.forEach(item => {
+          if (datalist) {
+            const opt = document.createElement("option");
+            opt.value = item.no;
+            datalist.appendChild(opt);
+          }
+
+          const tr = document.createElement("tr");
+          tr.style.cursor = "pointer";
+          tr.dataset.no = item.no;
+          tr.innerHTML = `
+            <td>${item.no}</td>
+            <td>${item.description || ""}</td>
+            <td>${item.template_name || ""}</td>
+            <td>${item.status || ""}</td>
+            <td>${item.hsn_sac_code || ""}</td>
+            <td>${item.last_date_modified || ""}</td>
+          `;
+          tr.addEventListener("click", () => {
+            if (sItemInput) sItemInput.value = item.no;
+            loadItemDetails(item.no);
+          });
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(() => {});
+  }
+
+  // ── Load item details ─────────────────────────────────────────────────────
+
+  function loadItemDetails(itemNo) {
+    const custId = getVal("customer_id");
+    if (!itemNo) { clearForm(); return; }
+
+    fetch(`/get_item_details/?item_no=${encodeURIComponent(itemNo)}&customer_id=${encodeURIComponent(custId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) { showAlert(data.error, "warning"); return; }
+
+        const fieldMap = {
+          no: "no", description: "description", template_name: "templatename",
+          base_unit_of_measure: "base_unit_of_measure", shelf_no: "shelf_no",
+          cell: "cell", cell_type: "cell_type",
+          item_category_code: "item_category_code", product_group_code: "product_group_code",
+          status: "status", last_date_modified: "lastModifiedDate",
+          fixture_no: "fixture", no_of_meft: "noofmeet", no_of_parts: "noofparts",
+          customer_name: "custname_short", revision_no: "revision",
+          customer_vendor_code: "custVenderCode", hsn_sac_code: "hsn",
+          costing_method: "costingmethod", inventory_posting_group: "inventory",
+          price_profit_calculation: "priceprofit", gen_prod_posting_group: "genpro",
+          replenishment_system: "replenishment", qc_applicable: "qc",
+          manufacturing_policy: "manu", assembly_policy: "assembly",
+          reordering_policy: "reordering", include_inventory: "inventoryinclude",
+          gst_credit: "gst", flushing_method: "flushing",
+          template_applied: "template_applied", rounding_precision: "rounding",
+          gst_group_code: "gstgroup",
+        };
+
+        Object.entries(fieldMap).forEach(([apiKey, domId]) => setVal(domId, data[apiKey] || ""));
+        setVal("lastEcnNo", data.last_ecn || "");
+
+        // RFQ lock
+        const locked = !!data.is_locked;
+        document.getElementById("rfq-locked-banner").classList.toggle("d-none", !locked);
+        setLocked(locked);
+      })
+      .catch(() => showAlert("Failed to load item details.", "danger"));
+  }
+
+  // ── Template auto-fill ────────────────────────────────────────────────────
+
+  document.getElementById("templatename").addEventListener("change", function () {
+    const tmpl = this.value;
+    if (!tmpl) return;
+    fetch(`/get_template_data/?template_name=${encodeURIComponent(tmpl)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) return;
+        const map = {
+          costing_method: "costingmethod", inventory_posting_group: "inventory",
+          price_profit_calculation: "priceprofit", gen_prod_posting_group: "genpro",
+          replenishment_system: "replenishment", qc_applicable: "qc",
+          manufacturing_policy: "manu", assembly_policy: "assembly",
+          reordering_policy: "reordering", include_inventory: "inventoryinclude",
+          gst_credit: "gst", flushing_method: "flushing",
+          template_applied: "template_applied", rounding_precision: "rounding",
+          gst_group_code: "gstgroup",
+        };
+        Object.entries(map).forEach(([k, id]) => setVal(id, data[k] || ""));
+        // Reset status when template changes
+        setVal("status", "");
+        // Re-trigger HSN auto-fill if category already selected
+        triggerHsnAutofill();
+      });
+  });
+
+  // ── Item Category → HSN auto-fill ─────────────────────────────────────────
+
+  function triggerHsnAutofill() {
+    const tmpl = getVal("templatename");
+    const cat = getVal("item_category_code");
+    if (!tmpl || !cat) return;
+    fetch(`/get_hsn_gst/?template_name=${encodeURIComponent(tmpl)}&item_category_code=${encodeURIComponent(cat)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.auto_hsn) setVal("hsn", data.auto_hsn);
+        if (data.gst_group_code) setVal("gstgroup", data.gst_group_code);
+      });
+  }
+
+  document.getElementById("item_category_code").addEventListener("change", triggerHsnAutofill);
+
+  // ── HSN → GST Group auto-fill ─────────────────────────────────────────────
+
+  document.getElementById("hsn").addEventListener("change", function () {
+    const hsn = this.value;
+    if (!hsn) return;
+    fetch(`/get_hsn_gst/?hsn=${encodeURIComponent(hsn)}`)
+      .then(r => r.json())
+      .then(data => { if (data.gst_group_code) setVal("gstgroup", data.gst_group_code); });
+  });
+
+  // ── Item No duplicate check (on blur) ─────────────────────────────────────
+
+  document.getElementById("no").addEventListener("blur", function () {
+    const itemNo = this.value.trim();
+    if (!itemNo) return;
+    const custId = getVal("customer_id");
+    fetch(`/get_item_details/?item_no=${encodeURIComponent(itemNo)}&customer_id=${encodeURIComponent(custId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.error) {
+          showAlert(`Item '${itemNo}' already exists. Choose a different Item No.`, "warning");
+          this.value = "";
+          this.focus();
         }
       });
-    }
+  });
 
-    document.getElementById("btn-back")?.addEventListener("click", function () {
-      window.history.back();
+  // ── Search item select / input ────────────────────────────────────────────
+
+  const sItemEl = document.getElementById("s_item");
+  if (sItemEl) {
+    sItemEl.addEventListener("change", function () {
+      loadItemDetails(this.value.trim());
+    });
+    sItemEl.addEventListener("input", function () {
+      const val = this.value.trim();
+      const datalist = document.getElementById("s_item_list");
+      if (datalist && val) {
+        const matches = Array.from(datalist.options).some(o => o.value === val);
+        if (matches) {
+          loadItemDetails(val);
+        }
+      }
+    });
+    sItemEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        loadItemDetails(this.value.trim());
+      }
+    });
+  }
+
+  // ── ADD ───────────────────────────────────────────────────────────────────
+
+  document.getElementById("btn-add").addEventListener("click", function () {
+    const fd = collectFormData();
+    postJSON("/item_creation/add/", fd, () => {
+      clearForm();
+      reloadItemsGrid();
     });
   });
+
+  // ── UPDATE ────────────────────────────────────────────────────────────────
+
+  document.getElementById("btn-update").addEventListener("click", function () {
+    if (!getVal("no")) { showAlert("Please search and select an item to update.", "warning"); return; }
+    const fd = collectFormData();
+    postJSON("/item_creation/update/", fd, () => reloadItemsGrid());
+  });
+
+  // ── DELETE ────────────────────────────────────────────────────────────────
+
+  document.getElementById("btn-delete").addEventListener("click", function () {
+    const itemNo = getVal("no");
+    if (!itemNo) { showAlert("Please search and select an item to delete.", "warning"); return; }
+    if (!confirm(`Delete item '${itemNo}'? This cannot be undone.`)) return;
+    const fd = new FormData();
+    fd.append("csrfmiddlewaretoken", CSRF);
+    fd.append("no", itemNo);
+    postJSON("/item_creation/delete/", fd, () => {
+      clearForm();
+      reloadItemsGrid();
+    });
+  });
+
+  // ── SEND EMAIL ────────────────────────────────────────────────────────────
+
+  document.getElementById("btn-email").addEventListener("click", function () {
+    const email = getVal("recipient_email");
+    if (!email) { showAlert("Please enter a recipient email address.", "warning"); return; }
+    const itemNo = getVal("no");
+    if (!itemNo) { showAlert("Please select an item first.", "warning"); return; }
+
+    const fd = new FormData();
+    fd.append("csrfmiddlewaretoken", CSRF);
+    fd.append("no", itemNo);
+    fd.append("customer_id", getVal("customer_id"));
+    fd.append("customer_name", getVal("customer_name"));
+    fd.append("recipient_email", email);
+
+    fetch("/item_creation/send-item-email/", { method: "POST", body: fd })
+      .then(r => {
+        if (r.redirected || r.ok) showAlert("Email sent successfully!", "success");
+        else showAlert("Failed to send email.", "danger");
+      });
+  });
+
+  // ── BACK button ───────────────────────────────────────────────────────────
+
+  document.getElementById("btn-back").addEventListener("click", () => window.history.back());
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+
+  reloadItemsGrid();
+
+})();
 </script>
 {% endblock %}

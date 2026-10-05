@@ -5,7 +5,7 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-LOCKED_STATUSES = ["sent for approval", "send_approval", "pending_approval", "approved"]
+LOCKED_STATUSES = ["sent for approval", "send_approval", "pending_approval"]
 
 def is_record_locked(instance):
     """

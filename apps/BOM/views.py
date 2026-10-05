@@ -551,11 +551,13 @@ def bom_get_autofill_data(request):
                 ItemCard.objects
                 .filter(customer_id=customer_id)
                 .order_by('no')
-                .values("no", "description", "base_unit_of_measure", "fixture")
+                .values("no", "description", "base_unit_of_measure", "fixture_no")
             )
             # Ensure item numbers are serialised as strings
+            # Rename fixture_no -> fixture to match the JS dataset key
             for it in items:
                 it['no'] = str(it['no']) if it['no'] is not None else ''
+                it['fixture'] = it.pop('fixture_no', '') or ''
             return JsonResponse({"items": items})
 
         return JsonResponse({"items": []})

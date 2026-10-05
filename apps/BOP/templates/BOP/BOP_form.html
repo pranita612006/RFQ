@@ -300,6 +300,9 @@
                 <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1"
                     style="background-color: #5b74a3;">Send Approval</button>
                 <button type="button" id="btn-ecn" class="btn btn-sm text-white px-4" style="background-color: #5b74a3;">ECN</button>
+                <span id="record-lock-badge" class="badge badge-warning text-dark ml-2 px-2 py-1" style="display: none; font-size: 0.82rem;">
+                    <i class="fas fa-lock me-1"></i> Locked (Pending Approval)
+                </span>
 
             </div>
         </form>
@@ -974,6 +977,36 @@
                     }
                 }
 
+                function updateBopLockUI(rawStatus) {
+                    const status = (rawStatus || '').toLowerCase().trim();
+                    const isPending = status === 'send for approval'
+                        || status === 'sent for approval'
+                        || status === 'pending_approval';
+                    const sendBtn = document.getElementById('btn-send-approval');
+                    const badge = document.getElementById('record-lock-badge');
+
+                    if (sendBtn) {
+                        sendBtn.disabled = isPending;
+                        if (isPending) {
+                            sendBtn.classList.remove('text-white');
+                            sendBtn.classList.add('btn-secondary');
+                            sendBtn.style.backgroundColor = '';
+                            sendBtn.innerText = 'Send Approval (Locked)';
+                            sendBtn.title = 'Record is pending approval — cannot re-send';
+                        } else {
+                            sendBtn.disabled = false;
+                            sendBtn.classList.add('text-white');
+                            sendBtn.classList.remove('btn-secondary');
+                            sendBtn.style.backgroundColor = '#5b74a3';
+                            sendBtn.innerText = 'Send Approval';
+                            sendBtn.title = '';
+                        }
+                    }
+                    if (badge) {
+                        badge.style.display = isPending ? 'inline-block' : 'none';
+                    }
+                }
+
                 // Initial page load state: disable fields and show all action buttons
                 setFieldsEnabled(false);
                 if (createButtonElement) createButtonElement.style.display = "inline-block";
@@ -1280,6 +1313,7 @@
                                 if (lastEcnEl) lastEcnEl.value = data.last_ecn_no || "";
 
                                 setViewMode(true);
+                                updateBopLockUI(data.action_status || "Send for Approval");
                                 alert(data.message || "BOP Record sent for approval successfully.");
                             })
                             .catch(err => {
@@ -1516,6 +1550,7 @@
 
                                     if (document.getElementById("last_modified_date")) document.getElementById("last_modified_date").value = data.last_modified_date || "";
                                     if (document.getElementById("action_status")) document.getElementById("action_status").value = data.action_status || "";
+                                    updateBopLockUI(data.action_status);
                                     if (document.getElementById("last_ecn_no")) document.getElementById("last_ecn_no").value = data.last_ecn_no || "0";
                                     if (revDateEl && data.revision_date) revDateEl.value = data.revision_date;
 
@@ -1527,6 +1562,7 @@
                                 } else {
                                     // Put the form into CREATE MODE since no BOP record exists
                                     setViewMode(false);
+                                    updateBopLockUI("");
 
                                     if (bopCreationEl) bopCreationEl.value = "";
                                     if (tableIdEl) tableIdEl.value = "";
@@ -1569,6 +1605,7 @@
                         if (!bopId) {
                             document.getElementById("last_modified_date").value = "";
                             document.getElementById("action_status").value = "";
+                            updateBopLockUI("");
                             document.getElementById("table_id").value = "";
                             document.getElementById("last_ecn_no").value = "0";
                             if (step2TableEl) step2TableEl.value = "";
@@ -1604,6 +1641,7 @@
 
                                     // Load existing BOP record into View Mode
                                     setViewMode(true);
+                                    updateBopLockUI(data.action_status);
                                 }
                             })
                             .catch(err => console.error("Error fetching details:", err));

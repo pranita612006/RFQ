@@ -138,9 +138,9 @@
                     style="background-color: #2a6ebb;">Save</button>
                 <button type="button" id="btn-delete" class="btn btn-sm text-white px-3 mr-1 mb-1"
                     style="background-color: #2a6ebb;">Delete</button>
-                {% if header and header.action_status == "Sent for approval" or header.action_status == "Approved" %}
+                {% if header and header.action_status == "Sent for approval" %}
                 <button type="button" id="btn-send-approval" class="btn btn-sm btn-secondary px-2 mr-1 mb-1"
-                    disabled="disabled" title="Record is locked in approval state"><u>S</u>endApproval (Locked)</button>
+                    disabled="disabled" title="Record is locked — pending approval"><u>S</u>endApproval (Locked)</button>
                 {% else %}
                 <button type="button" id="btn-send-approval" class="btn btn-sm text-white px-2 mr-1 mb-1"
                     style="background-color: #2a6ebb;"><u>S</u>endApproval</button>
@@ -149,7 +149,7 @@
                     style="background-color: #2a6ebb">ECN</button>
                 <span id="step1-msg" class="text-success ml-2 font-weight-bold"></span>
                 <span id="record-lock-badge" class="badge badge-warning text-dark ml-2"
-                    style="display: {% if header and header.action_status == 'Sent for approval' or header.action_status == 'Approved' %}inline-block{% else %}none{% endif %};">🔒
+                    style="display: {% if header and header.action_status == 'Sent for approval' %}inline-block{% else %}none{% endif %};">🔒
                     Record Locked</span>
             </div>
         </form>
@@ -508,6 +508,40 @@
             if (!matched) selectEl.value = "";
         }
 
+        // --- Lock / unlock the SendApproval button and badge based on action_status ---
+        function updateLockUI(rawStatus) {
+            const status = (rawStatus || '').toLowerCase().trim();
+            const isSentForApproval = status === 'sent for approval'
+                || status === 'send_approval'
+                || status === 'pending_approval';
+            // Approved records are UNLOCKED — user can re-send or edit
+            const isLocked = isSentForApproval;
+
+            const sendBtn = document.getElementById('btn-send-approval');
+            const badge   = document.getElementById('record-lock-badge');
+
+            if (sendBtn) {
+                sendBtn.disabled = isLocked;
+                if (isLocked) {
+                    sendBtn.classList.remove('text-white');
+                    sendBtn.classList.add('btn-secondary');
+                    sendBtn.style.backgroundColor = '';
+                    sendBtn.innerText = 'SendApproval (Locked)';
+                    sendBtn.title = 'Record is pending approval — cannot re-send';
+                } else {
+                    sendBtn.disabled = false;
+                    sendBtn.classList.add('text-white');
+                    sendBtn.classList.remove('btn-secondary');
+                    sendBtn.style.backgroundColor = '#2a6ebb';
+                    sendBtn.innerHTML = '<u>S</u>endApproval';
+                    sendBtn.title = '';
+                }
+            }
+            if (badge) {
+                badge.style.display = isLocked ? 'inline-block' : 'none';
+            }
+        }
+
         // --- Core autofill: called whenever an Item Creation ID is chosen ---
         function loadItemECNData(itemNo) {
             // Clear fields if no item is selected
@@ -568,6 +602,8 @@
                     // ── Action status — fuzzy-match dropdown ──
                     const rawStatus = bom.action_status || ecn.status || "Pending";
                     setSelectByText(document.getElementById("action_status"), rawStatus);
+                    // Update lock badge and SendApproval button state
+                    updateLockUI(rawStatus);
 
                     // Lock fields when ITEM ID is selected
                     // document.getElementById("item_creation_id").disabled = true;
@@ -1023,14 +1059,8 @@
                         if (res.action_status) setSelectByText(document.getElementById("action_status"), res.action_status);
                         if (res.last_date_modified) document.getElementById("last_date_modified").value = res.last_date_modified;
 
-                        // Dynamically toggle lock badge and disable send approval button
-                        const badge = document.getElementById("record-lock-badge");
-                        if (badge) badge.style.display = "inline-block";
-
-                        sendApprovalBtn.disabled = true;
-                        sendApprovalBtn.classList.remove("text-white");
-                        sendApprovalBtn.classList.add("btn-secondary");
-                        sendApprovalBtn.innerText = "SendApproval (Locked)";
+                        // Update lock badge and button state dynamically
+                        updateLockUI(res.action_status || 'Sent for approval');
                     })
                     .catch(err => alert("Error: " + (err.error || err.message || "Unknown error")));
             });
@@ -1050,21 +1080,10 @@
             
             // Set action status to ECN Created on the UI
             setSelectByText(document.getElementById("action_status"), "ECN Created");
-            
-            // Hide the lock badge
-            const badge = document.getElementById("record-lock-badge");
-            if (badge) badge.style.display = "none";
-            
-            // Make Send Approval available
-            const sendApprovalBtn = document.getElementById("btn-send-approval");
-            if (sendApprovalBtn) {
-                sendApprovalBtn.disabled = false;
-                sendApprovalBtn.classList.remove("btn-secondary");
-                sendApprovalBtn.classList.add("text-white");
-                sendApprovalBtn.style.backgroundColor = "#2a6ebb";
-                sendApprovalBtn.innerText = "SendApproval";
-            }
-            
+
+            // Unlock the Send Approval button (ECN Created is not a locked state)
+            updateLockUI("ECN Created");
+
             showMsg("Record unlocked for ECN. Make your changes to Description and UOM, then click Save.");
         });
 

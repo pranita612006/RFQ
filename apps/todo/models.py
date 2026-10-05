@@ -10,26 +10,27 @@ class Task(models.Model):
         return self.title
 
 class TblOpportunitymaster(models.Model):
-    item_no = models.CharField(max_length=50, blank=True, null=True)
-    sales_cycle_code = models.CharField(max_length=50, blank=True, null=True)
-    
+    customer_id = models.CharField(max_length=50, db_column='customerid', blank=True, null=True)
+    item_no = models.CharField(max_length=50, db_column='item_no', primary_key=True)
+    sales_cycle_code = models.CharField(max_length=50, db_column='sales_cycle_code', blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = 'tbl_opportunitymaster'
 
 class TblOppsalescycles(models.Model):
-    code = models.CharField(max_length=50, db_column='CODE', blank=True, null=True)
+    code = models.CharField(max_length=50, db_column='Code', primary_key=True)
     description = models.CharField(max_length=255, db_column='Description', blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'tbl_oppsalescycles'
 
 class TblCustomerinfo(models.Model):
-    customer_id = models.CharField(max_length=50, blank=True, null=True)
+    customer_id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     emailid = models.CharField(max_length=255, blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'tbl_customerinfo'

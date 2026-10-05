@@ -104,7 +104,8 @@
     color: #1e1b4b;
   }
   .subtab-btn.active span {
-    color: #ffffff;
+    color: #2E266D;
+    font-weight: 700;
   }
 
   /* ── Divider Line ── */
@@ -118,13 +119,212 @@
   .offer-tab-content-area {
     background: #FFFFFF;
     min-height: 400px;
-    padding: 20px;
+    padding: 0;
   }
   .offer-subpanel {
     display: none;
   }
   .offer-subpanel.active {
     display: block;
+  }
+
+  /* ── BOC Tab UI ─────────────────────────────────────────────────── */
+  .boc-layout {
+    display: flex;
+    padding: 12px 16px;
+    gap: 16px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .boc-left-column {
+    flex: 1 1 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .boc-right-column {
+    flex: 1 1 50%;
+    min-width: 0;
+    border-left: 1px dotted #94A3B8;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .boc-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .boc-section-title {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #2E3A59;
+    letter-spacing: 0.02em;
+  }
+  .boc-btn-save, .boc-btn-add {
+    background: #3A4B68;
+    color: #FFFFFF;
+    border: 1px solid #2E3D55;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .boc-btn-save:hover, .boc-btn-add:hover {
+    background: #253348;
+  }
+  .boc-table-container {
+    border: 1px solid #CBD5E1;
+    overflow-x: auto;
+    overflow-y: auto;
+    background: #FFFFFF;
+    border-radius: 2px;
+  }
+  .boc-table-container.table-fixed-h {
+    min-height: 90px;
+    max-height: 140px;
+  }
+  .boc-table-container.table-overview-h {
+    min-height: 110px;
+    max-height: 160px;
+  }
+  .boc-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .boc-data-table thead tr {
+    background: #D5E4F3;
+  }
+  .boc-data-table thead th {
+    color: #1E293B;
+    font-weight: 600;
+    padding: 5px 8px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #94A3B8;
+    text-align: left;
+  }
+  .boc-data-table thead th:last-child {
+    border-right: none;
+  }
+  .boc-data-table thead th.text-right {
+    text-align: right;
+  }
+  .boc-data-table thead th.text-center {
+    text-align: center;
+  }
+  .boc-data-table tbody td {
+    padding: 4px 8px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #E2E8F0;
+    color: #1E293B;
+  }
+  .boc-data-table tbody td:last-child {
+    border-right: none;
+  }
+  .boc-data-table tbody td.text-right {
+    text-align: right;
+  }
+  .boc-data-table tbody td.text-center {
+    text-align: center;
+  }
+  .boc-data-table tbody tr:hover {
+    background: #F8FAFC;
+  }
+  .boc-input-control {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border: 1px solid #94A3B8;
+    border-radius: 2px;
+    background: #FFFFFF;
+    color: #1E293B;
+    height: 22px;
+  }
+  .boc-input-control:focus {
+    outline: none;
+    border-color: #2563EB;
+  }
+  .boc-overview-header {
+    margin-bottom: 4px;
+  }
+  .boc-overview-link {
+    color: #2563EB;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .boc-subtotal-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .boc-subtotal-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  .boc-subtotal-field {
+    width: 75px;
+    text-align: right;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid #94A3B8;
+    border-radius: 2px;
+    background: #FFFFFF;
+    color: #1E293B;
+    height: 20px;
+  }
+  .boc-action-del {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #EF4444;
+    font-weight: bold;
+    font-size: 0.78rem;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .boc-action-del:hover {
+    color: #B91C1C;
+  }
+  .overview-subtotal-bar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+  .overview-subtotal-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .overview-subtotal-value {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #1E293B;
+    min-width: 50px;
+  }
+  .table-sort-caret {
+    display: inline-block;
+    margin-left: 3px;
+    font-size: 0.62rem;
+    color: #475569;
+    vertical-align: middle;
   }
 </style>
 </head>
@@ -152,7 +352,7 @@
 
     <div class="offer-tabs-list">
       <!-- BOC -->
-      <button class="subtab-btn" data-target="panel-boc">
+      <button class="subtab-btn active" data-target="panel-boc">
         <svg class="tab-bg" preserveAspectRatio="none" viewBox="0 0 100 40">
           <polygon points="1,1 88,1 99,14 99,39 1,39" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2"/>
         </svg>
@@ -197,12 +397,342 @@
 
   <div class="offer-tab-content-area">
     <div class="offer-subpanel active" id="panel-boc">
-      <h3>BOC Content</h3>
-      <p>BOC details and breakdown table will go here.</p>
+      <div class="boc-layout">
+
+        <!-- ── Left Column ── -->
+        <div class="boc-left-column">
+
+          <!-- 1. BOM : LOCAL BOC -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar">
+              <span class="boc-section-title">BOM : LOCAL BOC</span>
+              <button type="button" class="boc-btn-save" id="btn-save-local-boc">Save Details</button>
+            </div>
+            <div class="boc-table-container table-fixed-h">
+              <table class="boc-data-table" id="table-boc-local">
+                <thead>
+                  <tr>
+                    <th style="min-width: 95px;">Part_Number</th>
+                    <th style="min-width: 170px;">Description</th>
+                    <th style="min-width: 80px;">UOM_Code</th>
+                    <th class="text-right" style="min-width: 75px;">Quantity</th>
+                    <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+                    <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                  </tr>
+                </thead>
+                <tbody id="boc-local-bom-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 2. BOM : IMPORTED BOC -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar">
+              <span class="boc-section-title">BOM : IMPORTED BOC</span>
+              <button type="button" class="boc-btn-save" id="btn-save-imported-boc">Save Details</button>
+            </div>
+            <div class="boc-table-container table-fixed-h">
+              <table class="boc-data-table" id="table-boc-imported">
+                <thead>
+                  <tr>
+                    <th style="min-width: 95px;">Part_Number</th>
+                    <th style="min-width: 170px;">Description</th>
+                    <th style="min-width: 80px;">UOM</th>
+                    <th class="text-right" style="min-width: 75px;">Quantity</th>
+                    <th class="text-right" style="min-width: 90px;">Rate Per Unit</th>
+                    <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                  </tr>
+                </thead>
+                <tbody id="boc-imported-bom-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 3. Data Entry : IMPORTED BOC -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar">
+              <span class="boc-section-title">Data Entry : IMPORTED BOC</span>
+            </div>
+            <div class="boc-table-container">
+              <table class="boc-data-table" id="table-boc-entry">
+                <thead>
+                  <tr>
+                    <th style="min-width: 170px;">Description</th>
+                    <th style="min-width: 75px;">Tube Size</th>
+                    <th style="min-width: 60px;">Unit</th>
+                    <th class="text-right" style="min-width: 75px;">Rate/Unit</th>
+                    <th class="text-right" style="min-width: 70px;">Quantity</th>
+                    <th class="text-right" style="min-width: 75px;">Total Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding: 2px 4px;">
+                      <select id="boc-entry-desc" class="boc-input-control">
+                        <option value="">-- Select Description --</option>
+                      </select>
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="text" id="boc-entry-tubesize" class="boc-input-control">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="text" id="boc-entry-unit" class="boc-input-control">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="boc-entry-rate" class="boc-input-control" style="text-align: right;">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="boc-entry-qty" class="boc-input-control" style="text-align: right;">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="boc-entry-total" class="boc-input-control" style="text-align: right;" readonly>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+              <button type="button" class="boc-btn-add" id="btn-boc-add-entry" style="padding: 4px 18px;">Add</button>
+            </div>
+          </div>
+
+        </div><!-- /boc-left-column -->
+
+        <!-- ── Right Column ── -->
+        <div class="boc-right-column">
+
+          <!-- Overview Section Header -->
+          <div class="boc-overview-header">
+            <span class="boc-overview-link">Over View</span>
+          </div>
+
+          <!-- Over View Table 1 (Local) -->
+          <div class="boc-section-block">
+            <div class="boc-table-container table-overview-h">
+              <table class="boc-data-table" id="table-boc-overview-local">
+                <thead>
+                  <tr>
+                    <th style="min-width: 170px;">Raw_Material Description</th>
+                    <th style="min-width: 75px;">Tube Size</th>
+                    <th style="min-width: 50px;">Unit</th>
+                    <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                    <th class="text-right" style="min-width: 65px;">Qnty</th>
+                    <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                    <th style="width: 24px; text-align: center; border-right: none;"></th>
+                  </tr>
+                </thead>
+                <tbody id="boc-overview-local-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="boc-subtotal-bar">
+              <span class="boc-subtotal-label">Sub Total</span>
+              <input type="text" id="boc-local-subtotal" class="boc-subtotal-field" readonly value="0.00">
+            </div>
+          </div>
+
+          <!-- Over View Table 2 (Imported) -->
+          <div class="boc-section-block">
+            <div class="boc-table-container table-overview-h">
+              <table class="boc-data-table" id="table-boc-overview-imported">
+                <thead>
+                  <tr>
+                    <th style="min-width: 170px;">Raw_Material Description</th>
+                    <th style="min-width: 75px;">Tube Size</th>
+                    <th style="min-width: 50px;">Unit</th>
+                    <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                    <th class="text-right" style="min-width: 65px;">Qnty</th>
+                    <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                    <th style="width: 24px; text-align: center; border-right: none;"></th>
+                  </tr>
+                </thead>
+                <tbody id="boc-overview-imported-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="boc-subtotal-bar">
+              <span class="boc-subtotal-label">Sub Total</span>
+              <input type="text" id="boc-imported-subtotal" class="boc-subtotal-field" readonly value="">
+            </div>
+          </div>
+
+        </div><!-- /boc-right-column -->
+
+      </div><!-- /boc-layout -->
     </div>
+    <!-- ── RM + Conversion Subpanel ── -->
     <div class="offer-subpanel" id="panel-rm-conversion">
-      <h3>RM + Conversion Content</h3>
-      <p>Raw Material and Conversion cost breakdown.</p>
+      <div class="boc-layout">
+
+        <!-- ── Left Column ── -->
+        <div class="boc-left-column">
+
+          <!-- 1. RM BOM Table -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar" style="justify-content: flex-end;">
+              <button type="button" class="boc-btn-save" id="btn-save-rm-details">Save Details</button>
+            </div>
+            <div class="boc-table-container table-fixed-h" style="min-height: 110px; max-height: 155px;">
+              <table class="boc-data-table" id="table-rm-bom">
+                <thead>
+                  <tr>
+                    <th style="min-width: 95px;">Part_Number</th>
+                    <th style="min-width: 170px;">Description</th>
+                    <th style="min-width: 70px;">UOM</th>
+                    <th class="text-right" style="min-width: 75px;">Quantity</th>
+                    <th class="text-right" style="min-width: 90px;">Internal Cost</th>
+                    <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                  </tr>
+                </thead>
+                <tbody id="rm-bom-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 2. Data Entry : Raw Material -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar">
+              <span class="boc-section-title">Data Entry : Raw Material</span>
+              <button type="button" class="boc-btn-add" id="btn-rm-add-entry" style="padding: 3px 18px;">Add</button>
+            </div>
+            <div class="boc-table-container">
+              <table class="boc-data-table" id="table-rm-entry">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px;">Material Description</th>
+                    <th style="min-width: 60px;">Unit</th>
+                    <th class="text-right" style="min-width: 75px;">Rate/Unit</th>
+                    <th class="text-right" style="min-width: 70px;">Quantity</th>
+                    <th class="text-right" style="min-width: 75px;">Total Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding: 2px 4px;">
+                      <select id="rm-entry-desc" class="boc-input-control">
+                        <option value="">-- Select Material --</option>
+                      </select>
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="text" id="rm-entry-unit" class="boc-input-control">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="rm-entry-rate" class="boc-input-control" style="text-align: right;">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="rm-entry-qty" class="boc-input-control" style="text-align: right;">
+                    </td>
+                    <td style="padding: 2px 4px;">
+                      <input type="number" step="any" id="rm-entry-total" class="boc-input-control" style="text-align: right;" readonly>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 3. Conversion Cost : -->
+          <div class="boc-section-block">
+            <div class="boc-header-bar">
+              <span class="boc-section-title">Conversion Cost :</span>
+              <button type="button" class="boc-btn-save" id="btn-save-conversion-details">Save Details</button>
+            </div>
+            <div class="boc-table-container table-fixed-h" style="min-height: 120px; max-height: 165px;">
+              <table class="boc-data-table" id="table-conversion-cost">
+                <thead>
+                  <tr>
+                    <th style="min-width: 170px;">
+                      Conversion_Description <span class="table-sort-caret">&#x25BE;</span>
+                    </th>
+                    <th class="text-right" style="min-width: 95px;">
+                      Cost_Per_Qnty <span class="table-sort-caret">&#x25BE;</span>
+                    </th>
+                    <th class="text-right" style="min-width: 80px;">
+                      Quantity <span class="table-sort-caret">&#x25BE;</span>
+                    </th>
+                    <th class="text-right" style="min-width: 90px;">
+                      Total Cost <span class="table-sort-caret">&#x25BE;</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="conversion-cost-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /boc-left-column -->
+
+        <!-- ── Right Column ── -->
+        <div class="boc-right-column">
+
+          <!-- Overview Section Header -->
+          <div class="boc-overview-header">
+            <span class="boc-overview-link">Over View</span>
+          </div>
+
+          <!-- Over View Table 1: Raw Material -->
+          <div class="boc-section-block">
+            <div class="boc-table-container table-overview-h" style="min-height: 110px; max-height: 155px;">
+              <table class="boc-data-table" id="table-rm-overview">
+                <thead>
+                  <tr>
+                    <th style="min-width: 170px;">Raw_Material Description</th>
+                    <th style="min-width: 75px;">Tube Size</th>
+                    <th style="min-width: 50px;">Unit</th>
+                    <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                    <th class="text-right" style="min-width: 65px;">Qnty</th>
+                    <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                    <th style="width: 24px; text-align: center; border-right: none;"></th>
+                  </tr>
+                </thead>
+                <tbody id="rm-overview-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="overview-subtotal-bar">
+              <span class="overview-subtotal-label">Sub Total :</span>
+              <span class="overview-subtotal-value" id="rm-overview-subtotal">0.00</span>
+            </div>
+          </div>
+
+          <!-- Over View Table 2: Conversion Description -->
+          <div class="boc-section-block" style="margin-top: 14px;">
+            <div class="boc-table-container table-overview-h" style="min-height: 110px; max-height: 155px;">
+              <table class="boc-data-table" id="table-conversion-overview">
+                <thead>
+                  <tr>
+                    <th style="min-width: 200px;">Conversion Description</th>
+                    <th class="text-right" style="min-width: 85px;">RatePerUnit</th>
+                    <th class="text-right" style="min-width: 65px;">Qnty</th>
+                    <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                    <th style="width: 24px; text-align: center; border-right: none;"></th>
+                  </tr>
+                </thead>
+                <tbody id="conversion-overview-tbody">
+                  <!-- Dynamic fetch rows inserted here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="overview-subtotal-bar">
+              <span class="overview-subtotal-label">Sub Total :</span>
+              <span class="overview-subtotal-value" id="conversion-overview-subtotal">0.00</span>
+            </div>
+          </div>
+
+        </div><!-- /boc-right-column -->
+
+      </div><!-- /boc-layout -->
     </div>
     <div class="offer-subpanel" id="panel-tooling-cost">
       <h3>Tooling Cost Content</h3>
@@ -218,5 +748,50 @@
     </div>
   </div>
 
+  <script>
+    document.querySelectorAll(".subtab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".subtab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".offer-subpanel").forEach(p => p.classList.remove("active"));
+        const target = document.getElementById(btn.dataset.target);
+        if (target) target.classList.add("active");
+      });
+    });
+
+    const rateInput = document.getElementById("boc-entry-rate");
+    const qtyInput = document.getElementById("boc-entry-qty");
+    const totalInput = document.getElementById("boc-entry-total");
+
+    function calcTotal() {
+      if (!rateInput || !qtyInput || !totalInput) return;
+      const r = parseFloat(rateInput.value);
+      const q = parseFloat(qtyInput.value);
+      if (!isNaN(r) && !isNaN(q)) {
+        totalInput.value = (r * q).toFixed(2);
+      } else {
+        totalInput.value = "";
+      }
+    }
+
+    if (rateInput) rateInput.addEventListener("input", calcTotal);
+    if (qtyInput) qtyInput.addEventListener("input", calcTotal);
+
+    const rmRate = document.getElementById("rm-entry-rate");
+    const rmQty = document.getElementById("rm-entry-qty");
+    const rmTotal = document.getElementById("rm-entry-total");
+    function calcRmTotal() {
+      if (!rmRate || !rmQty || !rmTotal) return;
+      const r = parseFloat(rmRate.value);
+      const q = parseFloat(rmQty.value);
+      if (!isNaN(r) && !isNaN(q)) {
+        rmTotal.value = (r * q).toFixed(2);
+      } else {
+        rmTotal.value = "";
+      }
+    }
+    if (rmRate) rmRate.addEventListener("input", calcRmTotal);
+    if (rmQty) rmQty.addEventListener("input", calcRmTotal);
+  </script>
 </body>
 </html>

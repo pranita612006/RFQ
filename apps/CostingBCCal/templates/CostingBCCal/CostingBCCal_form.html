@@ -24,8 +24,8 @@
     padding: 8px 14px 4px;
     border-bottom: 2px solid #DEE2E6;
   }
-  .norms-brand { color: #FF3131; font-weight: 800; font-size: 1.35rem; letter-spacing: .5px; font-family: 'Permanent Marker', cursive; }
-  .norms-title { color: #2E266D; font-size: 1.05rem; font-weight: 600; margin-left: 10px; font-family: 'Permanent Marker', cursive; }
+  .norms-brand { color: #000000; font-weight: 800; font-size: 1.35rem; letter-spacing: .5px; font-family: 'Permanent Marker', cursive; }
+  .norms-title { color: #333333; font-size: 1.05rem; font-weight: 600; margin-left: 10px; font-family: 'Permanent Marker', cursive; }
 
   /* ── Top control bar ──────────────────────────────────────────── */
   .top-controls {
@@ -38,11 +38,11 @@
     flex-wrap: wrap;
   }
   .top-controls .ctrl-group { display: flex; flex-direction: column; min-width: 160px; }
-  .top-controls label { font-size: 0.68rem; font-weight: 700; color: #2E266D; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+  .top-controls label { font-size: 0.68rem; font-weight: 700; color: #333333; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
   .top-controls select,
   .top-controls input { font-size: 0.8rem; height: 30px; border-radius: 4px; border: 1px solid #DEE2E6; padding: 2px 8px; background: #FFFFFF; color: #000000; }
   .top-controls select:focus,
-  .top-controls input:focus { outline: none; border-color: #2E266D; box-shadow: 0 0 0 2px rgba(46, 38, 109, 0.18); }
+  .top-controls input:focus { outline: none; border-color: #333333; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15); }
 
   /* ── Tab bar ──────────────────────────────────────────────────── */
   .tab-bar {
@@ -60,19 +60,19 @@
     border-bottom: none;
     border-radius: 5px 5px 0 0;
     background: #FFFFFF;
-    color: #2E266D;
+    color: #333333;
     cursor: pointer;
     transition: background .15s, color .15s;
   }
-  .tab-btn:hover { background: #2E266D; color: #FFFFFF; }
-  .tab-btn.active { background: #2E266D; color: #FFFFFF; border-color: #2E266D; }
+  .tab-btn:hover { background: #333333; color: #FFFFFF; }
+  .tab-btn.active { background: #333333; color: #FFFFFF; border-color: #333333; }
 
   /* ── Tab panels ───────────────────────────────────────────────── */
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
   .tab-placeholder {
     display: flex; align-items: center; justify-content: center;
-    min-height: 300px; color: #2E266D; font-size: 1.1rem; font-style: italic;
+    min-height: 300px; color: #333333; font-size: 1.1rem; font-style: italic;
   }
 
   /* ── Norms control section ────────────────────────────────────── */
@@ -91,7 +91,7 @@
     flex-wrap: wrap;
   }
   .norms-filter-row .filter-label {
-    font-size: 0.72rem; font-weight: 700; color: #2E266D;
+    font-size: 0.72rem; font-weight: 700; color: #333333;
     text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
   }
   .norms-filter-row select {
@@ -99,7 +99,7 @@
     border: 1px solid #DEE2E6; padding: 2px 8px; min-width: 260px;
     background: #FFFFFF; color: #000000;
   }
-  .norms-filter-row select:focus { outline: none; border-color: #2E266D; box-shadow: 0 0 0 2px rgba(46,38,109,.18); }
+  .norms-filter-row select:focus { outline: none; border-color: #333333; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15); }
 
   /* Two-column form grid */
   .norms-form-grid {
@@ -117,7 +117,7 @@
     margin-bottom: 7px;
   }
   .norms-field-row label {
-    font-size: 0.72rem; font-weight: 700; color: #2E266D;
+    font-size: 0.72rem; font-weight: 700; color: #333333;
     text-transform: uppercase; letter-spacing: .4px;
     white-space: nowrap; min-width: 110px; text-align: right;
   }
@@ -130,37 +130,37 @@
   }
   .norms-field-row input:focus,
   .norms-field-row select:focus {
-    outline: none; border-color: #2E266D;
+    outline: none; border-color: #333333;
     box-shadow: 0 0 0 2px rgba(46, 38, 109, .18);
   }
   .norms-field-row input:read-only { background: #FFFFFF; color: #000000; cursor: default; }
-  .norms-field-row input.editable { background: #FFFFFF; color: #000000; cursor: text; border-color: #FF3131; }
+  .norms-field-row input.editable { background: #FFFFFF; color: #000000; cursor: text; border-color: #000000; }
 
   /* ── Buttons ──────────────────────────────────────────────────── */
   .btn-norms-primary {
     padding: 4px 13px; font-size: 0.78rem; font-weight: 600;
     border: none; border-radius: 4px; cursor: pointer;
-    background: #FF3131; color: #FFFFFF;
+    background: #000000; color: #FFFFFF;
     transition: background .15s, transform .1s;
   }
-  .btn-norms-primary:hover { background: #e02828; transform: translateY(-1px); }
+  .btn-norms-primary:hover { background: #000000; transform: translateY(-1px); }
   .btn-norms-primary:active { transform: translateY(0); }
 
   .btn-norms-secondary {
     padding: 3px 10px; font-size: 0.75rem; font-weight: 600;
-    border: 1px solid #2E266D; border-radius: 4px; cursor: pointer;
-    background: #2E266D; color: #FFFFFF;
+    border: 1px solid #333333; border-radius: 4px; cursor: pointer;
+    background: #333333; color: #FFFFFF;
     transition: background .15s;
   }
-  .btn-norms-secondary:hover { background: #1f1a4a; }
+  .btn-norms-secondary:hover { background: #000000; }
 
   .btn-norms-export {
     padding: 4px 14px; font-size: 0.78rem; font-weight: 600;
     border: none; border-radius: 4px; cursor: pointer;
-    background: #2E266D; color: #FFFFFF;
+    background: #333333; color: #FFFFFF;
     transition: background .15s, transform .1s;
   }
-  .btn-norms-export:hover { background: #FF3131; transform: translateY(-1px); }
+  .btn-norms-export:hover { background: #000000; transform: translateY(-1px); }
 
   /* ── Data table ───────────────────────────────────────────────── */
   .norms-table-wrap {
@@ -168,7 +168,7 @@
     overflow-x: auto;
   }
   .norms-table-wrap h6 {
-    font-size: 0.78rem; font-weight: 700; color: #2E266D;
+    font-size: 0.78rem; font-weight: 700; color: #333333;
     text-transform: uppercase; letter-spacing: .6px;
     margin-bottom: 6px;
     padding-bottom: 4px;
@@ -179,7 +179,7 @@
     font-size: 0.76rem; background: #FFFFFF;
   }
   #norms-table thead tr {
-    background: #2E266D; color: #FFFFFF;
+    background: #333333; color: #FFFFFF;
     position: sticky; top: 0; z-index: 2;
   }
   #norms-table thead th {
@@ -189,35 +189,35 @@
     user-select: none;
     border-right: 1px solid rgba(255,255,255,.15);
   }
-  #norms-table thead th:hover { background: #FF3131; }
+  #norms-table thead th:hover { background: #000000; }
   #norms-table thead th .sort-icon { margin-left: 4px; opacity: .6; }
   #norms-table tbody tr {
     border-bottom: 1px solid #DEE2E6;
     cursor: pointer;
     transition: background .1s;
   }
-  #norms-table tbody tr:hover { background: rgba(46, 38, 109, 0.08); }
-  #norms-table tbody tr.selected { background: rgba(255, 49, 49, 0.15) !important; }
+  #norms-table tbody tr:hover { background: rgba(204, 204, 204, 0.2); }
+  #norms-table tbody tr.selected { background: rgba(204, 204, 204, 0.4) !important; }
   #norms-table tbody td {
     padding: 5px 10px; color: #000000;
     max-width: 200px; overflow: hidden;
     text-overflow: ellipsis; white-space: nowrap;
   }
-  #norms-table tbody td:first-child { color: #2E266D; font-size: 0.7rem; font-weight: 600; }
+  #norms-table tbody td:first-child { color: #333333; font-size: 0.7rem; font-weight: 600; }
   .table-empty {
-    text-align: center; color: #2E266D; font-style: italic;
+    text-align: center; color: #333333; font-style: italic;
     padding: 30px !important;
   }
 
   /* ── Loading spinner ──────────────────────────────────────────── */
   .spinner-wrap {
     display: flex; align-items: center; justify-content: center;
-    padding: 30px; gap: 10px; color: #2E266D;
+    padding: 30px; gap: 10px; color: #333333;
   }
   .spinner {
     width: 20px; height: 20px;
     border: 3px solid #DEE2E6;
-    border-top-color: #FF3131;
+    border-top-color: #000000;
     border-radius: 50%;
     animation: spin .65s linear infinite;
   }
@@ -235,6 +235,7 @@
   }
   #norms-toast.show { transform: translateY(0); opacity: 1; }
   #norms-toast.success { background: #27a745; }
+  #norms-toast.info    { background: #27a745; }
   #norms-toast.error   { background: #dc3545; }
 
   /* ── Submit button in top bar ─────────────────────────────────── */
@@ -280,7 +281,7 @@
   .ic-card-title {
     font-size: 0.88rem;
     font-weight: 700;
-    color: #2E266D;
+    color: #333333;
     text-transform: uppercase;
     letter-spacing: .5px;
     margin: 0;
@@ -295,7 +296,7 @@
     font-size: 0.78rem;
   }
   .ic-table thead tr {
-    background: #2E266D;
+    background: #333333;
     color: #FFFFFF;
   }
   .ic-table thead th {
@@ -309,7 +310,7 @@
     border-bottom: 1px solid #DEE2E6;
   }
   .ic-table tbody tr:hover {
-    background: rgba(46, 38, 109, 0.04);
+    background: rgba(204, 204, 204, 0.15);
   }
   .ic-table td {
     padding: 6px 12px;
@@ -318,11 +319,11 @@
   .ic-table tfoot tr {
     background: #eef1f8;
     font-weight: 700;
-    border-top: 2px solid #2E266D;
+    border-top: 2px solid #333333;
   }
   .ic-table tfoot td {
     padding: 8px 12px;
-    color: #2E266D;
+    color: #333333;
   }
   
   .closer-fieldset {
@@ -335,7 +336,7 @@
   .closer-fieldset legend {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #2E266D;
+    color: #333333;
     padding: 0 8px;
     width: auto;
     margin: 0;
@@ -351,7 +352,7 @@
     gap: 6px;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #2E266D;
+    color: #333333;
     cursor: pointer;
   }
 
@@ -402,7 +403,7 @@
     padding: 6px 20px;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #2E266D;
+    color: #333333;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -429,25 +430,447 @@
   }
   .subtab-btn:hover svg.tab-bg polygon {
     fill: #f1f5f9;
-    stroke: #2E266D;
+    stroke: #333333;
   }
   .subtab-btn.active svg.tab-bg polygon {
     fill: #FFFFFF;
-    stroke: #2E266D;
+    stroke: #333333;
     stroke-width: 1.6;
   }
   .subtab-btn.active span {
-    color: #2E266D;
+    color: #333333;
     font-weight: 700;
   }
   .offer-blue-divider {
     height: 2px;
-    background: #2E266D;
+    background: #333333;
     width: 100%;
   }
   .offer-tab-content-area {
     background: #FFFFFF;
     min-height: 400px;
+  }
+
+  /* ── BOC Tab UI ─────────────────────────────────────────────────── */
+  .boc-layout {
+    display: flex;
+    padding: 12px 16px;
+    gap: 16px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .boc-left-column {
+    flex: 1 1 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .boc-right-column {
+    flex: 1 1 50%;
+    min-width: 0;
+    border-left: 1px dotted #94A3B8;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .boc-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .boc-section-title {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #2E3A59;
+    letter-spacing: 0.02em;
+  }
+  .boc-btn-save, .boc-btn-add {
+    background: #3A4B68;
+    color: #FFFFFF;
+    border: 1px solid #2E3D55;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .boc-btn-save:hover, .boc-btn-add:hover {
+    background: #253348;
+  }
+  .boc-table-container {
+    border: 1px solid #CBD5E1;
+    overflow-x: auto;
+    overflow-y: auto;
+    background: #FFFFFF;
+    border-radius: 2px;
+  }
+  .boc-table-container.table-fixed-h {
+    min-height: 90px;
+    max-height: 140px;
+  }
+  .boc-table-container.table-overview-h {
+    min-height: 110px;
+    max-height: 160px;
+  }
+  .boc-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .boc-data-table thead tr {
+    background: #D5E4F3;
+  }
+  .boc-data-table thead th {
+    color: #1E293B;
+    font-weight: 600;
+    padding: 5px 8px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #94A3B8;
+    text-align: left;
+  }
+  .boc-data-table thead th:last-child {
+    border-right: none;
+  }
+  .boc-data-table thead th.text-right {
+    text-align: right;
+  }
+  .boc-data-table thead th.text-center {
+    text-align: center;
+  }
+  .boc-data-table tbody td {
+    padding: 4px 8px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #E2E8F0;
+    color: #1E293B;
+  }
+  .boc-data-table tbody td:last-child {
+    border-right: none;
+  }
+  .boc-data-table tbody td.text-right {
+    text-align: right;
+  }
+  .boc-data-table tbody td.text-center {
+    text-align: center;
+  }
+  .boc-data-table tbody tr:hover {
+    background: #F8FAFC;
+  }
+  .boc-input-control {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border: 1px solid #94A3B8;
+    border-radius: 2px;
+    background: #FFFFFF;
+    color: #1E293B;
+    height: 22px;
+  }
+  .boc-input-control:focus {
+    outline: none;
+    border-color: #2563EB;
+  }
+  .boc-overview-header {
+    margin-bottom: 4px;
+  }
+  .boc-overview-link {
+    color: #2563EB;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: default;
+    user-select: text;
+  }
+  .boc-subtotal-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .boc-subtotal-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  .boc-subtotal-field {
+    width: 75px;
+    text-align: right;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid #94A3B8;
+    border-radius: 2px;
+    background: #FFFFFF;
+    color: #1E293B;
+    height: 20px;
+  }
+  .boc-action-del {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #EF4444;
+    font-weight: bold;
+    font-size: 0.78rem;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .boc-action-del:hover {
+    color: #B91C1C;
+  }
+  .overview-subtotal-bar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+  .overview-subtotal-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .overview-subtotal-value {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #1E293B;
+    min-width: 50px;
+  }
+  .table-sort-caret {
+    display: inline-block;
+    margin-left: 3px;
+    font-size: 0.62rem;
+    color: #475569;
+    vertical-align: middle;
+  }
+
+  /* ── Offer Sheet: Tooling Cost Tab ─────────────────────────────── */
+  .tooling-tab-container {
+    padding: 18px 20px 36px 20px;
+    background: #FFFFFF;
+    max-width: 960px;
+    box-sizing: border-box;
+  }
+  .tooling-cost-section {
+    margin-bottom: 34px;
+  }
+  .tooling-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .tooling-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2E3A59;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .tooling-btn-export {
+    background: #4B5E76;
+    color: #FFFFFF;
+    border: 1px solid #3B4C62;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 22px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .tooling-btn-export:hover {
+    background: #38485C;
+  }
+  .tooling-table-wrap {
+    border: 1px solid #CBD5E1;
+    background: #FFFFFF;
+    border-radius: 2px;
+    overflow-x: auto;
+  }
+  .tooling-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .tooling-data-table thead tr {
+    background: #D5E4F3;
+  }
+  .tooling-data-table thead th {
+    color: #1E293B;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #94A3B8;
+    text-align: left;
+  }
+  .tooling-data-table thead th:last-child {
+    border-right: none;
+  }
+  .tooling-data-table thead th.text-right {
+    text-align: right;
+  }
+  .tooling-data-table thead th.text-center {
+    text-align: center;
+  }
+  .tooling-data-table tbody td {
+    padding: 5px 10px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #E2E8F0;
+    color: #1E293B;
+  }
+  .tooling-data-table tbody td:last-child {
+    border-right: none;
+  }
+  .tooling-data-table tbody td.text-right {
+    text-align: right;
+  }
+  .tooling-data-table tbody td.text-center {
+    text-align: center;
+  }
+  .tooling-subtotal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-left: 2px;
+  }
+  .tooling-subtotal-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1E293B;
+  }
+  .tooling-subtotal-value {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1E293B;
+  }
+
+  /* ── Offer Sheet: Transport Cost Tab ────────────────────────────── */
+  .transport-tab-container {
+    padding: 18px 20px 36px 20px;
+    background: #FFFFFF;
+    max-width: 1040px;
+    box-sizing: border-box;
+  }
+  .transport-customer-bar {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #0F172A;
+  }
+  .transport-customer-label {
+    font-weight: 700;
+    font-style: italic;
+  }
+  .transport-customer-val {
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .transport-tables-flex {
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .transport-table-box {
+    flex: 1 1 50%;
+    min-width: 0;
+    border: 1px solid #94A3B8;
+    background: #FFFFFF;
+    box-sizing: border-box;
+  }
+  .transport-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  .transport-data-table thead tr {
+    background: #9BC2E6;
+  }
+  .transport-data-table thead th {
+    color: #0F172A;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-right: 1px solid #94A3B8;
+    border-bottom: 1px solid #94A3B8;
+    text-align: center;
+  }
+  .transport-data-table thead th:last-child {
+    border-right: none;
+  }
+  .transport-data-table tbody td {
+    padding: 4px 8px;
+    border-right: 1px solid #94A3B8;
+    border-bottom: 1px solid #94A3B8;
+    color: #1E293B;
+    height: 29px;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+  .transport-data-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .transport-data-table tbody td:last-child {
+    border-right: none;
+  }
+  .transport-data-table tbody tr.row-highlight-yellow td {
+    background: #FFFF00 !important;
+    font-weight: 700;
+    color: #000000;
+  }
+  .transport-cost-cell {
+    width: 125px;
+    text-align: right;
+    padding: 0 4px !important;
+  }
+  .transport-input-cost {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: right;
+    font-size: 0.78rem;
+    font-family: inherit;
+    color: inherit;
+    padding: 2px 6px;
+    box-sizing: border-box;
+  }
+  .transport-input-cost:focus {
+    background: #F1F5F9;
+  }
+  .row-highlight-yellow .transport-input-cost {
+    font-weight: 700;
+    text-align: center;
+  }
+  .transport-actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .transport-btn {
+    background: #4B5E76;
+    color: #FFFFFF;
+    border: 1px solid #3B4C62;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 26px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .transport-btn:hover {
+    background: #38485C;
   }
 </style>
 {% endblock extrastyle %}
@@ -473,7 +896,7 @@
       <select id="top-customer-id">
         <option value="">-- Select --</option>
         {% for cid in customers %}
-          <option value="{{ cid }}">{{ cid }}</option>
+          <option value="{{ cid }}" {% if cid == selected_customer %}selected{% endif %}>{{ cid }}</option>
         {% endfor %}
       </select>
     </div>
@@ -483,11 +906,12 @@
       <select id="top-item-id" name="item_creation_id">
         <option value="">-- Select --</option>
         {% for iid in item_ids %}
-          <option value="{{ iid }}">{{ iid }}</option>
+          <option value="{{ iid }}" {% if iid == selected_item %}selected{% endif %}>{{ iid }}</option>
         {% endfor %}
       </select>
-      <input type="hidden" id="id_item_creation_id" name="item_creation_id" value="">
+      <input type="hidden" id="id_item_creation_id" name="item_creation_id" value="{{ selected_item }}">
     </div>
+
 
     <div class="ctrl-group">
       <label for="top-year">Assignment Year</label>
@@ -515,7 +939,7 @@
 
     <!-- Closer Action — inline after Assignment Year & Submit -->
     <fieldset class="closer-fieldset" style="margin: 0; padding: 4px 14px; border: 1px solid #DEE2E6; border-radius: 4px; display: flex; align-items: center; gap: 0;">
-      <legend style="font-size: 0.68rem; font-weight: 700; color: #2E266D; padding: 0 4px; text-transform: uppercase; letter-spacing: .4px;"><i class="fas fa-tasks mr-1"></i>Closer Action</legend>
+      <legend style="font-size: 0.68rem; font-weight: 700; color: #333333; padding: 0 4px; text-transform: uppercase; letter-spacing: .4px;"><i class="fas fa-tasks mr-1"></i>Closer Action</legend>
       <div style="display: flex; align-items: center; gap: 10px;">
         <label style="display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #374151; cursor: pointer; margin: 0;">
           <input type="checkbox" id="ic-is-completed" style="width: 14px; height: 14px; cursor: pointer;">
@@ -818,33 +1242,552 @@
     <!-- Sub-tab content areas -->
     <div class="offer-tab-content-area">
       <div class="offer-subpanel active" id="subpanel-boc">
-        <div style="padding: 24px 16px; color: #4b5563;">
-          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">BOC Cost Details</h4>
-          <p style="font-size: 0.82rem; color: #6b7280;">BOC breakdown and calculations will appear here.</p>
-        </div>
+        <div class="boc-layout">
+
+          <!-- ── Left Column ── -->
+          <div class="boc-left-column">
+
+            <!-- 1. BOM : LOCAL BOC -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar">
+                <span class="boc-section-title">BOM : LOCAL BOC</span>
+                <button type="button" class="boc-btn-save" id="btn-save-local-boc">Save Details</button>
+              </div>
+              <div class="boc-table-container table-fixed-h">
+                <table class="boc-data-table" id="table-boc-local">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 45px; text-align: center;">Sr No</th>
+                      <th style="min-width: 95px;">Part_Number</th>
+                      <th style="min-width: 170px;">Description</th>
+                      <th style="min-width: 80px;">UOM_Code</th>
+                      <th class="text-right" style="min-width: 75px;">Quantity</th>
+                      <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+                      <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                      <th class="text-right" style="min-width: 90px;">Cost</th>
+                      <th class="text-center" style="min-width: 65px;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="boc-local-bom-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 2. BOM : IMPORTED BOC -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar">
+                <span class="boc-section-title">BOM : IMPORTED BOC</span>
+                <button type="button" class="boc-btn-save" id="btn-save-imported-boc">Save Details</button>
+              </div>
+              <div class="boc-table-container table-fixed-h">
+                <table class="boc-data-table" id="table-boc-imported">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 45px; text-align: center;">Sr No</th>
+                      <th style="min-width: 95px;">Part_Number</th>
+                      <th style="min-width: 170px;">Description</th>
+                      <th style="min-width: 80px;">UOM_Code</th>
+                      <th class="text-right" style="min-width: 75px;">Quantity</th>
+                      <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+                      <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                      <th class="text-right" style="min-width: 90px;">Cost</th>
+                      <th class="text-center" style="min-width: 65px;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="boc-imported-bom-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 3. Data Entry : IMPORTED BOC -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar">
+                <span class="boc-section-title">Data Entry : IMPORTED BOC</span>
+              </div>
+              <div class="boc-table-container">
+                <table class="boc-data-table" id="table-boc-entry">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 170px;">Description</th>
+                      <th style="min-width: 75px;">Tube Size</th>
+                      <th style="min-width: 60px;">Unit</th>
+                      <th class="text-right" style="min-width: 75px;">Rate/Unit</th>
+                      <th class="text-right" style="min-width: 70px;">Quantity</th>
+                      <th class="text-right" style="min-width: 75px;">Total Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 2px 4px;">
+                        <input type="text" id="boc-entry-desc" class="boc-input-control"
+                               list="boc-desc-datalist" placeholder="Type description..."
+                               autocomplete="off">
+                        <datalist id="boc-desc-datalist"></datalist>
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="text" id="boc-entry-tubesize" class="boc-input-control">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="text" id="boc-entry-unit" class="boc-input-control">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="boc-entry-rate" class="boc-input-control" style="text-align: right;">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="boc-entry-qty" class="boc-input-control" style="text-align: right;">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="boc-entry-total" class="boc-input-control" style="text-align: right;" readonly>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                <button type="button" class="boc-btn-add" id="btn-boc-add-entry" style="padding: 4px 18px;">Add</button>
+              </div>
+            </div>
+
+          </div><!-- /boc-left-column -->
+
+          <!-- ── Right Column ── -->
+          <div class="boc-right-column">
+
+            <!-- Overview Section Header -->
+            <div class="boc-overview-header">
+              <span class="boc-overview-link">Over View</span>
+            </div>
+
+            <!-- Over View Table 1 (Local) -->
+            <div class="boc-section-block">
+              <div class="boc-table-container table-overview-h">
+                <table class="boc-data-table" id="table-boc-overview-local">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 170px;">Raw_Material Description</th>
+                      <th style="min-width: 75px;">Tube Size</th>
+                      <th style="min-width: 50px;">Unit</th>
+                      <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                      <th class="text-right" style="min-width: 65px;">Qnty</th>
+                      <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                      <th style="width: 24px; text-align: center; border-right: none;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="boc-overview-local-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="boc-subtotal-bar">
+                <span class="boc-subtotal-label">Sub Total</span>
+                <input type="text" id="boc-local-subtotal" class="boc-subtotal-field" readonly value="0.00">
+              </div>
+            </div>
+
+            <!-- Over View Table 2 (Imported) -->
+            <div class="boc-section-block">
+              <div class="boc-table-container table-overview-h">
+                <table class="boc-data-table" id="table-boc-overview-imported">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 170px;">Raw_Material Description</th>
+                      <th style="min-width: 75px;">Tube Size</th>
+                      <th style="min-width: 50px;">Unit</th>
+                      <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                      <th class="text-right" style="min-width: 65px;">Qnty</th>
+                      <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                      <th style="width: 24px; text-align: center; border-right: none;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="boc-overview-imported-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="boc-subtotal-bar">
+                <span class="boc-subtotal-label">Sub Total</span>
+                <input type="text" id="boc-imported-subtotal" class="boc-subtotal-field" readonly value="">
+              </div>
+            </div>
+
+          </div><!-- /boc-right-column -->
+
+        </div><!-- /boc-layout -->
       </div>
+      <!-- ── RM + Conversion Subpanel ── -->
       <div class="offer-subpanel" id="subpanel-rm-conversion" style="display: none;">
-        <div style="padding: 24px 16px; color: #4b5563;">
-          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Raw Material + Conversion</h4>
-          <p style="font-size: 0.82rem; color: #6b7280;">Raw material and conversion costing details will appear here.</p>
-        </div>
+        <div class="boc-layout">
+
+          <!-- ── Left Column ── -->
+          <div class="boc-left-column">
+
+            <!-- 1. RM BOM Table -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar" style="justify-content: flex-end; gap: 8px;">
+                <button type="button" class="boc-btn-save" id="btn-save-rm-details">Save Details</button>
+              </div>
+              <div class="boc-table-container table-fixed-h" style="min-height: 110px; max-height: 155px;">
+                <table class="boc-data-table" id="table-rm-bom">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 95px;">Part_Number</th>
+                      <th style="min-width: 170px;">Description</th>
+                      <th style="min-width: 70px;">UOM</th>
+                      <th class="text-right" style="min-width: 75px;">Quantity</th>
+                      <th class="text-right" style="min-width: 90px;">Internal Rate</th>
+                      <th class="text-right" style="min-width: 90px;">Settle Price</th>
+                      <th class="text-right" style="min-width: 90px;">Cost</th>
+                      <th style="min-width: 60px; text-align:center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rm-bom-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 2. Data Entry : Raw Material -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar">
+                <span class="boc-section-title">Data Entry : Raw Material</span>
+                <button type="button" class="boc-btn-add" id="btn-rm-add-entry" style="padding: 3px 18px;">Add</button>
+              </div>
+              <div class="boc-table-container">
+                <table class="boc-data-table" id="table-rm-entry">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 180px;">Material Description</th>
+                      <th style="min-width: 60px;">Unit</th>
+                      <th class="text-right" style="min-width: 75px;">Rate/Unit</th>
+                      <th class="text-right" style="min-width: 70px;">Quantity</th>
+                      <th class="text-right" style="min-width: 75px;">Total Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 2px 4px;">
+                        <select id="rm-entry-desc" class="boc-input-control">
+                          <option value="">-- Select Material --</option>
+                        </select>
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="text" id="rm-entry-unit" class="boc-input-control">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="rm-entry-rate" class="boc-input-control" style="text-align: right;">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="rm-entry-qty" class="boc-input-control" style="text-align: right;">
+                      </td>
+                      <td style="padding: 2px 4px;">
+                        <input type="number" step="any" id="rm-entry-total" class="boc-input-control" style="text-align: right;" readonly>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 3. Conversion Cost : -->
+            <div class="boc-section-block">
+              <div class="boc-header-bar">
+                <span class="boc-section-title">Conversion Cost :</span>
+                <button type="button" class="boc-btn-save" id="btn-save-conversion-details">Save Details</button>
+              </div>
+              <div class="boc-table-container table-fixed-h" style="min-height: 120px; max-height: 165px;">
+                <table class="boc-data-table" id="table-conversion-cost">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 170px;">
+                        Conversion_Description <span class="table-sort-caret">&#x25BE;</span>
+                      </th>
+                      <th class="text-right" style="min-width: 95px;">
+                        Cost_Per_Qnty <span class="table-sort-caret">&#x25BE;</span>
+                      </th>
+                      <th class="text-right" style="min-width: 80px;">
+                        Quantity <span class="table-sort-caret">&#x25BE;</span>
+                      </th>
+                      <th class="text-right" style="min-width: 90px;">
+                        Total Cost <span class="table-sort-caret">&#x25BE;</span>
+                      </th>
+                      <th style="width: 60px; text-align: center; border-right: none;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="conversion-cost-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="overview-subtotal-bar">
+                <span class="overview-subtotal-label">Sub Total :</span>
+                <span class="overview-subtotal-value" id="conversion-cost-subtotal">0.00</span>
+              </div>
+            </div>
+
+          </div><!-- /boc-left-column -->
+
+          <!-- ── Right Column ── -->
+          <div class="boc-right-column">
+
+            <!-- Overview Section Header -->
+            <div class="boc-overview-header">
+              <span class="boc-overview-link">Over View</span>
+            </div>
+
+            <!-- Over View Table 1: Raw Material -->
+            <div class="boc-section-block">
+              <div class="boc-table-container table-overview-h" style="min-height: 110px; max-height: 155px;">
+                <table class="boc-data-table" id="table-rm-overview">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 170px;">Raw_Material Description</th>
+                      <th style="min-width: 75px;">Tube Size</th>
+                      <th style="min-width: 50px;">Unit</th>
+                      <th class="text-right" style="min-width: 80px;">RatePerUnit</th>
+                      <th class="text-right" style="min-width: 65px;">Qnty</th>
+                      <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                      <th style="width: 24px; text-align: center; border-right: none;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="rm-overview-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="overview-subtotal-bar">
+                <span class="overview-subtotal-label">Sub Total :</span>
+                <span class="overview-subtotal-value" id="rm-overview-subtotal">0.00</span>
+              </div>
+            </div>
+
+            <!-- Over View Table 2: Conversion Description -->
+            <div class="boc-section-block" style="margin-top: 14px;">
+              <div class="boc-table-container table-overview-h" style="min-height: 110px; max-height: 155px;">
+                <table class="boc-data-table" id="table-conversion-overview">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 200px;">Conversion Description</th>
+                      <th class="text-right" style="min-width: 85px;">RatePerUnit</th>
+                      <th class="text-right" style="min-width: 65px;">Qnty</th>
+                      <th class="text-right" style="min-width: 75px;">Total_Cost</th>
+                      <th style="width: 24px; text-align: center; border-right: none;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="conversion-overview-tbody">
+                    <!-- Dynamic fetch rows inserted here -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="overview-subtotal-bar">
+                <span class="overview-subtotal-label">Sub Total :</span>
+                <span class="overview-subtotal-value" id="conversion-overview-subtotal">0.00</span>
+              </div>
+            </div>
+
+          </div><!-- /boc-right-column -->
+
+        </div><!-- /boc-layout -->
       </div>
       <div class="offer-subpanel" id="subpanel-tooling-cost" style="display: none;">
-        <div style="padding: 24px 16px; color: #4b5563;">
-          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Tooling Cost</h4>
-          <p style="font-size: 0.82rem; color: #6b7280;">Tooling cost summary and details will appear here.</p>
+        <div class="tooling-tab-container">
+          <!-- ── Section 1: Internal Tooling Cost ────────────────────────── -->
+          <div class="tooling-cost-section">
+            <div class="tooling-section-header">
+              <h3 class="tooling-section-title">Data Tooling : Internal Tooling Cost</h3>
+              <button type="button" class="tooling-btn-export" id="btn-export-internal-tooling">Export</button>
+            </div>
+            <div class="tooling-table-wrap">
+              <table class="tooling-data-table" id="table-internal-tooling">
+                <thead>
+                  <tr>
+                    <th style="min-width: 280px; width: 50%;">Tootl Description</th>
+                    <th class="text-center" style="min-width: 80px; width: 10%;">UOM</th>
+                    <th class="text-right" style="min-width: 110px; width: 13%;">Unit Cost</th>
+                    <th class="text-right" style="min-width: 90px; width: 11%;">Qnty</th>
+                    <th class="text-right" style="min-width: 120px; width: 16%;">Total Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-internal-tooling">
+                  <!-- No row data entered per requirement; dynamic data will populate here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="tooling-subtotal-bar">
+              <span class="tooling-subtotal-label">Sub Total :</span>
+              <span class="tooling-subtotal-value" id="subtotal-internal-tooling">0.00</span>
+            </div>
+          </div>
+
+          <!-- ── Section 2: Recovery Tooling Cost ────────────────────────── -->
+          <div class="tooling-cost-section">
+            <div class="tooling-section-header">
+              <h3 class="tooling-section-title">Data Tooling : Recovery Tooling Cost</h3>
+              <button type="button" class="tooling-btn-export" id="btn-export-recovery-tooling">Export</button>
+            </div>
+            <div class="tooling-table-wrap">
+              <table class="tooling-data-table" id="table-recovery-tooling">
+                <thead>
+                  <tr>
+                    <th style="min-width: 280px; width: 50%;">Tootl Description</th>
+                    <th class="text-center" style="min-width: 80px; width: 10%;">UOM</th>
+                    <th class="text-right" style="min-width: 110px; width: 13%;">Unit Cost</th>
+                    <th class="text-right" style="min-width: 90px; width: 11%;">Qnty</th>
+                    <th class="text-right" style="min-width: 120px; width: 16%;">Total Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-recovery-tooling">
+                  <!-- No row data entered per requirement; dynamic data will populate here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="tooling-subtotal-bar">
+              <span class="tooling-subtotal-label">Sub Total :</span>
+              <span class="tooling-subtotal-value" id="subtotal-recovery-tooling">0.00</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="offer-subpanel" id="subpanel-transport-cost" style="display: none;">
-        <div style="padding: 24px 16px; color: #4b5563;">
-          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Transport Cost</h4>
-          <p style="font-size: 0.82rem; color: #6b7280;">Logistics and transport cost breakdown will appear here.</p>
+        <div class="transport-tab-container">
+          <!-- Customer Code Bar -->
+          <div class="transport-customer-bar">
+            <span class="transport-customer-label">Customer Code :</span>
+            <span class="transport-customer-val" id="transport-customer-name">Cooper</span>
+          </div>
+
+          <!-- Side-by-Side Part 1 & Part 2 Tables -->
+          <div class="transport-tables-flex">
+            <!-- Part 1 Table -->
+            <div class="transport-table-box">
+              <table class="transport-data-table" id="table-transport-part1">
+                <thead>
+                  <tr>
+                    <th style="width: 72%;">Particular : Part 1</th>
+                    <th style="width: 28%;">Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CFT of BOX (1 cft = 12 Kg)</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-cft-box" name="cft_box"></td>
+                  </tr>
+                  <tr>
+                    <td>Freight Rs.2.20/Kg</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-freight-kg" name="freight_kg"></td>
+                  </tr>
+                  <tr>
+                    <td>Freight charges/Vehicle rate</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-freight-vehicle" name="freight_vehicle"></td>
+                  </tr>
+                  <tr>
+                    <td>Docket charges</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-docket-charges" name="docket_charges"></td>
+                  </tr>
+                  <tr>
+                    <td>Pickup charges</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-pickup-charges" name="pickup_charges"></td>
+                  </tr>
+                  <tr>
+                    <td>Door Delivery/DOD Charges</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-door-delivery" name="door_delivery"></td>
+                  </tr>
+                  <tr>
+                    <td>LR charges/invoice</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-lr-charges" name="lr_charges"></td>
+                  </tr>
+                  <tr>
+                    <td>Service charges & Other</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-service-charges" name="service_charges"></td>
+                  </tr>
+                  <tr class="row-highlight-yellow">
+                    <td>Total Transporation Cost/Trip</td>
+                    <td class="transport-cost-cell" style="text-align: center;">
+                      <input type="text" class="transport-input-cost" id="tp-total-trip-cost" name="total_trip_cost" value="0.00" style="text-align: center;">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Part 2 Table -->
+            <div class="transport-table-box">
+              <table class="transport-data-table" id="table-transport-part2">
+                <thead>
+                  <tr>
+                    <th style="width: 72%;">Particular : Part 2</th>
+                    <th style="width: 28%;">Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Cubic Meter/CBM of Vehicle</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-cbm-vehicle" name="cbm_vehicle"></td>
+                  </tr>
+                  <tr>
+                    <td>CBM Freight Cost</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-cbm-freight" name="cbm_freight"></td>
+                  </tr>
+                  <tr>
+                    <td>Cubic Meter/CBM of Packing Box (MM)</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-cbm-packing-box" name="cbm_packing_box"></td>
+                  </tr>
+                  <tr>
+                    <td>Capacity Utilisation of Truck Space/CBM Rate</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-capacity-utilisation" name="capacity_utilisation"></td>
+                  </tr>
+                  <tr>
+                    <td>Quantity/Box/No of Parts in one Box</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-qty-per-box" name="qty_per_box"></td>
+                  </tr>
+                  <tr>
+                    <td>No of box/Trip</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-box-per-trip" name="box_per_trip"></td>
+                  </tr>
+                  <tr>
+                    <td>Total Qty per trip</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-total-qty-trip" name="total_qty_trip"></td>
+                  </tr>
+                  <tr>
+                    <td>Total tube in meter</td>
+                    <td class="transport-cost-cell"><input type="text" class="transport-input-cost" id="tp-total-tube-meter" name="total_tube_meter"></td>
+                  </tr>
+                  <tr class="row-highlight-yellow">
+                    <td>Transporation Cost/Quantity</td>
+                    <td class="transport-cost-cell">
+                      <input type="text" class="transport-input-cost" id="tp-cost-per-qty" name="cost_per_qty">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="transport-actions-bar">
+            <button type="button" class="transport-btn" id="btn-transport-edit">Edit</button>
+            <button type="button" class="transport-btn" id="btn-transport-save">Save</button>
+          </div>
         </div>
       </div>
       <div class="offer-subpanel" id="subpanel-download" style="display: none;">
-        <div style="padding: 24px 16px; color: #4b5563;">
-          <h4 style="font-size: 1rem; font-weight: 700; color: #2E266D; margin-bottom: 8px;">Offer Sheet Download</h4>
-          <p style="font-size: 0.82rem; color: #6b7280;">Download generated offer sheet files.</p>
+        <div style="padding: 24px 20px; color: #4b5563; max-width: 650px;">
+          <h4 style="font-size: 1.1rem; font-weight: 700; color: #333333; margin-bottom: 8px;">Offer Sheet Download</h4>
+          <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 20px;">
+            Generate and download the complete 7-sheet Offer Sheet workbook (.xlsx) containing Internal Conversion, Local & Imported BOC, RM & Conversion, Tooling Cost, Consolidate Data View, Transport Cost, and Final Cost.
+          </p>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+            <div style="font-size: 0.85rem; color: #334155; font-weight: 600; margin-bottom: 6px;">Target Selection:</div>
+            <div style="font-size: 0.82rem; color: #64748b;" id="download-target-info">Select Customer ID and Item Creation ID from top bar filters.</div>
+          </div>
+          <button type="button" id="btn-offer-download" style="height: 40px; padding: 0 24px; font-size: 0.9rem; font-weight: 600; background: #333333; color: #fff; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);">
+            <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span>Download Offer Sheet (.xlsx)</span>
+          </button>
         </div>
       </div>
     </div>
@@ -863,6 +1806,7 @@
 
 
 {% block extra_scripts %}
+<script src="{% static 'js/boc_local.js' %}"></script>
 <script>
 /* =========================================================
    Norms Subform — Interactive Controller
@@ -1410,13 +2354,1228 @@ async function loadDataToolingPanel(viewMode = 'dt_entry') {
   }
 }
 
+// ============================================================
+// BOC TAB — Local BOC Data Functions
+// ============================================================
+
+/**
+ * Escapes a string to prevent XSS when injecting into innerHTML.
+ * @param {string} str - Raw string value.
+ * @returns {string} HTML-safe escaped string.
+ */
+function _escBOC(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+/**
+ * Dynamically inserts a <tr> row into #boc-local-bom-tbody.
+ *
+ * Property mapping (strict lowercase):
+ *   part_number, description, uom_code, quantity,
+ *   internal_rate, settle_price  →  cost calculated client-side.
+ *
+ * @param {Object} dataObject - Row data returned by the fetch API.
+ */
+function addLocalBOCRow(dataObject) {
+  const tbody = document.getElementById('boc-local-bom-tbody');
+  if (!tbody) return;
+
+  // Remove placeholder row if present
+  const placeholder = tbody.querySelector('.no-data-row');
+  if (placeholder) placeholder.remove();
+
+  // Parse numeric values with safe fallbacks
+  const qty           = parseFloat(dataObject.quantity      || 0) || 0;
+  const internalRate  = parseFloat(dataObject.internal_rate || 0) || 0;
+  const settlePrice   = parseFloat(dataObject.settle_price  || 0) || 0;
+  // Cost from server; recalculate as fallback
+  const cost          = parseFloat(dataObject.cost          || 0) || (qty * settlePrice);
+
+  const tr = document.createElement('tr');
+
+  // Attach data-id for update operations (only when id exists)
+  if (dataObject.id) {
+    tr.setAttribute('data-id', dataObject.id);
+  }
+
+  const srNo = tbody.querySelectorAll('tr:not(.no-data-row)').length + 1;
+
+  tr.innerHTML = [
+    `<td style="text-align:center;" class="col-srno">${srNo}</td>`,
+    `<td>${_escBOC(dataObject.part_number)}</td>`,
+    `<td>${_escBOC(dataObject.description)}</td>`,
+    `<td>${_escBOC(dataObject.uom_code)}</td>`,
+    `<td style="text-align:right;" class="col-qty">${qty.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-ir">${internalRate.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-sp">${settlePrice.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-cost">${cost.toFixed(2)}</td>`,
+    `<td style="text-align:center;"><button type="button" class="btn-edit-row" style="padding:2px 8px; font-size:12px; cursor:pointer; background:#2563eb; color:#fff; border:none; border-radius:4px;">Edit</button></td>`,
+  ].join('');
+
+  tbody.appendChild(tr);
+}
+
+
+/**
+ * Loads LOCAL BOC data from the server and populates #boc-local-bom-tbody.
+ * Queries /CostingBCCal/get-boc-tab-data/ with customer_id and item_creation_id.
+ * Does NOT auto-fill from BOM or legacy tables — pure DB read of ztbl_offersheet_boc.
+ */
+async function loadBOCTabData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+
+  if (!customerId || !itemId) return;
+
+  const url = `/CostingBCCal/get-boc-tab-data/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    if (data.status !== 'success') {
+      console.warn('[BOC] get-boc-tab-data returned error:', data.message);
+      return;
+    }
+
+    /* ── LOCAL BOC table ─────────────────────────────────────────── */
+    const localTbody = document.getElementById('boc-local-bom-tbody');
+    if (localTbody) {
+      localTbody.innerHTML = '';
+      if (Array.isArray(data.local_boc) && data.local_boc.length > 0) {
+        data.local_boc.forEach(item => addLocalBOCRow(item));
+      } else {
+        localTbody.innerHTML =
+          '<tr class="no-data-row"><td colspan="9" style="text-align:center;color:#94a3b8;padding:8px;">No LOCAL BOC data found</td></tr>';
+      }
+    }
+
+    /* ── IMPORTED BOC table ─────────────────────────────────────── */
+    const importedTbody = document.getElementById('boc-imported-bom-tbody');
+    if (importedTbody) {
+      importedTbody.innerHTML = '';
+      if (Array.isArray(data.imported_boc) && data.imported_boc.length > 0) {
+        data.imported_boc.forEach(item => addImportedBOCRow(item));
+      } else {
+        importedTbody.innerHTML =
+          '<tr class="no-data-row"><td colspan="9" style="text-align:center;color:#94a3b8;padding:8px;">No IMPORTED BOC data found</td></tr>';
+      }
+    }
+
+  } catch (err) {
+    console.error('[BOC] Error loading BOC tab data:', err);
+  }
+}
+
+
+/* ── Save Local BOC: click handler on #btn-save-local-boc ──────────── */
+(function initSaveLocalBOC() {
+  const saveBtn = document.getElementById('btn-save-local-boc');
+  if (!saveBtn) return;
+
+  saveBtn.addEventListener('click', async () => {
+    const topCust = document.getElementById('top-customer-id');
+    const topItem = document.getElementById('top-item-id');
+    const customerId = topCust ? topCust.value.trim() : '';
+    const itemId     = topItem ? topItem.value.trim() : '';
+
+    if (!customerId || !itemId) {
+      alert('Please select a Customer and Item before saving.');
+      return;
+    }
+
+    // ── Collect all non-placeholder rows from the table ───────────
+    const tbody = document.getElementById('boc-local-bom-tbody');
+    if (!tbody) return;
+
+    const rows = [];
+    tbody.querySelectorAll('tr:not(.no-data-row)').forEach(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (cells.length < 8) return; // skip malformed rows
+
+      rows.push({
+        id:            tr.dataset.id ? parseInt(tr.dataset.id, 10) : null,
+        part_number:   cells[1].textContent.trim(),
+        description:   cells[2].textContent.trim(),
+        uom_code:      cells[3].textContent.trim(),
+        quantity:      parseFloat(cells[4].textContent) || 0,
+        internal_rate: parseFloat(cells[5].textContent) || 0,
+        settle_price:  parseFloat(cells[6].textContent) || 0,
+      });
+    });
+
+    // ── Read CSRF token from cookie ───────────────────────────────
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return '';
+    }
+    const csrfToken = getCookie('csrftoken');
+
+    // ── Build payload ─────────────────────────────────────────────
+    const payload = {
+      customer_id:      customerId,
+      item_creation_id: itemId,
+      rows:             rows,
+    };
+
+    try {
+      saveBtn.disabled  = true;
+      saveBtn.textContent = 'Saving…';
+
+      const res = await fetch('/CostingBCCal/save-local-boc/', {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'X-CSRFToken':   csrfToken,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseText = await res.text();
+      let result = {};
+      try {
+        result = JSON.parse(responseText);
+      } catch (pErr) {
+        throw new Error(`Server returned status ${res.status}`);
+      }
+
+      if (res.ok && result.status === 'success') {
+        alert('Local BOC records saved successfully.');
+        // Reload the table to reflect server-computed costs and assigned IDs
+        await loadBOCTabData();
+        loadAllOverviewBOC();
+      } else {
+        alert(`Save failed: ${result.message || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('[BOC] Save error:', err);
+      alert(`Save error: ${err.message}`);
+    } finally {
+      saveBtn.disabled    = false;
+      saveBtn.textContent = 'Save Details';
+    }
+  });
+})();
+
+
+// ============================================================
+// BOC TAB — Imported BOC Data Functions
+// ============================================================
+
+/**
+ * Dynamically inserts a <tr> row into #boc-imported-bom-tbody.
+ *
+ * Property mapping (strict lowercase):
+ *   part_number, description, uom_code, quantity,
+ *   internal_rate, settle_price  →  cost calculated client-side.
+ *
+ * @param {Object} dataObject - Row data returned by the fetch API.
+ */
+function addImportedBOCRow(dataObject) {
+  const tbody = document.getElementById('boc-imported-bom-tbody');
+  if (!tbody) return;
+
+  // Remove placeholder row if present
+  const placeholder = tbody.querySelector('.no-data-row, .boc-empty-row');
+  if (placeholder) placeholder.remove();
+
+  // Parse numeric values with safe fallbacks
+  const qty           = parseFloat(dataObject.quantity      || 0) || 0;
+  const internalRate  = parseFloat(dataObject.internal_rate || 0) || 0;
+  const settlePrice   = parseFloat(dataObject.settle_price  || 0) || 0;
+  // Cost from server; recalculate as fallback
+  const cost          = parseFloat(dataObject.cost          || 0) || (qty * settlePrice);
+
+  const tr = document.createElement('tr');
+
+  // Attach data-id for update operations (only when id exists)
+  if (dataObject.id) {
+    tr.setAttribute('data-id', dataObject.id);
+  }
+  tr.setAttribute('data-type', 'imported_bom');
+
+  const srNo = tbody.querySelectorAll('tr:not(.no-data-row):not(.boc-empty-row)').length + 1;
+
+  tr.innerHTML = [
+    `<td style="text-align:center;" class="col-srno">${srNo}</td>`,
+    `<td>${_escBOC(dataObject.part_number)}</td>`,
+    `<td>${_escBOC(dataObject.description)}</td>`,
+    `<td>${_escBOC(dataObject.uom_code)}</td>`,
+    `<td style="text-align:right;" class="col-qty">${qty.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-ir">${internalRate.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-sp">${settlePrice.toFixed(2)}</td>`,
+    `<td style="text-align:right;" class="col-cost">${cost.toFixed(2)}</td>`,
+    `<td style="text-align:center;"><button type="button" class="btn-edit-row" style="padding:2px 8px; font-size:12px; cursor:pointer; background:#2563eb; color:#fff; border:none; border-radius:4px;">Edit</button></td>`,
+  ].join('');
+
+  tbody.appendChild(tr);
+}
+
+
+/**
+ * Loads IMPORTED BOC data from the server and populates #boc-imported-bom-tbody.
+ * Queries /CostingBCCal/get-imported-boc-tab-data/ with customer_id and item_creation_id.
+ * Does NOT auto-fill from BOM or legacy tables — pure DB read of ztbl_offersheet_boc.
+ */
+async function loadImportedBOCTabData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+
+  if (!customerId || !itemId) return;
+
+  const url = `/CostingBCCal/get-imported-boc-tab-data/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    if (data.status !== 'success') {
+      console.warn('[BOC] get-imported-boc-tab-data returned error:', data.message);
+      return;
+    }
+
+    /* ── IMPORTED BOC table ─────────────────────────────────────── */
+    const importedTbody = document.getElementById('boc-imported-bom-tbody');
+    if (importedTbody) {
+      // Clear all existing rows before re-rendering
+      importedTbody.innerHTML = '';
+
+      if (Array.isArray(data.imported_boc) && data.imported_boc.length > 0) {
+        data.imported_boc.forEach(item => addImportedBOCRow(item));
+      } else {
+        // Show a friendly empty-state placeholder
+        importedTbody.innerHTML =
+          '<tr class="no-data-row"><td colspan="9" style="text-align:center;color:#94a3b8;padding:8px;">No IMPORTED BOC data found</td></tr>';
+      }
+    }
+
+  } catch (err) {
+    console.error('[BOC] Error loading Imported BOC tab data:', err);
+  }
+}
+
+/**
+ * Helper to get a cookie value by name (for CSRF tokens)
+ */
+function getCookieVal(name) {
+  const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+  return match ? decodeURIComponent(match[3]) : '';
+}
+
+/**
+ * Loads Overview Data from OfferSheetRMConversion for 'Over View' tables
+ */
+async function loadOverviewBOCData(rmFlag, tbodyId, subtotalId) {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+  if (!customerId) return;
+
+  const tbody = document.getElementById(tbodyId);
+  const subtotalField = document.getElementById(subtotalId);
+  if (!tbody) return;
+
+  const url = `/CostingBCCal/boc/overview/data/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&rm_flag=${encodeURIComponent(rmFlag)}`;
+  console.log(`[BOC Overview] Fetching ${rmFlag} for customer=${customerId}, item=${itemId}`);
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const res = await response.json();
+
+    if (res.status === 'success') {
+      tbody.innerHTML = '';
+      let subtotal = 0;
+
+      if (res.data && res.data.length > 0) {
+        console.log(`[BOC Overview] Populating ${res.data.length} records for ${rmFlag}`);
+        res.data.forEach(item => {
+          subtotal += item.total_cost || 0;
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-id', item.id);
+          tr.innerHTML = `
+            <td>${_escBOC(item.description)}</td>
+            <td>${_escBOC(item.tube_size)}</td>
+            <td>${_escBOC(item.unit)}</td>
+            <td class="text-right">${item.rate.toFixed(4)}</td>
+            <td class="text-right">${item.quantity.toFixed(2)}</td>
+            <td class="text-right">${item.total_cost.toFixed(2)}</td>
+            <td style="text-align:center; padding: 2px 4px;">
+               <button type="button" class="btn-delete-overview" data-id="${item.id}" style="padding:1px 5px; cursor:pointer; color:#dc2626; border:none; background:none; font-size:13px; font-weight:700; line-height:1;" title="Delete Record">✕</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        if (subtotalField) subtotalField.value = subtotal.toFixed(2);
+      } else {
+        console.log(`[BOC Overview] 0 records returned for ${rmFlag}`);
+        if (subtotalField) subtotalField.value = rmFlag.toUpperCase().includes('LOCAL') ? '0.00' : '';
+      }
+    }
+  } catch (err) {
+    console.error(`[BOC] Error loading Overview data for ${rmFlag}:`, err);
+  }
+}
+
+function loadAllOverviewBOC() {
+  loadOverviewBOCData('LOCAL BOC', 'boc-overview-local-tbody', 'boc-local-subtotal');
+  loadOverviewBOCData('IMPORTED BOC', 'boc-overview-imported-tbody', 'boc-imported-subtotal');
+}
+
+// Global delegated event listener for Overview Delete buttons
+document.addEventListener('click', async function(e) {
+  const btn = e.target.closest('.btn-delete-overview');
+  if (btn) {
+    const recordId = btn.getAttribute('data-id');
+    if (!recordId) return;
+
+    if (!confirm('Are you sure you want to delete this record?')) return;
+
+    try {
+      const response = await fetch('/CostingBCCal/boc/overview/delete/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookieVal('csrftoken')
+        },
+        body: JSON.stringify({ id: recordId })
+      });
+      const data = await response.json();
+      if (data.status === 'success') {
+        alert('Record Deleted');
+        loadAllOverviewBOC();
+      } else {
+        alert('Error deleting record: ' + (data.message || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Delete error: ' + err.message);
+    }
+  }
+});
+
+
+
+/* ── Save Imported BOC: click handler on #btn-save-imported-boc ──────── */
+(function initSaveImportedBOC() {
+  const saveBtn = document.getElementById('btn-save-imported-boc');
+  if (!saveBtn) return;
+
+  saveBtn.addEventListener('click', async () => {
+    const topCust = document.getElementById('top-customer-id');
+    const topItem = document.getElementById('top-item-id');
+    const customerId = topCust ? topCust.value.trim() : '';
+    const itemId     = topItem ? topItem.value.trim() : '';
+
+    if (!customerId || !itemId) {
+      alert('Please select a Customer and Item before saving.');
+      return;
+    }
+
+    // ── Collect all non-placeholder rows from the table ───────────
+    const tbody = document.getElementById('boc-imported-bom-tbody');
+    if (!tbody) return;
+
+    const rows = [];
+    tbody.querySelectorAll('tr:not(.no-data-row):not(.boc-empty-row)').forEach(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (cells.length < 8) return; // skip malformed rows
+
+      rows.push({
+        id:            tr.dataset.id ? parseInt(tr.dataset.id, 10) : null,
+        part_number:   cells[1].textContent.trim(),
+        description:   cells[2].textContent.trim(),
+        uom_code:      cells[3].textContent.trim(),
+        quantity:      parseFloat(cells[4].textContent) || 0,
+        internal_rate: parseFloat(cells[5].textContent) || 0,
+        settle_price:  parseFloat(cells[6].textContent) || 0,
+      });
+    });
+
+    // ── Read CSRF token from cookie ───────────────────────────────
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return '';
+    }
+    const csrfToken = getCookie('csrftoken');
+
+    // ── Build payload ─────────────────────────────────────────────
+    const payload = {
+      customer_id:      customerId,
+      item_creation_id: itemId,
+      rows:             rows,
+    };
+
+    try {
+      saveBtn.disabled  = true;
+      saveBtn.textContent = 'Saving…';
+
+      const res = await fetch('/CostingBCCal/save-imported-boc/', {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'X-CSRFToken':   csrfToken,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseText = await res.text();
+      let result = {};
+      try {
+        result = JSON.parse(responseText);
+      } catch (pErr) {
+        throw new Error(`Server returned status ${res.status}`);
+      }
+
+      if (res.ok && result.status === 'success') {
+        alert('Imported BOC records saved successfully.');
+        // Reload the table to reflect server-computed costs and assigned IDs
+        await loadImportedBOCTabData();
+        loadAllOverviewBOC();
+      } else {
+        alert(`Save failed: ${result.message || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('[BOC] Save imported error:', err);
+      alert(`Save error: ${err.message}`);
+    } finally {
+      saveBtn.disabled    = false;
+      saveBtn.textContent = 'Save Details';
+    }
+  });
+})();
+
+
+// ============================================================
+// RM + CONVERSION — Replicating MS Access btn_RMConversion_Click
+// ============================================================
+
+/**
+ * Handles the "RM + Conversion" button click / subtab activation:
+ * 1. Resets Overview and BOM tables briefly (DoEvents / SourceObject="").
+ * 2. Calls /CostingBCCal/rm-conversion/process/ to DELETE where BOC_Type='RM'
+ *    and INSERT INTO ztbl_OfferSheet_BOC from Raw Material items.
+ * 3. Populates ChildBoc_RM (table-rm-bom).
+ * 4. Loads Material Description dropdown options from tbl_BOM_PartDetails_Master.
+ * 5. Loads OverView_ChildFrmRM (table-rm-overview) from tbl_OfferSheetRMConversion.
+ */
+async function handleRMConversionTabClick(forceReconvert = true) {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  if (!customerId) {
+    console.warn('[RM Conversion] Missing Customer ID');
+    return;
+  }
+
+  const rmBomTbody = document.getElementById('rm-bom-tbody');
+  const rmOverviewTbody = document.getElementById('rm-overview-tbody');
+
+  // Replicate DoEvents UI reset in MS Access:
+  // Form_subfrm_OffSheet_RMConversion.OverView_ChildFrmRM.SourceObject = ""
+  if (rmOverviewTbody) {
+    rmOverviewTbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:8px;">Loading Overview…</td></tr>';
+  }
+  if (rmBomTbody) {
+    rmBomTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:8px;">Processing RM Conversion…</td></tr>';
+  }
+
+  // Load Material options dropdown
+  loadRMMaterialOptions(customerId);
+
+  // Load Over View Table (tbl_OfferSheetRMConversion where RM_Flag='LOCAL BOC')
+  loadRMOverviewData(customerId, itemId);
+
+  // Load Conversion Cost Table (tbl_OfferSheetRMConversion where RM_Flag='ConversionCost')
+  loadConversionCostData(customerId, itemId);
+
+  // Trigger RM Conversion query & populate ChildBoc_RM
+  const endpoint = forceReconvert ? '/CostingBCCal/rm-conversion/process/' : '/CostingBCCal/rm-conversion/bom-data/';
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookieVal('csrftoken'),
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        item_creation_id: itemId,
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success' && Array.isArray(data.rm_bom)) {
+      renderRMBOMTable(data.rm_bom);
+    } else {
+      if (rmBomTbody) {
+        rmBomTbody.innerHTML = '<tr class="no-data-row"><td colspan="6" style="text-align:center; color:#94a3b8; padding:8px;">No Raw Material records found.</td></tr>';
+      }
+    }
+  } catch (err) {
+    console.error('[RM Conversion] Error during conversion process:', err);
+    if (rmBomTbody) {
+      rmBomTbody.innerHTML = `<tr class="no-data-row"><td colspan="6" style="text-align:center; color:#ef4444; padding:8px;">Error: ${err.message}</td></tr>`;
+    }
+  }
+}
+
+/**
+ * Render rows into #table-rm-bom
+ */
+function renderRMBOMTable(rows) {
+  const tbody = document.getElementById('rm-bom-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = '<tr class="no-data-row"><td colspan="9" style="text-align:center; color:#94a3b8; padding:8px;">No Raw Material items found.</td></tr>';
+    return;
+  }
+
+  rows.forEach(item => {
+    const qty = parseFloat(item.quantity || 0) || 0;
+    const internalCost = parseFloat(item.internal_cost || item.internal_rate || 0) || 0;
+    const settlePrice = parseFloat(item.settle_price || 0) || 0;
+    const cost = qty * settlePrice;
+
+    const tr = document.createElement('tr');
+    if (item.id) tr.setAttribute('data-id', item.id);
+    tr.innerHTML = `
+      <td>${_escBOC(item.part_number)}</td>
+      <td>${_escBOC(item.description)}</td>
+      <td>${_escBOC(item.uom_code)}</td>
+      <td style="text-align:right;" class="col-qty">${qty.toFixed(4)}</td>
+      <td style="text-align:right;" class="col-ir">${internalCost.toFixed(4)}</td>
+      <td style="text-align:right;" class="col-sp">${settlePrice.toFixed(4)}</td>
+      <td style="text-align:right;" class="col-cost rm-bom-cost-cell">${cost.toFixed(4)}</td>
+      <td style="text-align:center;">
+        <button type="button" class="btn-edit-row" style="padding:2px 10px; font-size:12px; cursor:pointer; background:#2563eb; color:#fff; border:none; border-radius:4px;">Edit</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+/**
+ * Fetch rows with RM_Flag='ConversionCost' and populate:
+ *   - #conversion-cost-tbody   (left column, Conversion Cost table)
+ *   - #conversion-overview-tbody (right column, overview table)
+ *   - #conversion-cost-subtotal & #conversion-overview-subtotal
+ *
+ * Mirrors MS Access query:
+ *   SELECT ID, [Raw_Material Description], [Tube Size], Unit, RatePerUnit, Qnty, Total_Cost ...
+ *   WHERE Customer_Id=? AND ItemCreation_Id=? AND RM_Flag='ConversionCost'
+ */
+async function loadConversionCostData(customerId, itemId) {
+  const entryTbody    = document.getElementById('conversion-cost-tbody');
+  const overviewTbody = document.getElementById('conversion-overview-tbody');
+
+  if (entryTbody)    entryTbody.innerHTML    = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:8px;">Loading…</td></tr>';
+  if (overviewTbody) overviewTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:8px;">Loading…</td></tr>';
+
+  try {
+    const qs  = `?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId || '')}`;
+    const res = await fetch('/CostingBCCal/rm-conversion/conversion-cost-data/' + qs);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      renderConversionCostTable(data.data, data.subtotal);
+    } else {
+      const msg = `<tr><td colspan="5" style="text-align:center;color:#ef4444;padding:8px;">${data.message || 'Error loading data'}</td></tr>`;
+      if (entryTbody)    entryTbody.innerHTML    = msg;
+      if (overviewTbody) overviewTbody.innerHTML = msg;
+    }
+  } catch (err) {
+    console.error('[ConversionCost] Load error:', err);
+    const msg = `<tr><td colspan="5" style="text-align:center;color:#ef4444;padding:8px;">Error: ${err.message}</td></tr>`;
+    if (entryTbody)    entryTbody.innerHTML    = msg;
+    if (overviewTbody) overviewTbody.innerHTML = msg;
+  }
+}
+
+/**
+ * Render ConversionCost rows into both the entry table (left) and overview table (right).
+ * Rows have: raw_material_desc (Conversion_Description), rate_per_unit (Cost_Per_Qnty), qnty, total_cost
+ */
+function renderConversionCostTable(rows, subtotal) {
+  const entryTbody    = document.getElementById('conversion-cost-tbody');
+  const overviewTbody = document.getElementById('conversion-overview-tbody');
+  const subtotalEl    = document.getElementById('conversion-cost-subtotal');
+  const ovSubtotalEl  = document.getElementById('conversion-overview-subtotal');
+
+  if (entryTbody)    entryTbody.innerHTML    = '';
+  if (overviewTbody) overviewTbody.innerHTML = '';
+
+  if (!rows || rows.length === 0) {
+    const empty = '<tr class="no-data-row"><td colspan="5" style="text-align:center;color:#94a3b8;padding:8px;">No Conversion Cost records found.</td></tr>';
+    if (entryTbody)    entryTbody.innerHTML    = empty;
+    if (overviewTbody) overviewTbody.innerHTML = empty;
+    if (subtotalEl)    subtotalEl.textContent    = '0.00';
+    if (ovSubtotalEl)  ovSubtotalEl.textContent  = '0.00';
+    return;
+  }
+
+  rows.forEach(row => {
+    const rpu       = parseFloat(row.rate_per_unit || 0).toFixed(2);
+    const qty       = parseFloat(row.qnty         || 0).toFixed(2);
+    const totalCost = parseFloat(row.total_cost   || 0).toFixed(2);
+    const desc      = _escBOC(row.raw_material_desc || '');
+
+    // ── Entry table row (left, with Edit button) ──────────────────────────
+    if (entryTbody) {
+      const tr = document.createElement('tr');
+      if (row.id) tr.setAttribute('data-id', row.id);
+      tr.innerHTML = `
+        <td class="col-conv-desc">${desc}</td>
+        <td style="text-align:right;" class="col-ir">${rpu}</td>
+        <td style="text-align:right;" class="col-qty">${qty}</td>
+        <td style="text-align:right;" class="col-cost">${totalCost}</td>
+        <td style="text-align:center;">
+          <button type="button" class="btn-edit-row"
+            style="padding:2px 10px;font-size:12px;cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:4px;">
+            Edit
+          </button>
+        </td>
+      `;
+      entryTbody.appendChild(tr);
+    }
+
+    // ── Overview table row (right, with red cross delete button) ─────────
+    if (overviewTbody) {
+      const tr2 = document.createElement('tr');
+      if (row.id) tr2.setAttribute('data-id', row.id);
+      tr2.innerHTML = `
+        <td>${desc}</td>
+        <td style="text-align:right;">${rpu}</td>
+        <td style="text-align:right;">${qty}</td>
+        <td style="text-align:right;">${totalCost}</td>
+        <td style="width:24px; text-align:center; border-right:none;">
+          <button type="button" class="btn-delete-conv-overview" data-id="${row.id || ''}" data-source="${row.source || ''}" style="padding:1px 5px; cursor:pointer; color:#dc2626; border:none; background:none; font-size:13px; font-weight:700; line-height:1;" title="Delete Record">✕</button>
+        </td>
+      `;
+      overviewTbody.appendChild(tr2);
+    }
+  });
+
+  const sub = (subtotal !== undefined ? subtotal : 0).toFixed(2);
+  if (subtotalEl)   subtotalEl.textContent   = sub;
+  if (ovSubtotalEl) ovSubtotalEl.textContent = sub;
+}
+
+// Delegated click for Conversion Overview delete button (red cross)
+document.addEventListener('click', async function(e) {
+  const btn = e.target.closest('.btn-delete-conv-overview');
+  if (btn) {
+    const recordId = btn.getAttribute('data-id');
+    const source   = btn.getAttribute('data-source');
+    const row      = btn.closest('tr');
+
+    if (!confirm('Are you sure you want to delete this Conversion Cost record?')) return;
+
+    if (recordId && (source === 'saved_offersheet' || source === 'offersheet_rm')) {
+      try {
+        const response = await fetch('/CostingBCCal/rm-conversion/delete-entry/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookieVal('csrftoken'),
+          },
+          body: JSON.stringify({ id: recordId })
+        });
+        const data = await response.json();
+        if (data.status !== 'success') {
+          console.warn('Backend delete warning:', data.message);
+        }
+      } catch (err) {
+        console.error('Delete Conversion Overview error:', err);
+      }
+    }
+
+    // Remove row from overview table and also remove corresponding row from entry table
+    if (row) {
+      const desc = row.firstElementChild ? row.firstElementChild.textContent.trim() : '';
+      row.remove();
+
+      // Also remove corresponding row from left table
+      const entryTbody = document.getElementById('conversion-cost-tbody');
+      if (entryTbody) {
+        entryTbody.querySelectorAll('tr').forEach(etr => {
+          if ((recordId && etr.getAttribute('data-id') === recordId) || (desc && etr.firstElementChild && etr.firstElementChild.textContent.trim() === desc)) {
+            etr.remove();
+          }
+        });
+      }
+
+      // Recalculate subtotals
+      let newSubtotal = 0;
+      const ovTbody = document.getElementById('conversion-overview-tbody');
+      if (ovTbody) {
+        const remainingRows = ovTbody.querySelectorAll('tr:not(.no-data-row)');
+        if (remainingRows.length === 0) {
+          ovTbody.innerHTML = '<tr class="no-data-row"><td colspan="5" style="text-align:center;color:#94a3b8;padding:8px;">No Conversion Cost records found.</td></tr>';
+          if (entryTbody && entryTbody.querySelectorAll('tr:not(.no-data-row)').length === 0) {
+            entryTbody.innerHTML = '<tr class="no-data-row"><td colspan="5" style="text-align:center;color:#94a3b8;padding:8px;">No Conversion Cost records found.</td></tr>';
+          }
+        } else {
+          remainingRows.forEach(tr => {
+            const cells = tr.querySelectorAll('td');
+            if (cells.length >= 4) {
+              newSubtotal += parseFloat(cells[3].textContent) || 0;
+            }
+          });
+        }
+      }
+
+      const subtotalEl = document.getElementById('conversion-cost-subtotal');
+      const ovSubtotalEl = document.getElementById('conversion-overview-subtotal');
+      if (subtotalEl) subtotalEl.textContent = newSubtotal.toFixed(2);
+      if (ovSubtotalEl) ovSubtotalEl.textContent = newSubtotal.toFixed(2);
+    }
+  }
+});
+
+
+/**
+ * Save RM BOM table rows (#btn-save-rm-details)
+ */
+async function saveRMBOMDetails() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  if (!customerId || !itemId) {
+    alert('Please select a Customer and Item before saving.');
+    return;
+  }
+
+  const tbody = document.getElementById('rm-bom-tbody');
+  if (!tbody) return;
+
+  const rows = [];
+  tbody.querySelectorAll('tr:not(.no-data-row)').forEach(tr => {
+    const cells = tr.querySelectorAll('td');
+    if (cells.length < 7) return;
+    const partNumber  = cells[0].textContent.trim();
+    const description = cells[1].textContent.trim();
+    const uom         = cells[2].textContent.trim();
+
+    // Read from read-only text cells (same class names as BOC)
+    const qtyCell    = tr.querySelector('.col-qty');
+    const irCell     = tr.querySelector('.col-ir');
+    const spCell     = tr.querySelector('.col-sp');
+    const costCell   = tr.querySelector('.rm-bom-cost-cell');
+
+    const qty    = parseFloat(qtyCell  ? qtyCell.textContent  : 0) || 0;
+    const icost  = parseFloat(irCell   ? irCell.textContent   : 0) || 0;
+    const sprice = parseFloat(spCell   ? spCell.textContent   : 0) || 0;
+    const cost   = qty * sprice;
+
+    // Sync cost cell before saving
+    if (costCell) costCell.textContent = cost.toFixed(4);
+
+    rows.push({
+      id:            tr.dataset.id ? parseInt(tr.dataset.id, 10) : null,
+      part_number:   partNumber,
+      description:   description,
+      uom_code:      uom,
+      quantity:      qty,
+      internal_cost: icost,
+      settle_price:  sprice,
+      cost:          cost,
+    });
+  });
+
+  const saveBtn = document.getElementById('btn-save-rm-details');
+  try {
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving…';
+    }
+
+    const res = await fetch('/CostingBCCal/rm-conversion/save-bom-data/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookieVal('csrftoken'),
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        item_creation_id: itemId,
+        rows: rows,
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      alert('RM BOM records saved successfully.');
+    } else {
+      alert('Save failed: ' + (data.message || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('[RM Conversion] Save error:', err);
+    alert('Save error: ' + err.message);
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Details';
+    }
+  }
+}
+
+/**
+ * Save Conversion Cost table rows (#btn-save-conversion-details)
+ */
+async function saveConversionCostDetails() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  if (!customerId || !itemId) {
+    alert('Please select a Customer and Item before saving.');
+    return;
+  }
+
+  const tbody = document.getElementById('conversion-cost-tbody');
+  if (!tbody) return;
+
+  const rows = [];
+  tbody.querySelectorAll('tr:not(.no-data-row)').forEach(tr => {
+    const descCell = tr.querySelector('.col-conv-desc');
+    const rpuCell  = tr.querySelector('.col-ir');
+    const qtyCell  = tr.querySelector('.col-qty');
+    const costCell = tr.querySelector('.col-cost');
+
+    const desc = descCell ? descCell.textContent.trim() : '';
+    if (!desc) return;
+
+    const rpu   = parseFloat(rpuCell  ? rpuCell.textContent  : 0) || 0;
+    const qty   = parseFloat(qtyCell  ? qtyCell.textContent  : 0) || 0;
+    const cost  = parseFloat(costCell ? costCell.textContent : (rpu * qty)) || 0;
+
+    rows.push({
+      id:                 tr.dataset.id ? parseInt(tr.dataset.id, 10) : null,
+      raw_material_desc:  desc,
+      rate_per_unit:      rpu,
+      quantity:           qty,
+      total_cost:         cost,
+      unit:               'NOS',
+    });
+  });
+
+  const saveBtn = document.getElementById('btn-save-conversion-details');
+  try {
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving…';
+    }
+
+    const res = await fetch('/CostingBCCal/rm-conversion/save-conversion-data/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookieVal('csrftoken'),
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        item_creation_id: itemId,
+        rows: rows,
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      alert('Conversion Cost records saved successfully.');
+      // Refresh to sync overview
+      loadConversionCostData(customerId, itemId);
+    } else {
+      alert('Save failed: ' + (data.message || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('[Conversion Cost] Save error:', err);
+    alert('Save error: ' + err.message);
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Details';
+    }
+  }
+}
+
+// Bind click event for #btn-save-conversion-details
+document.addEventListener('DOMContentLoaded', () => {
+  const btnSaveConv = document.getElementById('btn-save-conversion-details');
+  if (btnSaveConv) {
+    btnSaveConv.addEventListener('click', saveConversionCostDetails);
+  }
+});
+
+/**
+ * Load Material Options dropdown for Data Entry : Raw Material (#rm-entry-desc)
+ * Query: SELECT tbl_BOM_PartDetails_Master... WHERE Categorisation="Raw Material" AND Customer=...
+ */
+async function loadRMMaterialOptions(customerId) {
+  const select = document.getElementById('rm-entry-desc');
+  if (!select) return;
+
+  try {
+    const res = await fetch(`/CostingBCCal/rm-conversion/material-options/?customer_id=${encodeURIComponent(customerId || '')}`);
+    const data = await res.json();
+
+    select.innerHTML = '<option value="">-- Select Material --</option>';
+    if (data.status === 'success' && Array.isArray(data.materials)) {
+      data.materials.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.part_no || item.part_description;
+        opt.textContent = item.display_name || item.part_description;
+        opt.setAttribute('data-desc', item.part_description || '');
+        opt.setAttribute('data-partno', item.part_no || '');
+        opt.setAttribute('data-unit', item.unit || '');
+        opt.setAttribute('data-rate', item.settle_price || 0);
+        select.appendChild(opt);
+      });
+    }
+  } catch (err) {
+    console.error('[RM Conversion] Error loading material options:', err);
+  }
+}
+
+/**
+ * Loads Over View Table 1: Raw Material
+ * Query: SELECT tbl_OfferSheetRMConversion... WHERE RM_Flag='LOCAL BOC'
+ */
+async function loadRMOverviewData(customerId, itemId) {
+  if (!customerId) {
+    const topCust = document.getElementById('top-customer-id');
+    customerId = topCust ? topCust.value.trim() : '';
+  }
+  if (!itemId) {
+    const topItem = document.getElementById('top-item-id');
+    itemId = topItem ? topItem.value.trim() : '';
+  }
+  if (!customerId) return;
+
+  const tbody = document.getElementById('rm-overview-tbody');
+  const subtotalElem = document.getElementById('rm-overview-subtotal');
+  if (!tbody) return;
+
+  try {
+    const res = await fetch(`/CostingBCCal/rm-conversion/overview-data/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId || '')}`);
+    const data = await res.json();
+
+    tbody.innerHTML = '';
+    if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+      data.data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-id', item.id);
+        tr.innerHTML = `
+          <td>${_escBOC(item.raw_material_desc)}</td>
+          <td>${_escBOC(item.tube_size)}</td>
+          <td>${_escBOC(item.unit)}</td>
+          <td class="text-right">${item.rate_per_unit.toFixed(2)}</td>
+          <td class="text-right">${item.qnty.toFixed(2)}</td>
+          <td class="text-right">${item.total_cost.toFixed(2)}</td>
+          <td style="text-align:center; padding: 2px 4px;">
+            <button type="button" class="btn-delete-rm-overview" data-id="${item.id}" style="padding:1px 5px; cursor:pointer; color:#dc2626; border:none; background:none; font-size:13px; font-weight:700; line-height:1;" title="Delete Record">✕</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      if (subtotalElem) {
+        subtotalElem.textContent = (data.subtotal || 0).toFixed(2);
+        subtotalElem.value = (data.subtotal || 0).toFixed(2);
+      }
+    } else {
+      tbody.innerHTML = '<tr class="no-data-row"><td colspan="7" style="text-align:center; color:#94a3b8; padding:8px;">No Raw Material records in Overview</td></tr>';
+      if (subtotalElem) {
+        subtotalElem.textContent = '0.00';
+        subtotalElem.value = '0.00';
+      }
+    }
+  } catch (err) {
+    console.error('[RM Conversion] Error loading RM overview data:', err);
+  }
+}
+
+/**
+ * Adds entry to Over View Table 1 from Data Entry form (#btn-rm-add-entry)
+ */
+async function addRMConversionEntry() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  if (!customerId) {
+    alert('Please select a Customer first.');
+    return;
+  }
+
+  const descSelect = document.getElementById('rm-entry-desc');
+  const selectedOpt = descSelect ? descSelect.options[descSelect.selectedIndex] : null;
+  const rawDesc = selectedOpt ? (selectedOpt.getAttribute('data-desc') || selectedOpt.text) : '';
+  const partNo = selectedOpt ? (selectedOpt.getAttribute('data-partno') || selectedOpt.value) : '';
+  const unit = document.getElementById('rm-entry-unit') ? document.getElementById('rm-entry-unit').value.trim() : '';
+  const rate = document.getElementById('rm-entry-rate') ? parseFloat(document.getElementById('rm-entry-rate').value) || 0 : 0;
+  const qty = document.getElementById('rm-entry-qty') ? parseFloat(document.getElementById('rm-entry-qty').value) || 0 : 0;
+  const total = document.getElementById('rm-entry-total') ? parseFloat(document.getElementById('rm-entry-total').value) || (rate * qty) : (rate * qty);
+
+  if (!rawDesc || rawDesc === '-- Select Material --') {
+    alert('Please select a Material Description.');
+    return;
+  }
+  if (qty <= 0) {
+    alert('Please enter a valid Quantity greater than 0.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/CostingBCCal/rm-conversion/add-entry/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookieVal('csrftoken'),
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        item_creation_id: itemId,
+        raw_material_desc: rawDesc,
+        tube_size: partNo,
+        unit: unit,
+        rate_per_unit: rate,
+        qnty: qty,
+        total_cost: total,
+        rm_flag: 'LOCAL BOC',
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      // Reset inputs
+      if (descSelect) descSelect.selectedIndex = 0;
+      if (document.getElementById('rm-entry-unit')) document.getElementById('rm-entry-unit').value = '';
+      if (document.getElementById('rm-entry-rate')) document.getElementById('rm-entry-rate').value = '';
+      if (document.getElementById('rm-entry-qty')) document.getElementById('rm-entry-qty').value = '';
+      if (document.getElementById('rm-entry-total')) document.getElementById('rm-entry-total').value = '';
+
+      // Refresh overview table
+      await loadRMOverviewData(customerId, itemId);
+    } else {
+      alert('Error adding entry: ' + (data.message || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('[RM Conversion] Add entry error:', err);
+    alert('Error adding entry: ' + err.message);
+  }
+}
+
+// ── Wire up RM Conversion event listeners on DOM ready / script run ──────
+(function initRMConversionListeners() {
+
+  const btnSaveRM = document.getElementById('btn-save-rm-details');
+  if (btnSaveRM) {
+    btnSaveRM.addEventListener('click', saveRMBOMDetails);
+  }
+
+  const btnAddRM = document.getElementById('btn-rm-add-entry');
+  if (btnAddRM) {
+    btnAddRM.addEventListener('click', addRMConversionEntry);
+  }
+
+  const descSelect = document.getElementById('rm-entry-desc');
+  if (descSelect) {
+    descSelect.addEventListener('change', function() {
+      const selected = this.options[this.selectedIndex];
+      if (selected) {
+        const unitElem = document.getElementById('rm-entry-unit');
+        const rateElem = document.getElementById('rm-entry-rate');
+        const totalElem = document.getElementById('rm-entry-total');
+        const qtyElem = document.getElementById('rm-entry-qty');
+
+        if (unitElem) unitElem.value = selected.getAttribute('data-unit') || '';
+        const rateVal = parseFloat(selected.getAttribute('data-rate') || 0) || 0;
+        if (rateElem) rateElem.value = rateVal.toFixed(2);
+        const qtyVal = parseFloat(qtyElem ? qtyElem.value : 0) || 0;
+        if (totalElem) totalElem.value = (rateVal * qtyVal).toFixed(2);
+      }
+    });
+  }
+
+  const updateRMTotal = () => {
+    const rateElem = document.getElementById('rm-entry-rate');
+    const qtyElem = document.getElementById('rm-entry-qty');
+    const totalElem = document.getElementById('rm-entry-total');
+    const rate = parseFloat(rateElem ? rateElem.value : 0) || 0;
+    const qty = parseFloat(qtyElem ? qtyElem.value : 0) || 0;
+    if (totalElem) totalElem.value = (rate * qty).toFixed(2);
+  };
+
+  const rateInput = document.getElementById('rm-entry-rate');
+  if (rateInput) rateInput.addEventListener('input', updateRMTotal);
+  const qtyInput = document.getElementById('rm-entry-qty');
+  if (qtyInput) qtyInput.addEventListener('input', updateRMTotal);
+
+  // Delegated click for RM Overview delete button
+  document.addEventListener('click', async function(e) {
+    const btn = e.target.closest('.btn-delete-rm-overview');
+    if (btn) {
+      const recordId = btn.getAttribute('data-id');
+      if (!recordId) return;
+
+      if (!confirm('Are you sure you want to delete this RM record?')) return;
+
+      try {
+        const response = await fetch('/CostingBCCal/rm-conversion/delete-entry/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookieVal('csrftoken'),
+          },
+          body: JSON.stringify({ id: recordId })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+          await loadRMOverviewData();
+        } else {
+          alert('Error deleting record: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Delete RM Overview error:', err);
+        alert('Delete error: ' + err.message);
+      }
+    }
+  });
+})();
+
+
 document.querySelectorAll(".tab-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
     btn.classList.add("active");
     const activePanel = document.getElementById(btn.dataset.tab);
-    activePanel.classList.add("active");
+    if (activePanel) activePanel.classList.add("active");
 
     if (btn.id === "tab-norms") {
       showNormsTab();
@@ -1430,6 +3589,17 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
     if (btn.id === "tab-tooling") {
       loadDataToolingPanel();
+    }
+
+    if (btn.id === "tab-offer") {
+      const activeSubtab = document.querySelector(".subtab-btn.active");
+      if (activeSubtab && activeSubtab.dataset.subtab === "rm-conversion") {
+        handleRMConversionTabClick(false);
+      } else {
+        loadBOCTabData();
+        loadImportedBOCTabData();
+        loadAllOverviewBOC();
+      }
     }
   });
 });
@@ -1449,54 +3619,1020 @@ document.querySelectorAll(".subtab-btn").forEach(btn => {
       targetPanel.style.display = "block";
       targetPanel.classList.add("active");
     }
+
+    if (subtabId === "boc") {
+      loadBOCTabData();
+      loadImportedBOCTabData();
+      loadAllOverviewBOC();
+    } else if (subtabId === "rm-conversion") {
+      handleRMConversionTabClick(false);
+    } else if (subtabId === "tooling-cost") {
+      loadToolingCostData();
+      loadRecoveryToolingData();
+    } else if (subtabId === "transport-cost") {
+      loadTransportCostData();
+    } else if (subtabId === "download") {
+      updateDownloadTabInfo();
+    }
   });
 });
 
+/**
+ * Loads Data Tooling : Internal Tooling Cost (#table-internal-tooling)
+ * Query: SELECT Tool_Description, UOM, Unit_Cost, Qty_Required, Total_Estimate
+ *        FROM tbl_BOP_Tolling
+ *        WHERE Year(Entry_Date)=AssignmentYear AND Customer_ID=? AND ItemCreation_ID=?
+ */
+async function loadToolingCostData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  const tbody      = document.getElementById('tbody-internal-tooling');
+  const subtotalEl = document.getElementById('subtotal-internal-tooling');
+
+  if (!customerId) return;
+
+  if (tbody) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:8px;">Loading Tooling Cost…</td></tr>';
+  }
+
+  try {
+    const qs = `?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&assignment_year=${encodeURIComponent(year)}`;
+    const res = await fetch('/CostingBCCal/tooling-cost/data/' + qs);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      renderInternalToolingTable(data.data, data.subtotal);
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ef4444; padding:8px;">${data.message || 'Error loading data'}</td></tr>`;
+      if (subtotalEl) subtotalEl.textContent = '0.00';
+    }
+  } catch (err) {
+    console.error('[Tooling Cost] Load error:', err);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ef4444; padding:8px;">Error: ${err.message}</td></tr>`;
+    if (subtotalEl) subtotalEl.textContent = '0.00';
+  }
+}
+
+/**
+ * Render Internal Tooling table rows
+ */
+function renderInternalToolingTable(rows, subtotal) {
+  const tbody      = document.getElementById('tbody-internal-tooling');
+  const subtotalEl = document.getElementById('subtotal-internal-tooling');
+
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = '<tr class="no-data-row"><td colspan="5" style="text-align:center; color:#94a3b8; padding:8px;">No Tooling Cost records found.</td></tr>';
+    if (subtotalEl) subtotalEl.textContent = '0.00';
+    return;
+  }
+
+  rows.forEach(item => {
+    const ucost = parseFloat(item.unit_cost || 0).toFixed(2);
+    const qty   = parseFloat(item.qty_required || 0).toFixed(2);
+    const tot   = parseFloat(item.total_estimate || 0).toFixed(2);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${_escBOC(item.tool_description || '')}</td>
+      <td style="text-align:center;">${_escBOC(item.uom || 'NOS')}</td>
+      <td style="text-align:right;">${ucost}</td>
+      <td style="text-align:right;">${qty}</td>
+      <td style="text-align:right;">${tot}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (subtotalEl) {
+    subtotalEl.textContent = (subtotal !== undefined ? subtotal : 0).toFixed(2);
+  }
+}
+
+/**
+ * Export Internal Tooling Cost to Excel
+ */
+function exportInternalToolingCost() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  if (!customerId) {
+    alert('Please select a Customer before exporting.');
+    return;
+  }
+
+  const url = `/CostingBCCal/tooling-cost/export/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&assignment_year=${encodeURIComponent(year)}`;
+  window.location.href = url;
+}
+
+// Bind Export button listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const exportBtn = document.getElementById('btn-export-internal-tooling');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', exportInternalToolingCost);
+  }
+  const exportRecBtn = document.getElementById('btn-export-recovery-tooling');
+  if (exportRecBtn) {
+    exportRecBtn.addEventListener('click', exportRecoveryToolingCost);
+  }
+});
+
+/**
+ * Loads Data Tooling : Recovery Tooling Cost (#table-recovery-tooling)
+ * Query: SELECT Tool_Description, UOM, Settled_Price, Qty_Required, Total_SettledPrice
+ *        FROM tbl_BOP_Tolling
+ *        WHERE Year(Entry_Date)=AssignmentYear AND Customer_ID=? AND ItemCreation_ID=?
+ *        ORDER BY Tool_Description;
+ */
+async function loadRecoveryToolingData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  const tbody      = document.getElementById('tbody-recovery-tooling');
+  const subtotalEl = document.getElementById('subtotal-recovery-tooling');
+
+  if (!customerId) return;
+
+  if (tbody) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:8px;">Loading Recovery Tooling Cost…</td></tr>';
+  }
+
+  try {
+    const qs = `?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&assignment_year=${encodeURIComponent(year)}`;
+    const res = await fetch('/CostingBCCal/tooling-cost/recovery/data/' + qs);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      renderRecoveryToolingTable(data.data, data.subtotal);
+    } else {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ef4444; padding:8px;">${data.message || 'Error loading data'}</td></tr>`;
+      if (subtotalEl) subtotalEl.textContent = '0.00';
+    }
+  } catch (err) {
+    console.error('[Recovery Tooling Cost] Load error:', err);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ef4444; padding:8px;">Error: ${err.message}</td></tr>`;
+    if (subtotalEl) subtotalEl.textContent = '0.00';
+  }
+}
+
+/**
+ * Render Recovery Tooling table rows (settled_price / total_settledprice)
+ */
+function renderRecoveryToolingTable(rows, subtotal) {
+  const tbody      = document.getElementById('tbody-recovery-tooling');
+  const subtotalEl = document.getElementById('subtotal-recovery-tooling');
+
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = '<tr class="no-data-row"><td colspan="5" style="text-align:center; color:#94a3b8; padding:8px;">No Recovery Tooling Cost records found.</td></tr>';
+    if (subtotalEl) subtotalEl.textContent = '0.00';
+    return;
+  }
+
+  rows.forEach(item => {
+    const ucost = parseFloat(item.settled_price || 0).toFixed(2);
+    const qty   = parseFloat(item.qty_required || 0).toFixed(2);
+    const tot   = parseFloat(item.total_settledprice || 0).toFixed(2);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${_escBOC(item.tool_description || '')}</td>
+      <td style="text-align:center;">${_escBOC(item.uom || 'NOS')}</td>
+      <td style="text-align:right;">${ucost}</td>
+      <td style="text-align:right;">${qty}</td>
+      <td style="text-align:right;">${tot}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (subtotalEl) {
+    subtotalEl.textContent = (subtotal !== undefined ? subtotal : 0).toFixed(2);
+  }
+}
+
+/**
+ * Export Recovery Tooling Cost to Excel
+ */
+function exportRecoveryToolingCost() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  if (!customerId) {
+    alert('Please select a Customer before exporting.');
+    return;
+  }
+
+  const url = `/CostingBCCal/tooling-cost/recovery/export/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&assignment_year=${encodeURIComponent(year)}`;
+  window.location.href = url;
+}
+
+
+// ── Transport Cost (tbl_OfferSheet_TransCost) Logic ─────────────────────────────
+const TRANS_COST_MAP = {
+  'tp-cft-box': 'CFT of BOX (1 cft = 12 Kg)',
+  'tp-freight-kg': 'Freight Rs.2.20/Kg',
+  'tp-freight-vehicle': 'Freight charges/Vehicle rate',
+  'tp-docket-charges': 'Docket charges',
+  'tp-pickup-charges': 'Pickup charges',
+  'tp-door-delivery': 'Door Delivery/DOD Charges',
+  'tp-lr-charges': 'LR charges/invoice',
+  'tp-service-charges': 'Service charges & Other',
+  'tp-cbm-vehicle': 'Cubic Meter/CBM of Vehicle',
+  'tp-cbm-freight': 'CBM Freight Cost',
+  'tp-cbm-packing-box': 'Cubic Meter/CBM of Packing Box (MM)',
+  'tp-capacity-utilisation': 'Capacity Utilisation of Truck Space/CBM Rate',
+  'tp-qty-per-box': 'Quantity/Box/No of Parts in one Box',
+  'tp-box-per-trip': 'No of box/Trip',
+  'tp-total-qty-trip': 'Total Qty per trip',
+  'tp-total-tube-meter': 'Total tube in meter',
+};
+
+function Func_TransCostAfterUpdate() {
+  const getVal = (id) => parseFloat(document.getElementById(id)?.value) || 0.0;
+
+  const ct1 = getVal('tp-cft-box');
+  const ct2 = getVal('tp-freight-kg');
+  const ct3 = getVal('tp-freight-vehicle');
+  const ct4 = getVal('tp-docket-charges');
+  const ct5 = getVal('tp-pickup-charges');
+  const ct6 = getVal('tp-door-delivery');
+  const ct7 = getVal('tp-lr-charges');
+  const ct8 = getVal('tp-service-charges');
+
+  const ctTotal = ct1 + ct2 + ct3 + ct4 + ct5 + ct6 + ct7 + ct8;
+  const elTripCost = document.getElementById('tp-total-trip-cost');
+  if (elTripCost) elTripCost.value = ctTotal.toFixed(2);
+
+  const cq3 = getVal('tp-cbm-packing-box');
+  const cq4 = getVal('tp-capacity-utilisation');
+  const cq5 = getVal('tp-qty-per-box');
+  const cq6 = getVal('tp-box-per-trip');
+  let cq7 = getVal('tp-total-qty-trip');
+
+  // Auto calculate Total Qty per trip (CQ7) if CQ5 and CQ6 are entered and CQ7 is 0
+  if (cq7 === 0 && cq5 > 0 && cq6 > 0) {
+    cq7 = cq5 * cq6;
+    const elCq7 = document.getElementById('tp-total-qty-trip');
+    if (elCq7) elCq7.value = cq7.toFixed(2);
+  }
+
+  const topCust = document.getElementById('top-customer-id');
+  const custDd  = document.getElementById('dd-customer-name');
+  const custVal = (topCust ? topCust.value : '') || (custDd ? custDd.value : '') || '';
+  const custCode = custVal.trim().toUpperCase();
+
+  let cqVal = 0.0;
+  if (custCode === "TML") {
+    if (cq5 !== 0) cqVal = (cq3 * cq4) / cq5;
+  } else if (custCode === "CNH" || custCode === "FML") {
+    if (cq5 !== 0) cqVal = ctTotal / cq5;
+  } else if (custCode === "ION") {
+    if (cq4 * cq5 !== 0) cqVal = ct3 / (cq4 * cq5);
+  } else {
+    if (cq7 !== 0) {
+      cqVal = ctTotal / cq7;
+    } else if (cq5 !== 0) {
+      cqVal = ctTotal / cq5;
+    }
+  }
+
+  const elCostPerQty = document.getElementById('tp-cost-per-qty');
+  if (elCostPerQty) elCostPerQty.value = cqVal.toFixed(4);
+}
+
+async function loadTransportCostData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  const elName = document.getElementById('transport-customer-name');
+  if (elName && customerId) {
+    elName.textContent = customerId;
+  }
+
+  if (!customerId || !itemId) return;
+
+  try {
+    const res = await fetch(`/CostingBCCal/transport-cost/data/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&cust_code=${encodeURIComponent(customerId)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const resData = await res.json();
+
+    if (resData.status === 'success' && resData.data) {
+      Object.keys(TRANS_COST_MAP).forEach(id => {
+        const particular = TRANS_COST_MAP[id];
+        const val = resData.data[particular];
+        const inputEl = document.getElementById(id);
+        if (inputEl) {
+          inputEl.value = val !== undefined && val !== null ? val : '';
+        }
+      });
+    }
+    Func_TransCostAfterUpdate();
+  } catch (err) {
+    console.error('[loadTransportCostData] Error:', err);
+  }
+}
+
+async function saveTransportCostData() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId = topItem ? topItem.value.trim() : '';
+
+  if (!customerId || !itemId) {
+    showToast('Please select Customer ID and Item Creation ID before saving.', 'error');
+    return;
+  }
+
+  const costs = {};
+  Object.keys(TRANS_COST_MAP).forEach(id => {
+    const particular = TRANS_COST_MAP[id];
+    const val = parseFloat(document.getElementById(id)?.value) || 0.0;
+    costs[particular] = val;
+  });
+
+  try {
+    const res = await fetch('/CostingBCCal/transport-cost/save/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_id: customerId,
+        item_creation_id: itemId,
+        cust_code: customerId,
+        costs: costs
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      showToast('Transport Cost saved successfully.', 'success');
+      loadTransportCostData();
+    } else {
+      showToast('Error saving Transport Cost: ' + (data.message || 'Unknown error'), 'error');
+    }
+  } catch (err) {
+    console.error('[saveTransportCostData] Error:', err);
+    showToast('Failed to save Transport Cost.', 'error');
+  }
+}
+
+function initTransportCostEvents() {
+  Object.keys(TRANS_COST_MAP).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', Func_TransCostAfterUpdate);
+      el.addEventListener('change', Func_TransCostAfterUpdate);
+      el.addEventListener('keyup', Func_TransCostAfterUpdate);
+    }
+  });
+
+  const btnEdit = document.getElementById('btn-transport-edit');
+  if (btnEdit && !btnEdit.dataset.bound) {
+    btnEdit.dataset.bound = "true";
+    btnEdit.addEventListener('click', () => {
+      Object.keys(TRANS_COST_MAP).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.removeAttribute('disabled');
+      });
+      showToast('Transport Cost fields enabled for editing.', 'success');
+    });
+  }
+
+  const btnSave = document.getElementById('btn-transport-save');
+  if (btnSave && !btnSave.dataset.bound) {
+    btnSave.dataset.bound = "true";
+    btnSave.addEventListener('click', saveTransportCostData);
+  }
+
+  const btnDownload = document.getElementById('btn-offer-download');
+  if (btnDownload && !btnDownload.dataset.bound) {
+    btnDownload.dataset.bound = "true";
+    btnDownload.addEventListener('click', downloadOfferSheet);
+  }
+}
+
+function downloadOfferSheet() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  if (!customerId || !itemId) {
+    showToast('Please select Customer ID and Item Creation ID before downloading.', 'error');
+    return;
+  }
+
+  showToast('Preparing Offer Sheet workbook download...', 'success');
+  const url = `/CostingBCCal/download-offer-sheet/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}&cust_code=${encodeURIComponent(customerId)}&year=${encodeURIComponent(year)}`;
+  window.location.href = url;
+}
+
+function updateDownloadTabInfo() {
+  const topCust = document.getElementById('top-customer-id');
+  const topItem = document.getElementById('top-item-id');
+  const topYear = document.getElementById('top-year');
+
+  const customerId = topCust ? topCust.value.trim() : '';
+  const itemId     = topItem ? topItem.value.trim() : '';
+  const year       = topYear ? topYear.value.trim() : '2026';
+
+  const infoEl = document.getElementById('download-target-info');
+  if (infoEl) {
+    if (customerId && itemId) {
+      infoEl.innerHTML = `<strong>Customer ID:</strong> ${customerId} &nbsp;|&nbsp; <strong>Item Creation ID:</strong> ${itemId} &nbsp;|&nbsp; <strong>Year:</strong> ${year}`;
+    } else {
+      infoEl.textContent = 'Please select Customer ID and Item Creation ID from the top header filters.';
+    }
+  }
+}
+
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initTransportCostEvents);
+} else {
+  initTransportCostEvents();
+}
+
+
+
+
+// ── Helper to dynamically update Item Creation ID dropdown based on Customer ID ─────
+async function updateItemDropdownByCustomer(customerId, preferredItemId = "") {
+  const itemSelect = document.getElementById("top-item-id");
+  const hiddenInput = document.getElementById("id_item_creation_id");
+  if (!itemSelect) return;
+
+  try {
+    const res = await fetch(`/CostingBCCal/api/get-items-by-customer/?customer_id=${encodeURIComponent(customerId || "")}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    itemSelect.innerHTML = '<option value="">-- Select --</option>';
+    let selectedVal = "";
+
+    if (data.status === "success" && Array.isArray(data.items)) {
+      data.items.forEach((item, index) => {
+        const opt = document.createElement("option");
+        opt.value = item.item_number;
+        opt.textContent = item.item_number;
+        if (preferredItemId && item.item_number === preferredItemId) {
+          opt.selected = true;
+          selectedVal = item.item_number;
+        } else if (!preferredItemId && index === 0) {
+          opt.selected = true;
+          selectedVal = item.item_number;
+        }
+        itemSelect.appendChild(opt);
+      });
+    }
+
+    if (!selectedVal && itemSelect.options.length > 1 && !preferredItemId) {
+      itemSelect.selectedIndex = 1;
+      selectedVal = itemSelect.value;
+    } else if (preferredItemId) {
+      itemSelect.value = preferredItemId;
+      selectedVal = itemSelect.value;
+    }
+
+    if (hiddenInput) hiddenInput.value = selectedVal;
+
+  } catch (err) {
+    console.error("Error updating item dropdown by customer:", err);
+  }
+}
 
 // ── Top dropdown change / submit listeners ───────────────────────────
-document.getElementById("top-customer-id").addEventListener("change", () => {
+document.getElementById("top-customer-id").addEventListener("change", async (e) => {
+  const custId = e.target.value;
+  await updateItemDropdownByCustomer(custId);
+
   loadInternalConversionData();
+  loadBOCTabData();
+  loadImportedBOCTabData();
+  loadAllOverviewBOC();
+  const activeSubtab = document.querySelector(".subtab-btn.active");
+  if (activeSubtab && activeSubtab.dataset.subtab === "rm-conversion") {
+    handleRMConversionTabClick(false);
+  } else if (activeSubtab && activeSubtab.dataset.subtab === "tooling-cost") {
+    loadToolingCostData();
+    loadRecoveryToolingData();
+  } else if (activeSubtab && activeSubtab.dataset.subtab === "transport-cost") {
+    loadTransportCostData();
+  }
   const activeTab = document.querySelector(".tab-btn.active");
   if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+  const transportCust = document.getElementById("transport-customer-name");
+  if (transportCust && custId) {
+    transportCust.textContent = custId;
+  }
 });
 
 document.getElementById("top-item-id").addEventListener("change", function () {
   const hiddenInput = document.getElementById("id_item_creation_id");
   if (hiddenInput) hiddenInput.value = this.value;
   loadInternalConversionData();
+  loadBOCTabData();
+  loadImportedBOCTabData();
+  loadAllOverviewBOC();
+  const activeSubtab = document.querySelector(".subtab-btn.active");
+  if (activeSubtab && activeSubtab.dataset.subtab === "rm-conversion") {
+    handleRMConversionTabClick(false);
+  } else if (activeSubtab && activeSubtab.dataset.subtab === "tooling-cost") {
+    loadToolingCostData();
+    loadRecoveryToolingData();
+  } else if (activeSubtab && activeSubtab.dataset.subtab === "transport-cost") {
+    loadTransportCostData();
+  }
   const activeTab = document.querySelector(".tab-btn.active");
   if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
 });
 
 const onYearUpdate = () => {
   loadInternalConversionData();
+  loadBOCTabData();
+  loadImportedBOCTabData();
+  loadAllOverviewBOC();
+  const activeSubtab = document.querySelector(".subtab-btn.active");
+  if (activeSubtab && activeSubtab.dataset.subtab === "tooling-cost") {
+    loadToolingCostData();
+    loadRecoveryToolingData();
+  } else if (activeSubtab && activeSubtab.dataset.subtab === "transport-cost") {
+    loadTransportCostData();
+  }
   const activeTab = document.querySelector(".tab-btn.active");
   if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
 };
 document.getElementById("top-year").addEventListener("change", onYearUpdate);
 document.getElementById("top-year").addEventListener("input", onYearUpdate);
 
-document.getElementById("btn-top-submit").addEventListener("click", () => {
-  showToast("Filters applied and data submitted.", "success");
-  loadInternalConversionData();
-  const activeTab = document.querySelector(".tab-btn.active");
-  if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
-});
+const btnTopSubmit = document.getElementById("btn-top-submit");
+if (btnTopSubmit) {
+  btnTopSubmit.addEventListener("click", () => {
+    showToast("Filters applied and data submitted.", "success");
+    loadInternalConversionData();
+    loadBOCTabData();
+    loadImportedBOCTabData();
+    loadAllOverviewBOC();
+    const activeSubtab = document.querySelector(".subtab-btn.active");
+    if (activeSubtab && activeSubtab.dataset.subtab === "tooling-cost") {
+      loadToolingCostData();
+      loadRecoveryToolingData();
+    } else if (activeSubtab && activeSubtab.dataset.subtab === "transport-cost") {
+      loadTransportCostData();
+    }
+    const activeTab = document.querySelector(".tab-btn.active");
+    if (activeTab && activeTab.id === "tab-tooling") loadDataToolingPanel();
+  });
+}
+
+// ── BOC Tab — Data Entry : IMPORTED BOC ──────────────────────────────
+(function initBOCDataEntry() {
+  const descSel   = document.getElementById('boc-entry-desc');
+  const tubeInput = document.getElementById('boc-entry-tubesize');
+  const unitInput = document.getElementById('boc-entry-unit');
+  const rateInput = document.getElementById('boc-entry-rate');
+  const qtyInput  = document.getElementById('boc-entry-qty');
+  const totalInput= document.getElementById('boc-entry-total');
+  const addBtn    = document.getElementById('btn-boc-add-entry');
+
+  // In-memory map: description → {tube_size, unit, rate}
+  let _bopMasterMap = {};
+
+  /* ── 1. Live total calculation ────────────────────────────────────── */
+  function calcTotal() {
+    const r = parseFloat(rateInput  ? rateInput.value  : '');
+    const q = parseFloat(qtyInput   ? qtyInput.value   : '');
+    if (totalInput) {
+      totalInput.value = (!isNaN(r) && !isNaN(q)) ? (r * q).toFixed(2) : '';
+    }
+  }
+  if (rateInput) rateInput.addEventListener('input', calcTotal);
+  if (qtyInput)  qtyInput.addEventListener('input',  calcTotal);
+
+  /* ── 2. Load descriptions from backend → populate datalist ─────── */
+  async function loadBOCDescriptions() {
+    if (!descSel) return;
+    const topCust = document.getElementById('top-customer-id');
+    const topItem = document.getElementById('top-item-id');
+    const customerId = topCust ? topCust.value.trim() : '';
+    const itemId     = topItem ? topItem.value.trim() : '';
+    if (!customerId || !itemId) return;
+
+    try {
+      const url = `/CostingBCCal/boc/get-bop-descriptions/?customer_id=${encodeURIComponent(customerId)}&item_creation_id=${encodeURIComponent(itemId)}`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      // Populate datalist for autocomplete suggestions
+      const dl = document.getElementById('boc-desc-datalist');
+      if (dl) dl.innerHTML = '';
+      _bopMasterMap = {};
+
+      if (data.status === 'success' && Array.isArray(data.descriptions) && data.descriptions.length > 0) {
+        data.descriptions.forEach(item => {
+          if (dl) {
+            const opt = document.createElement('option');
+            opt.value = item.description;
+            dl.appendChild(opt);
+          }
+          _bopMasterMap[item.description] = {
+            tube_size: item.tube_size || '',
+            unit:      item.unit      || '',
+            rate:      item.rate      || 0,
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('[BOC DataEntry] Failed to load descriptions:', err);
+    }
+  }
+
+  /* ── 3. Auto-fill when user picks from datalist or types a match ─── */
+  function onDescChange() {
+    if (!descSel) return;
+    const val = descSel.value.trim();
+    const selected = _bopMasterMap[val] || {};
+    if (tubeInput) tubeInput.value = selected.tube_size || '';
+    if (unitInput) unitInput.value = selected.unit      || '';
+    if (rateInput && (selected.rate !== undefined && selected.rate !== null)) {
+      rateInput.value = selected.rate;
+      calcTotal();
+    }
+  }
+  if (descSel) {
+    descSel.addEventListener('input', onDescChange);
+    descSel.addEventListener('change', onDescChange);
+  }
+
+  /* ── 4. Add button: push row into BOM: IMPORTED BOC table ────────── */
+  if (addBtn) {
+    addBtn.addEventListener('click', function () {
+      const desc     = descSel   ? descSel.value.trim()      : '';
+      const tubeSize = tubeInput ? tubeInput.value.trim()    : '';
+      const unit     = unitInput ? unitInput.value.trim()    : '';
+      const rate     = rateInput ? parseFloat(rateInput.value)  || 0 : 0;
+      const qty      = qtyInput  ? parseFloat(qtyInput.value)   || 0 : 0;
+      const total    = rate * qty;
+
+      if (!desc) {
+        alert('Please enter a Description before adding.');
+        return;
+      }
+      if (qty <= 0) {
+        alert('Please enter a valid Quantity greater than 0.');
+        return;
+      }
+
+      // Build data object matching addImportedBOCRow expectations
+      const rowData = {
+        part_number:   '',
+        description:   desc,
+        uom_code:      unit,
+        quantity:      qty,
+        internal_rate: rate,
+        settle_price:  0,
+        cost:          total,
+        // Extra display fields stored as data attrs via custom path below
+        _tube_size:    tubeSize,
+        _rate:         rate,
+        _total:        total,
+      };
+
+      // Insert row into boc-imported-bom-tbody
+      _addImportedEntryRow(rowData);
+
+      // Clear entry form
+      if (descSel)   { descSel.value   = ''; }
+      if (tubeInput) tubeInput.value = '';
+      if (unitInput) unitInput.value = '';
+      if (rateInput) rateInput.value = '';
+      if (qtyInput)  qtyInput.value  = '';
+      if (totalInput) totalInput.value = '';
+    });
+  }
+
+  /* ── 5. Helper: add a row with Tube Size, Unit, Rate, Qty, Total ─── */
+  function _addImportedEntryRow(obj) {
+    const tbody = document.getElementById('boc-imported-bom-tbody');
+    if (!tbody) return;
+
+    // Remove empty-state placeholder
+    const placeholder = tbody.querySelector('.no-data-row, .boc-empty-row');
+    if (placeholder) placeholder.remove();
+
+    const qty   = parseFloat(obj.quantity      || 0) || 0;
+    const rate  = parseFloat(obj.internal_rate || obj._rate || 0) || 0;
+    const sp    = parseFloat(obj.settle_price  || 0) || 0;
+    const cost  = parseFloat(obj.cost          || 0) || (qty * (sp || rate));
+    const tube  = obj._tube_size || '';
+    const unit  = obj.uom_code   || '';
+
+    const srNo = tbody.querySelectorAll('tr:not(.no-data-row):not(.boc-empty-row)').length + 1;
+
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-type', 'imported_bom');
+    tr.innerHTML = [
+      `<td style="text-align:center;" class="col-srno">${srNo}</td>`,
+      `<td></td>`,                                        // part_number (empty for manual entry)
+      `<td>${_escBOC(obj.description)}</td>`,
+      `<td>${_escBOC(unit)}</td>`,
+      `<td style="text-align:right;" class="col-qty">${qty.toFixed(2)}</td>`,
+      `<td style="text-align:right;" class="col-ir">${rate.toFixed(2)}</td>`,
+      `<td style="text-align:right;" class="col-sp">${sp.toFixed(2)}</td>`,
+      `<td style="text-align:right;" class="col-cost">${cost.toFixed(2)}</td>`,
+      `<td style="text-align:center;"><button type="button" class="btn-edit-row" style="padding:2px 8px;font-size:12px;cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:4px;">Edit</button></td>`,
+    ].join('');
+    tbody.appendChild(tr);
+  }
+
+  /* ── 6. Reload descriptions whenever customer/item changes ───────── */
+  const topCustEl = document.getElementById('top-customer-id');
+  const topItemEl = document.getElementById('top-item-id');
+  if (topCustEl) topCustEl.addEventListener('change', loadBOCDescriptions);
+  if (topItemEl) topItemEl.addEventListener('change', loadBOCDescriptions);
+
+  // Initial load
+  loadBOCDescriptions();
+})();
+
+
+// ── RM + Conversion Data Entry Handlers ───────────────────────────────
+(function initRMDataEntry() {
+  const rateInput = document.getElementById("rm-entry-rate");
+  const qtyInput = document.getElementById("rm-entry-qty");
+  const totalInput = document.getElementById("rm-entry-total");
+
+  function calcTotal() {
+    if (!rateInput || !qtyInput || !totalInput) return;
+    const r = parseFloat(rateInput.value);
+    const q = parseFloat(qtyInput.value);
+    if (!isNaN(r) && !isNaN(q)) {
+      totalInput.value = (r * q).toFixed(2);
+    } else {
+      totalInput.value = "";
+    }
+  }
+
+  if (rateInput) rateInput.addEventListener("input", calcTotal);
+  if (qtyInput) qtyInput.addEventListener("input", calcTotal);
+})();
 
 // ── Init ──────────────────────────────────────────────────────────────
 (async () => {
-  // Sync initial Item Creation ID to hidden input
+  const topCustomer = document.getElementById("top-customer-id");
   const topItem = document.getElementById("top-item-id");
   const hiddenInput = document.getElementById("id_item_creation_id");
+
+  if (topCustomer && topCustomer.value && (!topItem || topItem.options.length <= 1)) {
+    await updateItemDropdownByCustomer(topCustomer.value, topItem ? topItem.value : "");
+  }
+
   if (topItem && hiddenInput) {
     hiddenInput.value = topItem.value;
   }
 
-  await loadDropdowns();
+  // Load Overview Tables immediately so they populate automatically
+  loadAllOverviewBOC();
+
+  try { await loadDropdowns(); } catch (err) { console.warn('[Init] loadDropdowns error:', err); }
+  try { await loadBOCTabData(); } catch (err) { console.warn('[Init] loadBOCTabData error:', err); }
+  try { await loadImportedBOCTabData(); } catch (err) { console.warn('[Init] loadImportedBOCTabData error:', err); }
+  
+  // Refresh Overview Tables to ensure full sync
+  loadAllOverviewBOC();
+
   // Keep Norms table hidden on initial load until a filter is selected
   document.getElementById("table-loading").style.display = "none";
   document.getElementById("table-container").style.display = "none";
   document.getElementById("table-empty").style.display     = "none";
 })();
+
+// ── BOC & Conversion Row Edit Modal Logic ──────────────────────────
+let currentBOCEditingRow = null;
+let currentBOCEditingType = null;
+
+document.addEventListener('click', function(e) {
+  const editBtn = e.target.closest('.btn-edit-row');
+  if (editBtn) {
+    e.preventDefault();
+    const row = editBtn.closest('tr');
+    if (!row) return;
+    currentBOCEditingRow = row;
+
+    const isConversion = !!row.closest('#table-conversion-cost');
+    const irCell = row.querySelector('.col-ir');
+    const spCell = row.querySelector('.col-sp');
+    const modal = document.getElementById('boc-edit-modal-backdrop');
+    const spContainer = document.getElementById('boc-modal-sp-container');
+    const irLabel = document.getElementById('boc-modal-ir-label');
+    const modalTitle = document.getElementById('boc-modal-title');
+
+    if (isConversion) {
+      currentBOCEditingType = 'conversion';
+      if (modalTitle) modalTitle.textContent = 'Edit Conversion Rate';
+      if (spContainer) spContainer.style.display = 'none';
+      if (irLabel) irLabel.textContent = 'Cost Per Qnty / Rate';
+      const rpuVal = parseFloat(irCell ? irCell.textContent : 0) || 0;
+      const irInput = document.getElementById('boc-modal-ir-input');
+      if (irInput) irInput.value = rpuVal;
+    } else {
+      currentBOCEditingType = 'boc';
+      if (modalTitle) modalTitle.textContent = 'Edit Price & Rate';
+      if (spContainer) spContainer.style.display = 'block';
+      if (irLabel) irLabel.textContent = 'Internal Rate (IR)';
+      const irVal = parseFloat(irCell ? irCell.textContent : 0) || 0;
+      const spVal = parseFloat(spCell ? spCell.textContent : 0) || 0;
+      const spInput = document.getElementById('boc-modal-sp-input');
+      const irInput = document.getElementById('boc-modal-ir-input');
+      if (spInput) spInput.value = spVal;
+      if (irInput) irInput.value = irVal;
+    }
+
+    if (modal) modal.style.display = 'flex';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const cancelBtn = document.getElementById('boc-modal-cancel-btn');
+  const okBtn     = document.getElementById('boc-modal-ok-btn');
+  const modal     = document.getElementById('boc-edit-modal-backdrop');
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      if (modal) modal.style.display = 'none';
+      currentBOCEditingRow = null;
+      currentBOCEditingType = null;
+    });
+  }
+
+  if (okBtn) {
+    okBtn.addEventListener('click', function() {
+      if (!currentBOCEditingRow) return;
+
+      const spInput = document.getElementById('boc-modal-sp-input');
+      const irInput = document.getElementById('boc-modal-ir-input');
+
+      const newSp = parseFloat(spInput ? spInput.value : 0) || 0;
+      const newIr = parseFloat(irInput ? irInput.value : 0) || 0;
+
+      const qtyCell  = currentBOCEditingRow.querySelector('.col-qty');
+      const irCell   = currentBOCEditingRow.querySelector('.col-ir');
+      const spCell   = currentBOCEditingRow.querySelector('.col-sp');
+      const costCell = currentBOCEditingRow.querySelector('.col-cost') || currentBOCEditingRow.querySelector('.rm-bom-cost-cell');
+
+      const qty = parseFloat(qtyCell ? qtyCell.textContent : 0) || 0;
+
+      if (currentBOCEditingType === 'conversion') {
+        const newCost = qty * newIr;
+        if (irCell)   irCell.textContent   = newIr.toFixed(2);
+        if (costCell) costCell.textContent = newCost.toFixed(2);
+
+        // Recalculate Conversion Cost subtotal & update overview table
+        let subtotal = 0;
+        const tbody = document.getElementById('conversion-cost-tbody');
+        if (tbody) {
+          tbody.querySelectorAll('tr:not(.no-data-row)').forEach(tr => {
+            const cc = tr.querySelector('.col-cost');
+            if (cc) subtotal += parseFloat(cc.textContent) || 0;
+          });
+        }
+        const subtotalEl = document.getElementById('conversion-cost-subtotal');
+        const ovSubtotalEl = document.getElementById('conversion-overview-subtotal');
+        if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+        if (ovSubtotalEl) ovSubtotalEl.textContent = subtotal.toFixed(2);
+
+        // Update corresponding row in overview table
+        const descCell = currentBOCEditingRow.querySelector('.col-conv-desc');
+        const descText = descCell ? descCell.textContent.trim() : '';
+        const rowId = currentBOCEditingRow.getAttribute('data-id');
+        const ovTbody = document.getElementById('conversion-overview-tbody');
+        if (ovTbody) {
+          ovTbody.querySelectorAll('tr').forEach(tr => {
+            if ((rowId && tr.getAttribute('data-id') === rowId) || (descText && tr.firstElementChild && tr.firstElementChild.textContent.trim() === descText)) {
+              const cells = tr.querySelectorAll('td');
+              if (cells.length >= 4) {
+                cells[1].textContent = newIr.toFixed(2);
+                cells[3].textContent = newCost.toFixed(2);
+              }
+            }
+          });
+        }
+      } else {
+        const newCost = qty * newSp;
+        if (irCell)   irCell.textContent   = newIr.toFixed(2);
+        if (spCell)   spCell.textContent   = newSp.toFixed(2);
+        if (costCell) costCell.textContent = newCost.toFixed(2);
+      }
+
+      if (modal) modal.style.display = 'none';
+      currentBOCEditingRow = null;
+      currentBOCEditingType = null;
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const btnSubmitAction = document.getElementById('btn-ic-submit-action');
+  if (btnSubmitAction) {
+    btnSubmitAction.addEventListener('click', async function(e) {
+      e.preventDefault();
+      
+      const cid = document.getElementById('top-customer-id').value;
+      const iid = document.getElementById('top-item-id').value;
+      
+      if (!cid || !iid) {
+        if(typeof showToast === 'function') showToast('warning', 'Please select Customer ID and Item Creation ID.');
+        else alert('Please select Customer ID and Item Creation ID.');
+        return;
+      }
+      
+      if (!confirm('Do you want to complete RFQ ?')) {
+        return;
+      }
+      
+      const chkCompleted = document.getElementById('ic-is-completed');
+      const isCompleted = chkCompleted ? chkCompleted.checked : false;
+      const custSel = document.getElementById('top-customer-id');
+      const custName = custSel.options[custSel.selectedIndex].text;
+      
+      try {
+        const response = await fetch('/CostingBCCal/submit-rfq-completion/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer_id: cid,
+            itemcreation_id: iid,
+            customername: custName,
+            is_completed: isCompleted
+          })
+        });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          if(typeof showToast === 'function') showToast('success', result.message);
+          else alert(result.message);
+          // Reload page to reflect status update
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          alert(result.message);
+        }
+      } catch (err) {
+        alert('An error occurred while submitting RFQ completion.');
+        console.error(err);
+      }
+    });
+  }
+});
 </script>
+
+<!-- ── BOC & Conversion Edit Row Modal Backdrop ─────────────────────── -->
+<div id="boc-edit-modal-backdrop" style="display:none; position:fixed; z-index:99999; inset:0; background:rgba(15,23,42,0.4); backdrop-filter:blur(2px); align-items:center; justify-content:center;">
+  <div style="background:#ffffff; width:340px; padding:20px; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.2); font-family:inherit;">
+    <h4 id="boc-modal-title" style="margin:0 0 16px; font-size:16px; color:#1e293b; font-weight:600; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">Edit Price & Rate</h4>
+    <div id="boc-modal-sp-container" style="margin-bottom:12px;">
+      <label style="display:block; font-size:13px; font-weight:500; color:#475569; margin-bottom:4px;">Settle Price (SP)</label>
+      <input type="number" step="any" id="boc-modal-sp-input" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:14px; outline:none; box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label id="boc-modal-ir-label" style="display:block; font-size:13px; font-weight:500; color:#475569; margin-bottom:4px;">Internal Rate (IR)</label>
+      <input type="number" step="any" id="boc-modal-ir-input" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:14px; outline:none; box-sizing:border-box;">
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" id="boc-modal-cancel-btn" style="padding:6px 14px; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer; font-size:13px; font-weight:500;">Cancel</button>
+      <button type="button" id="boc-modal-ok-btn" style="padding:6px 16px; background:#2563eb; color:#ffffff; border:none; border-radius:4px; cursor:pointer; font-size:13px; font-weight:500;">OK</button>
+    </div>
+  </div>
+</div>
 {% endblock extra_scripts %}

@@ -49,9 +49,6 @@
         <label>Item No :</label>
         <select id="Cmb_SearchItem" onchange="checkProjectType()">
             <option value="">Select Item</option>
-            {% for item in items %}
-                <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}
         </select>
     </div>
 
@@ -92,9 +89,48 @@
         var nameInput = document.getElementById("txtBox_Name");
         if(select.selectedIndex > 0) {
             nameInput.value = select.options[select.selectedIndex].getAttribute("data-name") || "";
+            loadItemsByCustomer(select.value);
         } else {
             nameInput.value = "";
+            resetItemDropdown();
         }
+    }
+
+    function resetItemDropdown() {
+        var itemSelect = document.getElementById("Cmb_SearchItem");
+        itemSelect.innerHTML = '<option value="">Select Item</option>';
+        // Hide all todo buttons
+        document.getElementById("Cmd_ToDoListSimple").classList.add("hidden");
+        document.getElementById("cmd_todoNormal").classList.add("hidden");
+        document.getElementById("cmd_todoComplex").classList.add("hidden");
+    }
+
+    function loadItemsByCustomer(customerId) {
+        resetItemDropdown();
+        if (!customerId) return;
+
+        var itemSelect = document.getElementById("Cmb_SearchItem");
+        itemSelect.innerHTML = '<option value="">Loading...</option>';
+
+        fetch(`/todo/api/get_items_by_customer/?customer_id=${encodeURIComponent(customerId)}`)
+            .then(r => r.json())
+            .then(data => {
+                itemSelect.innerHTML = '<option value="">Select Item</option>';
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(item => {
+                        var opt = document.createElement('option');
+                        opt.value = item;
+                        opt.textContent = item;
+                        itemSelect.appendChild(opt);
+                    });
+                } else {
+                    itemSelect.innerHTML = '<option value="">No items found</option>';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                itemSelect.innerHTML = '<option value="">Error loading items</option>';
+            });
     }
 
     function checkProjectType() {

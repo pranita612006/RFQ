@@ -215,8 +215,21 @@ window.autofillDTCostsFromDB = async function() {
 
   if (!itemCreationId) return;
 
+  function normCat(s) {
+    if (!s) return "";
+    return s.toString()
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .trim()
+      .toLowerCase();
+  }
+
   try {
-    const url = `/CostingBCCal/get-cost/?item_creation_id=${encodeURIComponent(itemCreationId)}&year=${encodeURIComponent(year)}`;
+    const cleanId = String(itemCreationId).trim();
+    const url = `/CostingBCCal/get-cost/?item_creation_id=${encodeURIComponent(cleanId)}&year=${encodeURIComponent(year)}`;
     const resp = await fetch(url);
     if (!resp.ok) return;
     const data = await resp.json();
@@ -225,13 +238,27 @@ window.autofillDTCostsFromDB = async function() {
     // Populate cost displays and inputs by matching data-category attribute
     document.querySelectorAll("tr[data-category]").forEach(row => {
       const cat = row.getAttribute("data-category") || "";
+      if (!cat) return;
+
+      // 1. Exact match
       let costVal = costs[cat];
-      if (costVal === undefined) {
-        const catLower = cat.toLowerCase();
-        for (const [k, v] of Object.entries(costs)) {
-          if (k.toLowerCase() === catLower) { costVal = v; break; }
+
+      // 2. Normalized match (unescaped HTML entities, trimmed, lowercased)
+      if (costVal === undefined || costVal === null) {
+        const normTarget = normCat(cat);
+        costVal = costs[normTarget];
+
+        // 3. Fallback iterate keys
+        if (costVal === undefined || costVal === null) {
+          for (const [k, v] of Object.entries(costs)) {
+            if (normCat(k) === normTarget) {
+              costVal = v;
+              break;
+            }
+          }
         }
       }
+
       if (costVal !== undefined && costVal !== null && costVal !== "") {
         const display = row.querySelector(".dt-cost-display");
         const input   = row.querySelector(".dt-cost-input");
@@ -288,7 +315,7 @@ window.submitDTAssignmentForm = async function(event) {
   if (!form) return false;
 
   const topItem = document.getElementById("top-item-id");
-  const topCustomer = document.getElementById("top-customer-id");
+  const topCustomer = document.getElementById("top-customer-id"); 
   const topYear = document.getElementById("top-year");
   const hiddenItem = document.getElementById("hidden-dt-item-id");
   const hiddenCustomer = document.getElementById("hidden-dt-customer-id");

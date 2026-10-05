@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
+from django.db.models import Max
 from config.decorators import require_active_customer
 
 from .models import BlanketSO, BSOSalesLine
@@ -13,54 +14,156 @@ from apps.item_creation.models import ItemCard, UnitOfMeasure
 from apps.opportunities.models import OpportunityMaster, CustomerInfo
 
 
+def _cust_variants(customer_id):
+    """Return ID variants (padded, stripped) for flexible matching."""
+    clean_id = customer_id.strip()
+    padded_id = clean_id.zfill(8) if clean_id.isdigit() else clean_id
+    lstrip_id = clean_id.lstrip('0') or clean_id
+    return list(dict.fromkeys([clean_id, padded_id, lstrip_id]))
+
+
+def _item_variants(item_no):
+    """Return item No variants for flexible matching."""
+    clean = item_no.strip()
+    padded = clean.zfill(8) if clean.isdigit() else clean
+    lstripped = clean.lstrip('0') or clean
+    return list(dict.fromkeys([clean, padded, lstripped]))
+
+
+def _format_date_iso(val):
+    """Normalize date strings or date objects into YYYY-MM-DD for HTML5 inputs."""
+    if not val:
+        return ''
+    if isinstance(val, (datetime.date, datetime.datetime)):
+        return val.strftime('%Y-%m-%d')
+    s = str(val).strip()
+    if not s:
+        return ''
+    for fmt in ('%Y-%m-%d', '%d-%m-%Y', '%d/%m/%Y', '%Y/%m/%d', '%d-%b-%Y', '%d-%b-%y'):
+        try:
+            return datetime.datetime.strptime(s, fmt).strftime('%Y-%m-%d')
+        except ValueError:
+            pass
+    return s
+
+
+def _get_customer_items(customer_id):
+    """
+    Return list of dicts {no, description} for the active customer.
+    Mirrors VBA: SELECT No, Description FROM tbl_ItemCard WHERE CustomerID = [customer_id]
+    Also unions items across OpportunityMaster, BOC, BlanketSO, BSOSalesLine so no customer items are missed.
+    """
+    items_map = {}
+    if not customer_id:
+        return []
+    variants = _cust_variants(customer_id)
+
+    # 1. ItemCard
+    for r in ItemCard.objects.filter(customer_id__in=variants).values('no', 'description'):
+        no = str(r['no'] or '').strip()
+        if no:
+            items_map[no] = (r['description'] or '').strip()
+
+    # 2. BocItemCard
+    for r in BocItemCard.objects.filter(customerid__in=variants).values('no', 'part_name'):
+        no = str(r['no'] or '').strip()
+        if no and (no not in items_map or not items_map[no]):
+            items_map[no] = (r['part_name'] or '').strip()
+
+    # 3. OpportunityMaster
+    for r in OpportunityMaster.objects.filter(customer_id__in=variants).values('item_no', 'part_name'):
+        no = str(r['item_no'] or '').strip()
+        if no and (no not in items_map or not items_map[no]):
+            items_map[no] = (r['part_name'] or '').strip()
+
+    # 4. BlanketSO & BSOSalesLine
+    for r in BlanketSO.objects.filter(customer_id__in=variants).values_list('item_creation_id', flat=True).distinct():
+        no = str(r or '').strip()
+        if no and no not in items_map:
+            items_map[no] = ''
+
+    for r in BSOSalesLine.objects.filter(customer_id__in=variants).values('item_creation_id', 'description').distinct():
+        no = str(r['item_creation_id'] or '').strip()
+        if no and (no not in items_map or not items_map[no]):
+            items_map[no] = (r['description'] or '').strip()
+
+    # 5. Raw SQL fallback for tbl_boc_creation
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT DISTINCT itemcreation_id FROM tbl_boc_creation WHERE customer_id IN %s",
+                [tuple(variants)]
+            )
+            for row in cursor.fetchall():
+                no = str(row[0] or '').strip()
+                if no and no not in items_map:
+                    items_map[no] = ''
+    except Exception:
+        pass
+
+    return [{'no': k, 'description': v} for k, v in sorted(items_map.items(), key=lambda x: str(x[0]))]
+
+
 @require_active_customer
 def BlanketSales_form(request):
     customer_id = request.session.get('active_customer_id', '')
     customer_name = request.session.get('active_customer_name', '')
+    cust_vars = _cust_variants(customer_id)
 
-    # 1. Fetch Item numbers associated with this customer
-    item_nos = []
-    if customer_id:
-        clean_id = customer_id.strip()
-        padded_id = clean_id.zfill(8) if clean_id.isdigit() else clean_id
-        lstrip_id = clean_id.lstrip('0') or clean_id
-        variants = list(dict.fromkeys([clean_id, padded_id, lstrip_id]))
+    # Items filtered by customer (mirrors VBA Cmb_Item_no rowsource)
+    items = _get_customer_items(customer_id)
 
-        # Try BocItemCard
-        item_nos = list(BocItemCard.objects.filter(customerid__in=variants).values_list('no', flat=True).distinct())
-        if not item_nos:
-            item_nos = list(ItemCard.objects.filter(customer_id__in=variants).values_list('no', flat=True).distinct())
-        if not item_nos:
-            item_nos = list(OpportunityMaster.objects.filter(customer_id__in=variants).values_list('item_no', flat=True).distinct())
+    # BSO numbers for this customer (mirrors VBA: WHERE Customer_ID = [customer_id])
+    bso_numbers = list(
+        BlanketSO.objects.filter(customer_id__in=cust_vars)
+        .values_list('bso_creation_id', flat=True)
+        .distinct()
+        .order_by('bso_creation_id')
+    )
 
-    # 2. Location options
-    location_options = ['LOCATION 1', 'LOCATION 2', 'PLANT 1', 'DEFAULT']
+    # Location code dropdown – mirrors VBA: SELECT [Location Code] FROM tbl_BSO_LocationCode
+    location_options = []
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT DISTINCT locationcode FROM tbl_bso_locationcode WHERE locationcode IS NOT NULL")
-            locs = [row[0] for row in cursor.fetchall() if row[0]]
-            if locs:
-                location_options = locs
+            cursor.execute(
+                "SELECT DISTINCT location_code FROM tbl_bso_locationcode "
+                "WHERE location_code IS NOT NULL ORDER BY location_code"
+            )
+            location_options = [r[0] for r in cursor.fetchall() if r[0]]
     except Exception:
         pass
+    if not location_options:
+        location_options = ['LOCATION 1', 'LOCATION 2', 'PLANT 1', 'DEFAULT']
 
-    # 3. Status options
     status_options = ['Open', 'Released', 'Pending Approval', 'Closed']
 
-    # 4. Units of measure
     uom_list = list(UnitOfMeasure.objects.values_list('code', flat=True).distinct())
     if not uom_list:
         uom_list = ['NOS', 'PCS', 'SET', 'MTR', 'KG']
 
-    today_formatted = datetime.date.today().strftime('%d-%b-%y')
+    # HSN/SAC codes – mirrors VBA: SELECT Code FROM tbl_ItemCard_Invoice
+    hsn_codes = []
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT DISTINCT code FROM tbl_itemcard_invoice "
+                "WHERE code IS NOT NULL ORDER BY code"
+            )
+            hsn_codes = [r[0] for r in cursor.fetchall() if r[0]]
+    except Exception:
+        pass
+
+    today_formatted = datetime.date.today().strftime('%Y-%m-%d')
 
     return render(request, "BlanketSales/BlanketSales_form.html", {
         "customer_id": customer_id,
         "customer_name": customer_name,
-        "item_nos": item_nos,
+        "items": items,
+        "bso_numbers": bso_numbers,
         "location_options": location_options,
         "status_options": status_options,
         "uom_list": uom_list,
+        "hsn_codes": hsn_codes,
         "today_date": today_formatted,
     })
 
@@ -68,8 +171,8 @@ def BlanketSales_form(request):
 @require_active_customer
 def get_item_customer_details(request):
     """
-    Called when an Item No is selected (matches Cmb_Item_no_AfterUpdate in VBA).
-    Fetches Opportunity, Customer, Item Card, and existing BlanketSO records for autofill.
+    Called when Item No is selected (mirrors VBA Cmb_Item_no_AfterUpdate).
+    Returns autofill data and BSO dropdown (filtered by customer only, matching VBA query).
     """
     item_no = request.GET.get('item_no', '').strip()
     customer_id = request.session.get('active_customer_id', '').strip()
@@ -78,25 +181,14 @@ def get_item_customer_details(request):
     if not item_no or not customer_id:
         return JsonResponse({'error': 'Missing item_no or active customer'}, status=400)
 
-    clean_id = customer_id
-    padded_id = clean_id.zfill(8) if clean_id.isdigit() else clean_id
-    lstrip_id = clean_id.lstrip('0') or clean_id
-    cust_variants = list(dict.fromkeys([clean_id, padded_id, lstrip_id]))
+    cust_vars = _cust_variants(customer_id)
+    item_vars = _item_variants(item_no)
 
-    item_clean = item_no
-    item_padded = item_clean.zfill(8) if item_clean.isdigit() else item_clean
-    item_lstrip = item_clean.lstrip('0') or item_clean
-    item_variants = list(dict.fromkeys([item_clean, item_padded, item_lstrip]))
+    opp = OpportunityMaster.objects.filter(item_no__in=item_vars).first()
+    cust_info = CustomerInfo.objects.filter(customer_id__in=cust_vars).first()
+    item_card = ItemCard.objects.filter(no__in=item_vars).first()
 
-    # Lookups matching VBA DLookup calls
-    opp = OpportunityMaster.objects.filter(item_no__in=item_variants).first()
-    cust_info = CustomerInfo.objects.filter(customer_id__in=cust_variants).first()
-    item_card = ItemCard.objects.filter(no__in=item_variants).first()
-
-    # sellto_contact from OpportunityMaster.contact_name
-    sellto_contact = opp.contact_name if opp and opp.contact_name else ''
-    
-    # country/region code and postcode from CustomerInfo
+    sellto_contact = (opp.contact_name if opp and opp.contact_name else '')
     country_region_code = ''
     post_code = ''
     if cust_info:
@@ -105,38 +197,58 @@ def get_item_customer_details(request):
         if not sellto_contact and getattr(cust_info, 'contact', None):
             sellto_contact = cust_info.contact
 
-    # Line item defaults
+    # Preceding line item for customer or item
+    prev_line = (
+        BSOSalesLine.objects.filter(customer_id__in=cust_vars, item_creation_id__in=item_vars).order_by('-id_field').first()
+        or BSOSalesLine.objects.filter(customer_id__in=cust_vars).order_by('-id_field').first()
+    )
+
     line_no_field = opp.last_ecn_no or opp.item_no if opp else item_no
-    line_description = item_card.description if item_card and item_card.description else (opp.part_name if opp else '')
-    
+    line_description = ''
+    if item_card and item_card.description:
+        line_description = item_card.description
+    elif opp and opp.part_name:
+        line_description = opp.part_name
+    elif prev_line and prev_line.description:
+        line_description = prev_line.description
+
     unit_of_measure = ''
     if item_card and item_card.base_unit_of_measure:
         unit_of_measure = item_card.base_unit_of_measure
+    elif prev_line and prev_line.unit_of_measure_code:
+        unit_of_measure = prev_line.unit_of_measure_code
 
-    # Location code and plant code from latest BSO Sales Line or Opportunity
-    prev_line = BSOSalesLine.objects.filter(customer_id__in=cust_variants).last()
     line_location_code = prev_line.location_code if prev_line and prev_line.location_code else ''
-    line_plant_code = prev_line.plant_code if prev_line and prev_line.plant_code else (opp.plant_loc if opp and opp.plant_loc else '')
-
+    line_plant_code = (
+        prev_line.plant_code if prev_line and prev_line.plant_code
+        else (opp.plant_loc if opp and opp.plant_loc else '')
+    )
     salesperson_code = opp.salesperson_code if opp and opp.salesperson_code else ''
     plant_code = opp.plant_loc if opp and opp.plant_loc else line_plant_code
 
-    # Check existing BlanketSO for this Item and Customer
-    existing_bso = None
-    for iv in item_variants:
-        for cv in cust_variants:
-            existing_bso = BlanketSO.objects.filter(item_creation_id=iv, customer_id=cv).first()
-            if existing_bso:
-                break
-        if existing_bso:
-            break
+    gst_group_code = getattr(item_card, 'gst_group_code', '') or ''
+    hsn_sac_code = getattr(item_card, 'hsn', '') or ''
+    unit_price = (
+        float(prev_line.unit_price_excl_tax) if prev_line and prev_line.unit_price_excl_tax is not None
+        else (float(item_card.unit_price) if item_card and item_card.unit_price else '')
+    )
+    rm_base = float(prev_line.rm_base) if prev_line and prev_line.rm_base is not None else ''
+    boc_base = float(prev_line.boc_base) if prev_line and prev_line.boc_base is not None else ''
+    shipment_date = _format_date_iso(prev_line.shipment_date) if prev_line and prev_line.shipment_date else ''
+    price_from_date = _format_date_iso(prev_line.price_from_date) if prev_line and prev_line.price_from_date else ''
+    price_to_date = _format_date_iso(prev_line.price_to_date) if prev_line and prev_line.price_to_date else ''
 
-    # Get list of all BSO numbers (bso_creation_id) for this item
+    # BSO dropdown: SELECT BSOCreationID FROM tbl_BlanketSO WHERE Customer_ID = [customer_id]
     bso_numbers = list(
-        BlanketSO.objects.filter(item_creation_id__in=item_variants, customer_id__in=cust_variants)
+        BlanketSO.objects.filter(customer_id__in=cust_vars)
         .values_list('bso_creation_id', flat=True)
         .distinct()
+        .order_by('bso_creation_id')
     )
+
+    existing_bso = BlanketSO.objects.filter(
+        item_creation_id__in=item_vars, customer_id__in=cust_vars
+    ).order_by('-bso_creation_id').first()
 
     data = {
         'sellto_contact': sellto_contact,
@@ -150,7 +262,6 @@ def get_item_customer_details(request):
         'shipto_post_code': post_code,
         'salesperson_code': salesperson_code,
         'plant_code': plant_code,
-        # Line item defaults
         'line_defaults': {
             'no': line_no_field,
             'description': line_description,
@@ -159,6 +270,14 @@ def get_item_customer_details(request):
             'plant_code': line_plant_code,
             'document_type': 'Blanket Order',
             'sellto_customer_no': customer_id,
+            'gst_group_code': gst_group_code,
+            'hsn_sac_code': hsn_sac_code,
+            'unit_price_excl_tax': unit_price,
+            'rm_base': rm_base,
+            'boc_base': boc_base,
+            'shipment_date': shipment_date,
+            'price_from_date': price_from_date,
+            'price_to_date': price_to_date,
         },
         'bso_numbers': bso_numbers,
         'has_existing_bso': existing_bso is not None,
@@ -168,11 +287,11 @@ def get_item_customer_details(request):
         data['bso_data'] = {
             'bso_creation_id': existing_bso.bso_creation_id or '',
             'no': existing_bso.no or '',
-            'document_date': str(existing_bso.document_date) if existing_bso.document_date else '',
+            'document_date': _format_date_iso(existing_bso.document_date),
             'sellto_customer_no': existing_bso.sellto_customer_no or customer_id,
             'billto_customer_no': existing_bso.billto_customer_no or customer_id,
             'sellto_customer_name': existing_bso.sellto_customer_name or customer_name,
-            'order_date': str(existing_bso.order_date) if existing_bso.order_date else '',
+            'order_date': _format_date_iso(existing_bso.order_date),
             'external_document_no': existing_bso.external_document_no or '',
             'location_code': existing_bso.location_code or '',
             'status': existing_bso.status or 'Open',
@@ -189,8 +308,9 @@ def get_item_customer_details(request):
             'shipto_country_region_code': existing_bso.shipto_country_region_code or country_region_code,
             'shipto_name': existing_bso.shipto_name or customer_name,
             'shipto_post_code': existing_bso.shipto_post_code or post_code,
-            'table_id': existing_bso.table_id or 1,
+            'table_id': str(existing_bso.table_id or 1),
             'bso_row_id': existing_bso.bso_row_id or 1,
+            'item_creation_id': existing_bso.item_creation_id or item_no,
         }
 
     return JsonResponse(data)
@@ -198,31 +318,87 @@ def get_item_customer_details(request):
 
 @require_active_customer
 def get_blanketso_details(request):
-    """Retrieve BlanketSO details by BSO creation ID (bso_creation_id)."""
+    """
+    Retrieve BlanketSO details and Table IDs when BSO is selected.
+    Table ID query mirrors VBA: SELECT DISTINCT Table_Id FROM tbl_BSO_SalesLines
+    WHERE ItemCreation_Id = Cmb_Item_no AND BSOCreationID = Cmb_BSOCreationID
+    """
     bso_id = request.GET.get('bso_creation_id', '').strip()
+    item_no = request.GET.get('item_no', '').strip()
+
     if not bso_id:
         return JsonResponse({'error': 'Missing bso_creation_id'}, status=400)
-    
+
     blanket = BlanketSO.objects.filter(bso_creation_id=bso_id).first()
+    if not blanket:
+        blanket = BlanketSO.objects.filter(bso_creation_id__iexact=bso_id).first()
     if not blanket:
         return JsonResponse({'error': 'BlanketSO not found'}, status=404)
 
-    # Get distinct table_ids for this BSO
-    table_ids = list(
-        BlanketSO.objects.filter(bso_creation_id=bso_id)
-        .values_list('table_id', flat=True)
-        .distinct()
+    target_item = (blanket.item_creation_id or item_no).strip()
+
+    # Table IDs from SalesLines, filtered by item+BSO (mirrors VBA Cmb_TableID rowsource)
+    tbl_qs = BSOSalesLine.objects.filter(blanket_so_id=blanket.bso_creation_id)
+    if target_item:
+        tbl_qs_item = tbl_qs.filter(item_creation_id__in=_item_variants(target_item))
+        if tbl_qs_item.exists():
+            tbl_qs = tbl_qs_item
+
+    table_ids = list(tbl_qs.values_list('table_id', flat=True).distinct())
+    clean_table_ids = sorted(
+        [str(t) for t in table_ids if t is not None and str(t).strip()],
+        key=lambda x: int(x) if x.isdigit() else x
     )
-    if not table_ids or table_ids == [None]:
-        table_ids = [1]
+    if blanket.table_id and str(blanket.table_id) not in clean_table_ids:
+        clean_table_ids.append(str(blanket.table_id))
+    if not clean_table_ids:
+        clean_table_ids = ['1']
+
+    # Build line defaults for this BSO and target item
+    cust_vars = _cust_variants(blanket.customer_id or request.session.get('active_customer_id', ''))
+    target_vars = _item_variants(target_item) if target_item else []
+    bso_item_card = ItemCard.objects.filter(no__in=target_vars).first() if target_vars else None
+    bso_opp = OpportunityMaster.objects.filter(item_no__in=target_vars).first() if target_vars else None
+    bso_prev_line = (
+        tbl_qs.order_by('-id_field').first()
+        or BSOSalesLine.objects.filter(customer_id__in=cust_vars, item_creation_id__in=target_vars).order_by('-id_field').first()
+        or BSOSalesLine.objects.filter(customer_id__in=cust_vars).order_by('-id_field').first()
+    )
+
+    bso_line_no = (
+        bso_prev_line.line_no_field if bso_prev_line and bso_prev_line.line_no_field
+        else (bso_opp.last_ecn_no or bso_opp.item_no if bso_opp else target_item)
+    )
+    bso_desc = (
+        (bso_item_card.description if bso_item_card and bso_item_card.description else None)
+        or (bso_opp.part_name if bso_opp and bso_opp.part_name else None)
+        or (bso_prev_line.description if bso_prev_line else '')
+    )
+    bso_uom = (
+        (bso_item_card.base_unit_of_measure if bso_item_card and bso_item_card.base_unit_of_measure else None)
+        or (bso_prev_line.unit_of_measure_code if bso_prev_line else '')
+    )
+    bso_loc = (bso_prev_line.location_code if bso_prev_line and bso_prev_line.location_code else blanket.location_code) or ''
+    bso_plant = (bso_prev_line.plant_code if bso_prev_line and bso_prev_line.plant_code else blanket.plant_code) or ''
+    bso_gst = getattr(bso_item_card, 'gst_group_code', '') or ''
+    bso_hsn = getattr(bso_item_card, 'hsn', '') or ''
+    bso_price = (
+        float(bso_prev_line.unit_price_excl_tax) if bso_prev_line and bso_prev_line.unit_price_excl_tax is not None
+        else (float(bso_item_card.unit_price) if bso_item_card and bso_item_card.unit_price else '')
+    )
+    bso_rm = float(bso_prev_line.rm_base) if bso_prev_line and bso_prev_line.rm_base is not None else ''
+    bso_boc = float(bso_prev_line.boc_base) if bso_prev_line and bso_prev_line.boc_base is not None else ''
+    bso_ship_dt = _format_date_iso(bso_prev_line.shipment_date) if bso_prev_line and bso_prev_line.shipment_date else ''
+    bso_price_from = _format_date_iso(bso_prev_line.price_from_date) if bso_prev_line and bso_prev_line.price_from_date else ''
+    bso_price_to = _format_date_iso(bso_prev_line.price_to_date) if bso_prev_line and bso_prev_line.price_to_date else ''
 
     data = {
         'no': blanket.no or '',
-        'document_date': str(blanket.document_date) if blanket.document_date else '',
+        'document_date': _format_date_iso(blanket.document_date),
         'sellto_customer_no': blanket.sellto_customer_no or '',
         'billto_customer_no': blanket.billto_customer_no or '',
         'sellto_customer_name': blanket.sellto_customer_name or '',
-        'order_date': str(blanket.order_date) if blanket.order_date else '',
+        'order_date': _format_date_iso(blanket.order_date),
         'external_document_no': blanket.external_document_no or '',
         'location_code': blanket.location_code or '',
         'status': blanket.status or '',
@@ -230,7 +406,7 @@ def get_blanketso_details(request):
         'billto_post_code': blanket.billto_post_code or '',
         'currency_code': blanket.currency_code or 'INR',
         'plant_code': blanket.plant_code or '',
-        'posting_date': str(blanket.posting_date) if blanket.posting_date else '',
+        'posting_date': _format_date_iso(blanket.posting_date),
         'salesperson_code': blanket.salesperson_code or '',
         'sellto_contact': blanket.sellto_contact or '',
         'sellto_country_region_code': blanket.sellto_country_region_code or '',
@@ -242,19 +418,52 @@ def get_blanketso_details(request):
         'shipto_post_code': blanket.shipto_post_code or '',
         'bso_creation_id': blanket.bso_creation_id or '',
         'bso_row_id': blanket.bso_row_id or 1,
-        'item_creation_id': blanket.item_creation_id or '',
+        'item_creation_id': target_item,
         'customer_id': blanket.customer_id or '',
-        'table_id': blanket.table_id or 1,
-        'table_ids': table_ids,
+        'table_id': str(blanket.table_id or 1),
+        'table_ids': clean_table_ids,
+        'line_defaults': {
+            'no': bso_line_no or '',
+            'description': bso_desc or '',
+            'unit_of_measure_code': bso_uom or '',
+            'location_code': bso_loc,
+            'plant_code': bso_plant,
+            'document_type': 'Blanket Order',
+            'sellto_customer_no': blanket.sellto_customer_no or blanket.customer_id or '',
+            'gst_group_code': bso_gst,
+            'hsn_sac_code': bso_hsn,
+            'unit_price_excl_tax': bso_price,
+            'rm_base': bso_rm,
+            'boc_base': bso_boc,
+            'shipment_date': bso_ship_dt,
+            'price_from_date': bso_price_from,
+            'price_to_date': bso_price_to,
+        },
     }
     return JsonResponse(data)
+
+
+@require_active_customer
+def get_hsn_codes(request):
+    """Return HSN/SAC code list. Mirrors VBA: SELECT Code FROM tbl_ItemCard_Invoice"""
+    codes = []
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT DISTINCT code FROM tbl_itemcard_invoice "
+                "WHERE code IS NOT NULL ORDER BY code"
+            )
+            codes = [r[0] for r in cursor.fetchall() if r[0]]
+    except Exception as e:
+        return JsonResponse({'error': str(e), 'codes': []})
+    return JsonResponse({'codes': codes})
 
 
 @csrf_exempt
 @require_POST
 @require_active_customer
 def create_blanketso(request):
-    """Create a new BlanketSO record (matches btn_BSOCreate_Click in VBA)."""
+    """Create a new BlanketSO record (mirrors VBA btn_BSOCreate_Click)."""
     try:
         body = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
@@ -262,38 +471,34 @@ def create_blanketso(request):
 
     customer_id = request.session.get('active_customer_id', '').strip()
     customer_name = request.session.get('active_customer_name', '').strip()
-    item_creation_id = body.get('item_no', '').strip() or body.get('item_creation_id', '').strip()
+    item_creation_id = (body.get('item_no', '') or body.get('item_creation_id', '')).strip()
 
     if not customer_id:
         return JsonResponse({'error': 'Active customer session missing'}, status=400)
     if not item_creation_id:
         return JsonResponse({'error': 'Item No is required'}, status=400)
 
-    # 1. Calculate intBSORowID = MAX(bso_row_id) + 1
     with connection.cursor() as cursor:
         cursor.execute(
-            """
-            SELECT COALESCE(MAX(bso_rowid), 0)
-            FROM tbl_blanketso
-            WHERE itemcreation_id = %s AND customer_id = %s
-            """,
+            "SELECT COALESCE(MAX(bso_rowid), 0) FROM tbl_blanketso "
+            "WHERE itemcreation_id = %s AND customer_id = %s",
             [item_creation_id, customer_id]
         )
         row = cursor.fetchone()
         int_bso_row_id = (row[0] if row else 0) + 1
 
-    # 2. Format sBSOCreationID = "BSO_" + yyyymmdd + intBSORowID
+    user_bso_id = (body.get('bso_creation_id') or '').strip()
     now_str = datetime.datetime.now().strftime('%Y%m%d')
-    bso_creation_id = f"BSO_{now_str}{int_bso_row_id}"
-    table_id = 1
+    bso_creation_id = user_bso_id if user_bso_id else f"BSO_{now_str}{int_bso_row_id}"
+    table_id = str(body.get('table_id') or '1')
 
-    # 3. Create or insert record
     try:
-        blanket = BlanketSO.objects.create(
+        BlanketSO.objects.create(
             bso_creation_id=bso_creation_id,
             bso_row_id=int_bso_row_id,
             item_creation_id=item_creation_id,
             customer_id=customer_id,
+            customer_name=customer_name,
             table_id=table_id,
             no=body.get('no', ''),
             document_date=body.get('document_date') or None,
@@ -334,22 +539,18 @@ def create_blanketso(request):
 @require_POST
 @require_active_customer
 def save_blanketso(request):
-    """Update an existing BlanketSO record (matches btn_BSOSave_Click in VBA)."""
+    """Update an existing BlanketSO record (mirrors VBA btn_BSOSave_Click)."""
     try:
         body = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
     bso_creation_id = body.get('bso_creation_id', '').strip()
-    customer_id = request.session.get('active_customer_id', '').strip()
-    item_creation_id = body.get('item_no', '').strip() or body.get('item_creation_id', '').strip()
-
     if not bso_creation_id:
         return JsonResponse({'error': 'bso_creation_id is required'}, status=400)
 
-    updated = BlanketSO.objects.filter(
-        bso_creation_id=bso_creation_id
-    ).update(
+    table_id = str(body.get('table_id') or '1')
+    updated = BlanketSO.objects.filter(bso_creation_id=bso_creation_id).update(
         no=body.get('no') or None,
         document_date=body.get('document_date') or None,
         sellto_customer_no=body.get('sellto_customer_no') or None,
@@ -373,7 +574,7 @@ def save_blanketso(request):
         shipto_country_region_code=body.get('shipto_country_region_code') or None,
         shipto_name=body.get('shipto_name') or None,
         shipto_post_code=body.get('shipto_post_code') or None,
-        table_id=body.get('table_id') or 1,
+        table_id=table_id,
     )
     if updated == 0:
         return JsonResponse({'error': 'BlanketSO not found'}, status=404)
@@ -384,56 +585,117 @@ def save_blanketso(request):
 @require_POST
 @require_active_customer
 def create_bso_table(request):
-    """Create a new Table ID for BSO (matches btn_BSOCreateTable_Click in VBA)."""
+    """Create new Table ID for a BSO (mirrors VBA btn_BSOCreateTable_Click)."""
     try:
         body = json.loads(request.body)
     except Exception:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
     bso_creation_id = body.get('bso_creation_id', '').strip()
-    item_creation_id = body.get('item_no', '').strip()
+    item_no = body.get('item_no', '').strip()
 
     if not bso_creation_id:
         return JsonResponse({'error': 'bso_creation_id is required'}, status=400)
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT COALESCE(MAX(table_id), 0)
-            FROM tbl_blanketso
-            WHERE bso_creationid = %s
-            """,
-            [bso_creation_id]
-        )
-        row = cursor.fetchone()
-        new_table_id = (row[0] if row else 0) + 1
+    qs = BSOSalesLine.objects.filter(blanket_so_id=bso_creation_id)
+    if item_no:
+        qs = qs.filter(item_creation_id__in=_item_variants(item_no))
 
-    return JsonResponse({'success': True, 'table_id': new_table_id})
+    existing_tids = list(qs.values_list('table_id', flat=True))
+    int_ids = []
+    for tid in existing_tids:
+        try:
+            if tid:
+                int_ids.append(int(tid))
+        except (ValueError, TypeError):
+            pass
+    new_table_id = (max(int_ids) if int_ids else 0) + 1
+    return JsonResponse({'success': True, 'table_id': str(new_table_id)})
 
 
 @require_active_customer
 def get_bso_lines(request):
-    """Return all sales lines for a given BlanketSO (matches Func_ShowBSOLineItems in VBA)."""
+    """
+    Return sales lines filtered by BSO, item, and table_id.
+    Mirrors VBA Func_ShowBSOLineItem SQL query.
+    """
     bso_id = request.GET.get('bso_creation_id', '').strip()
+    item_no = request.GET.get('item_no', '').strip()
     table_id = request.GET.get('table_id')
+    if table_id is not None:
+        table_id = str(table_id).strip()
 
     if not bso_id:
         return JsonResponse({'records': []})
 
-    qs = BSOSalesLine.objects.filter(blanket_so__bso_creation_id=bso_id)
+    qs = BSOSalesLine.objects.filter(blanket_so_id=bso_id)
+    if not qs.exists():
+        qs = BSOSalesLine.objects.filter(blanket_so_id__iexact=bso_id)
+
+    # ── Mirror VBA: WHERE ItemCreation_Id=X AND BSOCreationID=Y AND Table_Id=Z ──
+    # Step 1: filter by item_no FIRST (primary key for line grouping in VBA)
+    if item_no:
+        qs_item = qs.filter(item_creation_id__in=_item_variants(item_no))
+        if qs_item.exists():
+            qs = qs_item
+        else:
+            # Fallback: try BSO's own item_creation_id
+            blanket = BlanketSO.objects.filter(bso_creation_id=bso_id).first()
+            if blanket and blanket.item_creation_id:
+                qs_blanket_item = qs.filter(
+                    item_creation_id__in=_item_variants(blanket.item_creation_id)
+                )
+                if qs_blanket_item.exists():
+                    qs = qs_blanket_item
+            # If still no match, keep all lines for this BSO (don't return empty)
+
+    # Step 2: filter by table_id (sub-group within item+BSO)
     if table_id:
-        try:
-            qs = qs.filter(table_id=int(table_id))
-        except (ValueError, TypeError):
-            pass
+        qs_table = qs.filter(table_id=table_id)
+        if qs_table.exists():
+            qs = qs_table
+        # If no lines for this table_id, show all remaining lines (item-filtered)
 
     lines = list(qs.order_by('line_no').values(
-        'id_field', 'document_type', 'document_no', 'sellto_customer_no', 'line_type', 'line_no',
-        'line_no_field', 'description', 'location_code', 'reserve', 'quantity', 'unit_of_measure_code',
-        'line_amount_excl_tax', 'shipment_date', 'outstanding_quantity', 'price_from_date',
-        'price_to_date', 'remarks', 'unit_price_excl_tax', 'line_discount', 'plant_code',
-        'rm_base', 'boc_base'
+        'id_field', 'document_type', 'document_no', 'sellto_customer_no',
+        'line_type', 'line_no', 'line_no_field', 'description', 'location_code',
+        'reserve', 'quantity', 'unit_of_measure_code', 'unit_price_excl_tax',
+        'line_amount_excl_tax', 'line_discount', 'shipment_date',
+        'outstanding_quantity',
+        'price_from_date', 'price_to_date', 'remarks',
+        'plant_code', 'rm_base', 'boc_base', 'table_id', 'item_creation_id',
     ))
+
+    # Pre-fetch item cards for GST and HSN codes
+    line_item_ids = [l['item_creation_id'] for l in lines if l.get('item_creation_id')]
+    item_cards_map = {}
+    if line_item_ids:
+        for ic in ItemCard.objects.filter(no__in=line_item_ids):
+            item_cards_map[ic.no] = ic
+
+    for line in lines:
+        for f in ('shipment_date', 'price_from_date', 'price_to_date'):
+            if line.get(f):
+                line[f] = _format_date_iso(line[f])
+        for f in ('quantity', 'unit_price_excl_tax', 'line_amount_excl_tax',
+                  'line_discount', 'outstanding_quantity', 'rm_base', 'boc_base'):
+            if line.get(f) is not None:
+                try:
+                    line[f] = float(line[f])
+                except (ValueError, TypeError):
+                    pass
+        line['qty_to_ship'] = None
+        line['qty_shipped'] = None
+        line['qty_invoiced'] = None
+
+        ic = item_cards_map.get(line.get('item_creation_id'))
+        if not ic and item_no:
+            ic = ItemCard.objects.filter(no__in=_item_variants(item_no)).first()
+        line['gst_group_code'] = getattr(ic, 'gst_group_code', '') or ''
+        line['hsn_sac_code'] = getattr(ic, 'hsn', '') or ''
+        if not line.get('description') and ic and ic.description:
+            line['description'] = ic.description
+
     return JsonResponse({'records': lines})
 
 
@@ -441,7 +703,11 @@ def get_bso_lines(request):
 @require_POST
 @require_active_customer
 def add_bso_line(request):
-    """Add a new line item in tbl_bso_saleslines."""
+    """
+    Add a new sales line (mirrors VBA btnAdd_BSO_Click).
+    Auto-calculates LineAmountExclTax = Qty * UnitPrice,
+    OutstandingQty = Qty - QtyInvoiced.
+    """
     try:
         body = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
@@ -449,34 +715,54 @@ def add_bso_line(request):
 
     bso_creation_id = body.get('bso_creation_id', '').strip()
     customer_id = request.session.get('active_customer_id', '').strip()
+    customer_name = request.session.get('active_customer_name', '').strip()
     item_creation_id = body.get('item_no', '').strip()
-    table_id = body.get('table_id') or 1
+    table_id = str(body.get('table_id') or '1')
 
     if not bso_creation_id:
         return JsonResponse({'error': 'bso_creation_id is required'}, status=400)
+    if not body.get('quantity'):
+        return JsonResponse({'error': 'Quantity cannot be blank'}, status=400)
+    if not body.get('price_to_date'):
+        return JsonResponse({'error': 'PriceToDate cannot be blank'}, status=400)
 
     blanket = BlanketSO.objects.filter(bso_creation_id=bso_creation_id).first()
     if not blanket:
         return JsonResponse({'error': 'Parent BlanketSO not found'}, status=404)
 
-    # Calculate line_no (auto-increment: max + 10000 or max + 1)
     with connection.cursor() as cursor:
         cursor.execute(
-            """
-            SELECT COALESCE(MAX(lineno), 0)
-            FROM tbl_bso_saleslines
-            WHERE bso_creationid = %s
-            """,
+            "SELECT COALESCE(MAX(lineno), 0) FROM tbl_bso_saleslines WHERE bsocreationid = %s",
             [bso_creation_id]
         )
         row = cursor.fetchone()
-        next_line_no = (row[0] if row else 0) + 10000
+        next_line_no = float((row[0] if row else 0)) + 10000
+
+    quantity = body.get('quantity')
+    unit_price = body.get('unit_price_excl_tax')
+    line_amount = body.get('line_amount_excl_tax')
+    if quantity and unit_price and not line_amount:
+        try:
+            line_amount = float(quantity) * float(unit_price)
+        except (ValueError, TypeError):
+            pass
+
+    qty_invoiced = body.get('qty_invoiced')
+    outstanding_qty = body.get('outstanding_quantity')
+    if outstanding_qty is None and quantity and qty_invoiced:
+        try:
+            outstanding_qty = float(quantity) - float(qty_invoiced)
+        except (ValueError, TypeError):
+            pass
+
+    remarks = body.get('remarks') or 'NA'
 
     try:
         line = BSOSalesLine.objects.create(
             blanket_so=blanket,
             item_creation_id=item_creation_id,
             customer_id=customer_id,
+            customer_name=customer_name,
             table_id=table_id,
             document_type=body.get('document_type', 'Blanket Order'),
             document_no=body.get('document_no', ''),
@@ -487,16 +773,16 @@ def add_bso_line(request):
             description=body.get('description', ''),
             location_code=body.get('location_code', ''),
             reserve=body.get('reserve', ''),
-            quantity=body.get('quantity') or None,
+            quantity=quantity or None,
             unit_of_measure_code=body.get('unit_of_measure_code', ''),
-            line_amount_excl_tax=body.get('line_amount_excl_tax') or None,
-            shipment_date=body.get('shipment_date') or None,
-            outstanding_quantity=body.get('outstanding_quantity') or None,
-            price_from_date=body.get('price_from_date') or None,
-            price_to_date=body.get('price_to_date') or None,
-            remarks=body.get('remarks', ''),
-            unit_price_excl_tax=body.get('unit_price_excl_tax') or None,
+            unit_price_excl_tax=unit_price or None,
+            line_amount_excl_tax=line_amount or None,
             line_discount=body.get('line_discount') or None,
+            shipment_date=body.get('shipment_date') or '',
+            outstanding_quantity=outstanding_qty or None,
+            price_from_date=body.get('price_from_date') or '',
+            price_to_date=body.get('price_to_date') or '',
+            remarks=remarks,
             plant_code=body.get('plant_code', ''),
             rm_base=body.get('rm_base') or None,
             boc_base=body.get('boc_base') or None,
@@ -511,7 +797,7 @@ def add_bso_line(request):
 @require_POST
 @require_active_customer
 def save_bso_line(request):
-    """Update an existing BSOSalesLine."""
+    """Update an existing BSOSalesLine (mirrors VBA btnSave_BSO_Click)."""
     try:
         body = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
@@ -521,20 +807,41 @@ def save_bso_line(request):
     if not line_id:
         return JsonResponse({'error': 'Line id is required'}, status=400)
 
+    quantity = body.get('quantity')
+    unit_price = body.get('unit_price_excl_tax')
+    line_amount = body.get('line_amount_excl_tax')
+    if quantity and unit_price and not line_amount:
+        try:
+            line_amount = float(quantity) * float(unit_price)
+        except (ValueError, TypeError):
+            pass
+
+    qty_invoiced = body.get('qty_invoiced')
+    outstanding_qty = body.get('outstanding_quantity')
+    if outstanding_qty is None and quantity and qty_invoiced:
+        try:
+            outstanding_qty = float(quantity) - float(qty_invoiced)
+        except (ValueError, TypeError):
+            pass
+
     updated = BSOSalesLine.objects.filter(id_field=line_id).update(
+        line_type=body.get('line_type'),
         line_no_field=body.get('line_no_field') or body.get('no'),
         description=body.get('description'),
         location_code=body.get('location_code'),
         plant_code=body.get('plant_code'),
         unit_of_measure_code=body.get('unit_of_measure_code'),
-        price_from_date=body.get('price_from_date') or None,
-        price_to_date=body.get('price_to_date') or None,
-        line_amount_excl_tax=body.get('line_amount_excl_tax') or None,
-        quantity=body.get('quantity') or None,
-        outstanding_quantity=body.get('outstanding_quantity') or None,
+        unit_price_excl_tax=unit_price or None,
+        line_amount_excl_tax=line_amount or None,
+        line_discount=body.get('line_discount') or None,
+        shipment_date=body.get('shipment_date') or '',
+        quantity=quantity or None,
+        outstanding_quantity=outstanding_qty or None,
+        price_from_date=body.get('price_from_date') or '',
+        price_to_date=body.get('price_to_date') or '',
+        remarks=body.get('remarks'),
         rm_base=body.get('rm_base') or None,
         boc_base=body.get('boc_base') or None,
-        remarks=body.get('remarks'),
     )
     if updated == 0:
         return JsonResponse({'error': 'Line item not found'}, status=404)
@@ -545,7 +852,7 @@ def save_bso_line(request):
 @require_POST
 @require_active_customer
 def delete_bso_line(request):
-    """Delete a BSOSalesLine."""
+    """Delete a BSOSalesLine (mirrors VBA Cmd_DeleteBSOLine_Click)."""
     try:
         body = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):

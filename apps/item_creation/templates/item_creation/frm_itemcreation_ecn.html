@@ -3,351 +3,412 @@
 
 {% block content %}
 <style>
-    .ecn-wrapper{
-        padding:20px;
-        background:#f3f4f6;
-    }
-
-    .ecn-title{
-        font-size:34px;
-        font-weight:700;
-        color:#4b5563;
-        margin-bottom:16px;
-    }
-
-    .ecn-grid{
-        display:grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap:14px;
-    }
-
-    .ecn-column{
-        display:flex;
-        flex-direction:column;
-        gap:4px;
-    }
-
-    .ecn-row{
-        display:grid;
-        grid-template-columns: 42% 58%;
-        align-items:center;
-        gap:4px;
-    }
-
-    .ecn-label{
-        background:#dbe5f1;
-        border:1px solid #a8b4c5;
-        padding:4px 6px;
-        font-size:13px;
-        min-height:30px;
-        display:flex;
-        align-items:center;
-    }
-
-    .ecn-input{
-        width:100%;
-        border:1px solid #b8b8b8;
-        padding:4px 6px;
-        min-height:30px;
-        font-size:13px;
-        background:#fff;
-    }
-
-    .ecn-actions{
-        margin-top:8px;
-        display:flex;
-        gap:8px;
-    }
-
-    .ecn-table{
-        margin-top:20px;
-        overflow-x:auto;
-        border:1px solid #cfcfcf;
-        background:#fff;
-    }
-
-    .ecn-table table{
-        width:100%;
-        min-width:1600px;
-        border-collapse:collapse;
-    }
-
-    .ecn-table th{
-        background:#222;
-        color:#fff;
-        font-size:13px;
-        padding:6px 8px;
-        border:1px solid #444;
-        white-space:nowrap;
-        font-weight:500;
-    }
-
-    .ecn-table td{
-        border:1px solid #e5e7eb;
-        padding:6px 8px;
-        font-size:13px;
-        height:28px;
-        white-space:nowrap;
-    }
-
-    .top-actions{
-        display:flex;
-        justify-content:flex-end;
-        margin-bottom:8px;
-    }
+  .ecn-label {
+    background: #dbe5f1; border: 1px solid #a8b4c5;
+    padding: 4px 8px; font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; min-height: 32px;
+  }
+  .ecn-field {
+    border: 1px solid #b8b8b8; padding: 4px 8px;
+    font-size: 13px; background: #fff; min-height: 32px;
+    width: 100%;
+  }
+  select.ecn-field { height: 32px; }
+  .ecn-row { display: grid; grid-template-columns: 44% 56%; margin-bottom: 4px; }
+  .ecn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .history-table { font-size: 12px; }
+  .history-table th { background: #1e293b; color: #fff; white-space: nowrap; }
+  .history-table td { white-space: nowrap; }
+  .badge-original { background: #0d6efd; }
+  .badge-replicate { background: #198754; }
 </style>
 
-<div class="ecn-wrapper">
+<div class="container-fluid mt-3">
 
-    <div class="top-actions">
-        <button class="btn btn-light" onclick="window.history.back()">Back</button>
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0 fw-bold text-primary">📋 ECN Request — Item Creation</h4>
+    <button class="btn btn-sm btn-outline-secondary" onclick="window.history.back()">← Back</button>
+  </div>
+
+  <!-- Customer Info (readonly) -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body py-2">
+      <div class="row g-2">
+        <div class="col-auto">
+          <label class="form-label mb-0 small fw-bold">Customer ID</label>
+          <input id="ecn_cust_id" class="form-control form-control-sm" value="{{ customer_id }}" readonly style="width:160px">
+        </div>
+        <div class="col-auto">
+          <label class="form-label mb-0 small fw-bold">Customer Name</label>
+          <input id="ecn_cust_name" class="form-control form-control-sm" value="{{ customer_name }}" readonly style="width:240px">
+        </div>
+        <div class="col-auto ms-auto d-flex align-items-end gap-2">
+          <div>
+            <label class="form-label mb-0 small fw-bold">Select Item No <span class="text-danger">*</span></label>
+            <select id="ecn_item_no" class="form-select form-select-sm" style="width:200px">
+              <option value="">— Select Item —</option>
+              {% for item in s_items %}
+              <option value="{{ item }}">{{ item }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="form-label mb-0 small fw-bold">ECN ID</label>
+            <input id="ecn_id_display" class="form-control form-control-sm" readonly style="width:110px">
+          </div>
+          <div>
+            <label class="form-label mb-0 small fw-bold">ECN Type</label>
+            <input id="ecn_type_display" class="form-control form-control-sm" value="REPLICATE" readonly style="width:110px">
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="ecn-title">
-        ECN- Request for Item Creation
-    </div>
-
-    <div class="ecn-grid">
+  <!-- Fields Grid -->
+  <div class="card shadow-sm mb-3">
+    <div class="card-header"><h6 class="mb-0">Item Fields</h6></div>
+    <div class="card-body">
+      <div class="ecn-grid">
 
         <!-- LEFT -->
-        <div class="ecn-column">
-
-            <div class="ecn-row">
-                <div class="ecn-label">Cust ID :</div>
-                <input class="ecn-input" value="{{ customer_id }}">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">*Item No</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">ECN ID</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">ECN TYPE</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">*Template Name</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Description</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">*Base Unit of Measure</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Shelf No</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Cell</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Cell Type</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Item Category Code</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Product Group Code</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Status</div>
-                <select class="ecn-input"></select>
-            </div>
-
+        <div>
+          <div class="ecn-row"><div class="ecn-label">Template Name</div>
+            <select id="ecn_templatename" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for t in template_names %}<option value="{{ t }}">{{ t }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Description</div><input id="ecn_description" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Base Unit of Measure</div>
+            <select id="ecn_base_unit_of_measure" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for u in uoms %}<option value="{{ u.code }}">{{ u.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Shelf No</div><input id="ecn_shelf_no" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Cell</div>
+            <select id="ecn_cell" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for c in cells %}<option value="{{ c.code }}">{{ c.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Cell Type</div>
+            <select id="ecn_cell_type" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for ct in cell_types %}<option value="{{ ct.code }}">{{ ct.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Item Category Code</div>
+            <select id="ecn_item_category_code" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for c in item_categories %}<option value="{{ c.code }}">{{ c.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Product Group Code</div>
+            <select id="ecn_product_group_code" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for p in product_groups %}<option value="{{ p.code }}">{{ p.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Status</div>
+            <select id="ecn_status" class="ecn-field">
+              <option value="">— Select —</option>
+              <option>Pending For Approval</option>
+              <option>Approved</option>
+              <option>Rejected</option>
+              <option>Completed by Sales</option>
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Last Date Modified</div><input id="ecn_last_date" class="ecn-field" readonly></div>
         </div>
 
         <!-- MIDDLE -->
-        <div class="ecn-column">
-
-            <div class="ecn-row">
-                <div class="ecn-label">Customer Name :</div>
-                <input class="ecn-input" value="{{ customer_name }}">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Last Date Modified</div>
-                <input class="ecn-input" value="{% now 'd-m-Y' %}">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Fixture No</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">No Of MEFT</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">No Of Parts</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Customer Name</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Revision No</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Customer Vendor Code</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">*HSN/SAC Code</div>
-                <select class="ecn-input"></select>
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Costing Method</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Inventory Posting Group</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Price Profit Calculation</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Gen Prod Posting Group</div>
-                <input class="ecn-input">
-            </div>
-
+        <div>
+          <div class="ecn-row"><div class="ecn-label">Fixture No</div><input id="ecn_fixture" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">No Of MEFT</div><input id="ecn_noofmeet" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">No Of Parts</div><input id="ecn_noofparts" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Customer Name</div><input id="ecn_custname_short" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Revision No</div><input id="ecn_revision" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Customer Vendor Code</div><input id="ecn_custVenderCode" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">HSN/SAC Code</div>
+            <select id="ecn_hsn" class="ecn-field">
+              <option value="">— Select —</option>
+              {% for h in hsn_codes %}<option value="{{ h.code }}">{{ h.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="ecn-row"><div class="ecn-label">Costing Method</div><input id="ecn_costingmethod" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Inventory Posting Group</div><input id="ecn_inventory" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Price Profit Calculation</div><input id="ecn_priceprofit" class="ecn-field"></div>
         </div>
 
         <!-- RIGHT -->
-        <div class="ecn-column">
+        <div>
+          <div class="ecn-row"><div class="ecn-label">Gen Prod Posting Group</div><input id="ecn_genpro" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Replenishment System</div><input id="ecn_replenishment" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">QC Applicable</div><input id="ecn_qc" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Manufacturing Policy</div><input id="ecn_manu" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Assembly Policy</div><input id="ecn_assembly" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Reordering Policy</div><input id="ecn_reordering" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Include Inventory</div><input id="ecn_inventoryinclude" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">GST Credit</div><input id="ecn_gst" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Flushing Method</div><input id="ecn_flushing" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Template Applied</div><input id="ecn_template_applied" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">Rounding Precision</div><input id="ecn_rounding" class="ecn-field"></div>
+          <div class="ecn-row"><div class="ecn-label">GST Group Code</div><input id="ecn_gstgroup" class="ecn-field"></div>
 
-            <div class="ecn-row">
-                <div class="ecn-label">Replenishment System</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">QC Applicable</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Manufacturing Policy</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Assembly Policy</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Reordering Policy</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Include Inventory</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">GST Credit</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Flushing Method</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Template Applied</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">Rounding Precision</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-row">
-                <div class="ecn-label">GST Group Code</div>
-                <input class="ecn-input">
-            </div>
-
-            <div class="ecn-actions">
-                <button class="btn btn-primary btn-sm">Update</button>
-                <button class="btn btn-secondary btn-sm">Delete</button>
-            </div>
-
+          <!-- Actions -->
+          <div class="mt-3 d-flex gap-2">
+            <button id="btn-ecn-update" class="btn btn-primary btn-sm" disabled>✔ Request ECN</button>
+            <button id="btn-ecn-delete" class="btn btn-danger btn-sm" disabled>🗑 Delete ECN</button>
+          </div>
         </div>
 
+      </div><!-- /ecn-grid -->
     </div>
+  </div>
 
-    <div class="ecn-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>*</th>
-                    <th>ECN_ID</th>
-                    <th>Product_Gro</th>
-                    <th>ECN_TYPE</th>
-                    <th>GST_Group</th>
-                    <th>No</th>
-                    <th>HSN_SAC_C</th>
-                    <th>No_2</th>
-                    <th>GST_Credit</th>
-                    <th>Base_Unit_o</th>
-                    <th>Fixture_No</th>
-                    <th>Inventory_P</th>
-                    <th>No_Of_MEF</th>
-                    <th>Shelf_No</th>
-                    <th>Template_A</th>
-                    <th>Price_Profit</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in "12345678" %}
-                <tr>
-                    <td></td>
-                    <td colspan="15"></td>
-                </tr>
-                {% endfor %}
-            </tbody>
+  <!-- ECN History Table -->
+  <div class="card shadow-sm">
+    <div class="card-header"><h6 class="mb-0">ECN Revision History</h6></div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered history-table mb-0">
+          <thead>
+            <tr>
+              <th>ECN ID</th><th>ECN Type</th><th>Item No</th><th>Description</th>
+              <th>Template</th><th>Revision No</th><th>Status</th><th>Last Modified</th>
+            </tr>
+          </thead>
+          <tbody id="ecn-history-tbody">
+            <tr><td colspan="8" class="text-center text-muted py-3">Select an item to load ECN history.</td></tr>
+          </tbody>
         </table>
+      </div>
     </div>
+  </div>
 
 </div>
+{% csrf_token %}
+
+<script>
+(function () {
+  "use strict";
+
+  const CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || "";
+
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val ?? "";
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+  }
+
+  function showAlert(msg, type = "success") {
+    const div = document.createElement("div");
+    div.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    div.style.cssText = "top:20px;right:20px;z-index:9999;min-width:300px";
+    div.innerHTML = `${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
+  }
+
+  function collectEcnForm(itemNo) {
+    const fd = new FormData();
+    fd.append("csrfmiddlewaretoken", CSRF);
+    fd.append("ecn_item_no", itemNo);
+    const ids = [
+      "ecn_templatename","ecn_description","ecn_base_unit_of_measure","ecn_shelf_no",
+      "ecn_cell","ecn_cell_type","ecn_item_category_code","ecn_product_group_code",
+      "ecn_status","ecn_fixture","ecn_noofmeet","ecn_noofparts","ecn_custname_short",
+      "ecn_revision","ecn_custVenderCode","ecn_hsn","ecn_costingmethod","ecn_inventory",
+      "ecn_priceprofit","ecn_genpro","ecn_replenishment","ecn_qc","ecn_manu",
+      "ecn_assembly","ecn_reordering","ecn_inventoryinclude","ecn_gst","ecn_flushing",
+      "ecn_template_applied","ecn_rounding","ecn_gstgroup"
+    ];
+    ids.forEach(id => fd.append(id, getVal(id)));
+    return fd;
+  }
+
+  function renderHistory(history) {
+    const tbody = document.getElementById("ecn-history-tbody");
+    if (!history || history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No ECN history.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = history.map(h => `
+      <tr>
+        <td><span class="badge ${h.ecn_type === 'ORIGINAL' ? 'badge-original' : 'badge-replicate'}">${h.ecn_id}</span></td>
+        <td>${h.ecn_type || ""}</td>
+        <td>${h["No"] || h.no || ""}</td>
+        <td>${h.description || ""}</td>
+        <td>${h.template_name || ""}</td>
+        <td>${h.revision_no || ""}</td>
+        <td>${h.status || ""}</td>
+        <td>${h.last_date_modified || ""}</td>
+      </tr>
+    `).join("");
+  }
+
+  // Load item details into ECN form
+  document.getElementById("ecn_item_no").addEventListener("change", function () {
+    const itemNo = this.value;
+    const custId = getVal("ecn_cust_id");
+
+    if (!itemNo) {
+      ["btn-ecn-update","btn-ecn-delete"].forEach(id => document.getElementById(id).disabled = true);
+      document.getElementById("ecn-history-tbody").innerHTML =
+        '<tr><td colspan="8" class="text-center text-muted">Select an item.</td></tr>';
+      return;
+    }
+
+    fetch(`/ecn-request/details/?item_no=${encodeURIComponent(itemNo)}&customer_id=${encodeURIComponent(custId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) { showAlert(data.error, "warning"); return; }
+
+        setVal("ecn_id_display", data.ecn_id || "");
+        setVal("ecn_type_display", "REPLICATE");
+        setVal("ecn_templatename", data.template_name);
+        setVal("ecn_description", data.description);
+        setVal("ecn_base_unit_of_measure", data.base_unit_of_measure);
+        setVal("ecn_shelf_no", data.shelf_no);
+        setVal("ecn_cell", data.cell);
+        setVal("ecn_cell_type", data.cell_type);
+        setVal("ecn_item_category_code", data.item_category_code);
+        setVal("ecn_product_group_code", data.product_group_code);
+        setVal("ecn_status", data.status);
+        setVal("ecn_last_date", data.last_date_modified);
+        setVal("ecn_fixture", data.fixture_no);
+        setVal("ecn_noofmeet", data.no_of_meft);
+        setVal("ecn_noofparts", data.no_of_parts);
+        setVal("ecn_custname_short", data.customer_name);
+        setVal("ecn_revision", data.revision_no);
+        setVal("ecn_custVenderCode", data.customer_vendor_code);
+        setVal("ecn_hsn", data.hsn_sac_code);
+        setVal("ecn_costingmethod", data.costing_method);
+        setVal("ecn_inventory", data.inventory_posting_group);
+        setVal("ecn_priceprofit", data.price_profit_calculation);
+        setVal("ecn_genpro", data.gen_prod_posting_group);
+        setVal("ecn_replenishment", data.replenishment_system);
+        setVal("ecn_qc", data.qc_applicable);
+        setVal("ecn_manu", data.manufacturing_policy);
+        setVal("ecn_assembly", data.assembly_policy);
+        setVal("ecn_reordering", data.reordering_policy);
+        setVal("ecn_inventoryinclude", data.include_inventory);
+        setVal("ecn_gst", data.gst_credit);
+        setVal("ecn_flushing", data.flushing_method);
+        setVal("ecn_template_applied", data.template_applied);
+        setVal("ecn_rounding", data.rounding_precision);
+        setVal("ecn_gstgroup", data.gst_group_code);
+
+        document.getElementById("btn-ecn-update").disabled = false;
+        document.getElementById("btn-ecn-delete").disabled = false;
+
+        renderHistory(data.history || []);
+      })
+      .catch(() => showAlert("Failed to load item details.", "danger"));
+  });
+
+  // Template auto-fill for ECN form
+  document.getElementById("ecn_templatename").addEventListener("change", function () {
+    const tmpl = this.value;
+    if (!tmpl) return;
+    fetch(`/get_template_data/?template_name=${encodeURIComponent(tmpl)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) return;
+        setVal("ecn_costingmethod", data.costing_method);
+        setVal("ecn_inventory", data.inventory_posting_group);
+        setVal("ecn_priceprofit", data.price_profit_calculation);
+        setVal("ecn_genpro", data.gen_prod_posting_group);
+        setVal("ecn_replenishment", data.replenishment_system);
+        setVal("ecn_qc", data.qc_applicable);
+        setVal("ecn_manu", data.manufacturing_policy);
+        setVal("ecn_assembly", data.assembly_policy);
+        setVal("ecn_reordering", data.reordering_policy);
+        setVal("ecn_inventoryinclude", data.include_inventory);
+        setVal("ecn_gst", data.gst_credit);
+        setVal("ecn_flushing", data.flushing_method);
+        setVal("ecn_template_applied", data.template_applied);
+        setVal("ecn_rounding", data.rounding_precision);
+        setVal("ecn_gstgroup", data.gst_group_code);
+        setVal("ecn_status", "");
+      });
+  });
+
+  // HSN → GST Group auto-fill
+  document.getElementById("ecn_hsn").addEventListener("change", function () {
+    const hsn = this.value;
+    if (!hsn) return;
+    fetch(`/get_hsn_gst/?hsn=${encodeURIComponent(hsn)}`)
+      .then(r => r.json())
+      .then(data => { if (data.gst_group_code) setVal("ecn_gstgroup", data.gst_group_code); });
+  });
+
+  // Numeric validations
+  ["ecn_noofmeet","ecn_noofparts"].forEach(id => {
+    document.getElementById(id).addEventListener("blur", function () {
+      if (this.value && isNaN(parseInt(this.value))) {
+        showAlert(`${id === "ecn_noofmeet" ? "No Of MEFT" : "No Of Parts"} must be numeric.`, "warning");
+        this.value = "";
+        this.focus();
+      }
+    });
+  });
+
+  // Request ECN (create new revision)
+  document.getElementById("btn-ecn-update").addEventListener("click", function () {
+    const itemNo = getVal("ecn_item_no");
+    if (!itemNo) { showAlert("Please select an item.", "warning"); return; }
+
+    const fd = collectEcnForm(itemNo);
+    fetch("/ecn-request/create/", { method: "POST", body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showAlert(data.message, "success");
+          setVal("ecn_id_display", data.new_ecn_id || "");
+          // Reload history
+          document.getElementById("ecn_item_no").dispatchEvent(new Event("change"));
+        } else {
+          const errs = data.errors ? data.errors.join("<br>") : "Error.";
+          showAlert(errs, "danger");
+        }
+      })
+      .catch(() => showAlert("Network error.", "danger"));
+  });
+
+  // Delete ECN
+  document.getElementById("btn-ecn-delete").addEventListener("click", function () {
+    const itemNo = getVal("ecn_item_no");
+    if (!itemNo) return;
+    if (!confirm(`Delete ALL ECN records for item '${itemNo}'?`)) return;
+
+    const fd = new FormData();
+    fd.append("csrfmiddlewaretoken", CSRF);
+    fd.append("ecn_item_no", itemNo);
+    fetch("/ecn-request/delete/", { method: "POST", body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showAlert(data.message, "success");
+          document.getElementById("ecn-history-tbody").innerHTML =
+            '<tr><td colspan="8" class="text-center text-muted">No ECN history.</td></tr>';
+          setVal("ecn_id_display", "");
+          document.getElementById("btn-ecn-update").disabled = true;
+          document.getElementById("btn-ecn-delete").disabled = true;
+        } else {
+          showAlert(data.errors ? data.errors.join("<br>") : "Error.", "danger");
+        }
+      });
+  });
+
+})();
+</script>
 {% endblock %}

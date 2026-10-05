@@ -2,91 +2,1424 @@
 
 {% block content %}
 <div class="container-fluid full-dashboard bg-white pb-5">
+
+    <!-- ── Tab bar ── -->
     <div class="d-flex justify-content-between align-items-center pt-2 px-2 border-bottom">
-        <ul class="nav nav-tabs border-0 small">
+        <ul class="nav nav-tabs border-0 small" id="approveTabBar">
             <li class="nav-item">
-                <a class="nav-link active py-1 px-3 border" style="background-color: #e2ebf5;">BOM</a>
+                <a class="nav-link active py-1 px-3 border" id="tab-bom" onclick="switchTab('bom')"
+                   style="background-color:#e2ebf5; cursor:pointer; font-weight:600;">BOM</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-1 px-3 border mx-1" style="background-color: #f8f9fa;">BOM New Part</a>
+                <a class="nav-link py-1 px-3 border mx-1" id="tab-bom-newpart" onclick="switchTab('bom-newpart')"
+                   style="background-color:#f8f9fa; cursor:pointer;">BOM New Part</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-1 px-3 border mr-1" style="background-color: #f8f9fa;">BOP</a>
+                <a class="nav-link py-1 px-3 border mr-1" id="tab-bop" onclick="switchTab('bop')"
+                   style="background-color:#f8f9fa; cursor:pointer;">BOP</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-1 px-3 border" style="background-color: #f8f9fa;">RFQ</a>
+                <a class="nav-link py-1 px-3 border" id="tab-rfq" onclick="switchTab('rfq')"
+                   style="background-color:#f8f9fa; cursor:pointer;">RFQ</a>
             </li>
         </ul>
-        <button class="btn btn-outline-secondary btn-sm px-3"><i class="fas fa-arrow-left"></i> <u>Back</u></button>
+        <button class="btn btn-outline-secondary btn-sm px-3" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i> <u>Back</u>
+        </button>
     </div>
 
-    <div class="p-3" style="background-color: #f8f9fa;">
-        <form method="post">
-            {% csrf_token %}
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-0 font-weight-bold" style="width: 130px;">Customer ID :</span>
-                        </div>
-                        <select name="customer_id" class="form-control border-secondary"><option></option></select>
-                    </div>
-                    <div class="input-group input-group-sm">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-0 font-weight-bold" style="width: 130px;">BOM Creation ID</span>
-                        </div>
-                        <select name="bom_creation_id" class="form-control border-secondary"><option></option></select>
-                    </div>
-                </div>
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ── 1. VIEW: BOM TAB ── -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="view-bom">
+        <!-- ── Filter bar ── -->
+        <div class="p-3" style="background-color:#f8f9fa; border-bottom:1px solid #dee2e6;">
+            <div class="row align-items-end g-2">
 
-                <div class="col-md-5">
-                    <div class="input-group input-group-sm mb-1">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-0 font-weight-bold" style="width: 130px;">Item Creation Id</span>
-                        </div>
-                        <select name="item_creation_id" class="form-control border-secondary"><option></option></select>
-                    </div>
+                <!-- Customer ID -->
+                <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-0 font-weight-bold" style="width: 130px;">Action Status</span>
-                        </div>
-                        <select name="action_status" class="form-control border-secondary">
-                            <option>Sent for approval</option>
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Customer ID :</span>
+                        <select id="sel_customer" class="form-select form-select-sm border-secondary">
+                            <option value="">-- Loading... --</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-sm text-white px-3" style="background-color: #5b74a3;">
-                        <i class="fas fa-print"></i> Submit
-                    </button>
+                <!-- Item Creation ID -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Item Creation Id :</span>
+                        <select id="sel_item" class="form-select form-select-sm border-secondary" disabled>
+                            <option value="">-- Select Customer first --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BOM Creation ID -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">BOM Creation ID :</span>
+                        <select id="sel_bom" class="form-select form-select-sm border-secondary" disabled>
+                            <option value="">-- Select Item first --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Status + Submit -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Action Status :</span>
+                        <select id="sel_action_status" class="form-select form-select-sm border-secondary">
+                            <option value="Sent for Approval">Sent for Approval</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <button id="btn_save_action" class="btn btn-sm text-white px-3 ms-1"
+                                style="background-color:#5b74a3;" onclick="saveAction()">
+                            <i class="fas fa-check"></i> Submit
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Status message -->
+            <div id="status_msg" class="mt-2" style="min-height:1.4rem;"></div>
+        </div>
+
+        <!-- ── BOM lines table ── -->
+        <div class="table-responsive mt-0">
+            <table class="table table-sm table-bordered mb-0 text-nowrap" id="bom_table" style="font-size:0.82rem;">
+                <thead style="background-color:#212529; color:white; position:sticky; top:0; z-index:1;">
+                    <tr>
+                        <th class="px-2">Customer ID</th>
+                        <th class="px-2">ItemCreation Id</th>
+                        <th class="px-2">BOMCreation Id</th>
+                        <th class="px-2">Description</th>
+                        <th class="px-2">Entry Type</th>
+                        <th class="px-2">Part Number</th>
+                        <th class="px-2">Part Description</th>
+                        <th class="px-2">Qty</th>
+                        <th class="px-2">UOM</th>
+                        <th class="px-2">Categorisation</th>
+                        <th class="px-2">Routing Link</th>
+                        <th class="px-2">Start Date</th>
+                        <th class="px-2">Part Status</th>
+                        <th class="px-2">Table Id</th>
+                        <th class="px-2">Series</th>
+                        <th class="px-2">Version</th>
+                        <th class="px-2">Status</th>
+                        <th class="px-2">Remark</th>
+                        <th class="px-2 text-center" style="min-width:70px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bom_tbody">
+                    <tr>
+                        <td colspan="19" class="text-center text-muted py-5" style="background:#fafafa;">
+                            <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>
+                            Select Customer ID, Item Creation ID and BOM Creation ID to load records
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record count badge -->
+        <div class="px-2 py-1 border-top" style="font-size:0.78rem; color:#555;">
+            <span id="rec_count">0 record(s)</span>
+        </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ── 2. VIEW: BOM NEW PART TAB (frm_Approve_NewPartDetails_Bom) ── -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="view-bom-newpart" style="display: none;">
+        <!-- Header Banner (matching Access form header) -->
+        <div class="py-2 px-3 m-2 d-flex align-items-center justify-content-between"
+             style="background-color:#dce6f2; color:#1f497d; border:1px solid #b8cce4; border-radius:3px;">
+            <h4 class="mb-0 fw-bold" style="font-size:1.35rem; color:#1f497d;">
+                New Part Details : Sent for approval
+            </h4>
+            <div class="form-check form-switch mb-0 fs-6" style="cursor:pointer;">
+                <input class="form-check-input" type="checkbox" id="Check63" checked onchange="Check63_Click()">
+                <label class="form-check-label fw-bold text-dark ms-1" for="Check63">
+                    Show New Parts List (Check63)
+                </label>
+            </div>
+        </div>
+
+        <!-- ── Filter & Action bar for BOM New Part ── -->
+        <div class="px-3 py-2 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between g-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-secondary small">Filter Status:</span>
+                <select id="sel_newpart_status" class="form-select form-select-sm border-secondary" style="width:170px;" onchange="loadBomNewParts()">
+                    <option value="Sent for approval" selected>Sent for approval</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="">All</option>
+                </select>
+                <button class="btn btn-outline-primary btn-sm ms-1" onclick="loadBomNewParts()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-secondary small">Action Status:</span>
+                <select id="sel_newpart_action" class="form-select form-select-sm border-secondary" style="width:160px;">
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Sent for approval">Sent for approval</option>
+                </select>
+                <button id="btn_save_newpart_action" class="btn btn-sm text-white px-3"
+                        style="background-color:#5b74a3;" onclick="saveNewPartAction()">
+                    <i class="fas fa-check"></i> Submit Action
+                </button>
+            </div>
+        </div>
+
+        <!-- Status message for New Parts -->
+        <div id="newpart_status_msg" class="px-3 pt-2" style="min-height:1.2rem;"></div>
+
+        <!-- ── List61 (New Part Details Table) ── -->
+        <div id="List61" class="table-responsive mt-1 px-2">
+            <table class="table table-sm table-bordered mb-0 text-nowrap" id="newpart_table" style="font-size:0.83rem;">
+                <thead style="background-color:#2c3e50; color:white; position:sticky; top:0; z-index:1;">
+                    <tr>
+                        <th class="px-2 text-center" style="width:36px;">
+                            <input type="checkbox" id="chk_select_all_newparts" onchange="toggleSelectAllNewParts(this)">
+                        </th>
+                        <th class="px-2">Part No</th>
+                        <th class="px-2">Part Description</th>
+                        <th class="px-2">Base / Unit of Measure</th>
+                        <th class="px-2">Customer</th>
+                        <th class="px-2">Classification</th>
+                        <th class="px-2 text-end">Cost Price</th>
+                        <th class="px-2 text-end">Settle Price</th>
+                        <th class="px-2">Categorisation</th>
+                        <th class="px-2">Part Status</th>
+                        <th class="px-2">Part Type</th>
+                    </tr>
+                </thead>
+                <tbody id="newpart_tbody">
+                    <tr>
+                        <td colspan="11" class="text-center text-muted py-5" style="background:#fafafa;">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-2 d-block text-primary"></i>
+                            Loading New Part Details...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record count badge -->
+        <div class="px-3 py-1 border-top mt-1" style="font-size:0.78rem; color:#555;">
+            <span id="newpart_rec_count">0 record(s)</span>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ── 3. VIEW: BOP TAB (frm_Approve_BOP) ── -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="view-bop" style="display: none;">
+        <!-- ── Filter bar for BOP ── -->
+        <div class="p-3" style="background-color:#f8f9fa; border-bottom:1px solid #dee2e6;">
+            <div class="row align-items-end g-2">
+
+                <!-- Customer ID -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Customer ID :</span>
+                        <select id="sel_bop_customer" class="form-select form-select-sm border-secondary">
+                            <option value="">-- Loading... --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Item Creation ID -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Item Creation Id :</span>
+                        <select id="sel_bop_item" class="form-select form-select-sm border-secondary" disabled>
+                            <option value="">-- Select Customer first --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BOP Creation ID -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">BOP Creation ID :</span>
+                        <select id="sel_bop_id" class="form-select form-select-sm border-secondary" disabled>
+                            <option value="">-- Select Item first --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Status + Submit -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:130px;">Action Status :</span>
+                        <select id="sel_bop_action_status" class="form-select form-select-sm border-secondary">
+                            <option value="Sent for approval">Sent for approval</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <button id="btn_save_bop_action" class="btn btn-sm text-white px-3 ms-1"
+                                style="background-color:#5b74a3;" onclick="saveBopAction()">
+                            <i class="fas fa-check"></i> Submit
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Status message for BOP -->
+            <div id="bop_status_msg" class="mt-2" style="min-height:1.4rem;"></div>
+        </div>
+
+        <!-- ── BOP lines table ── -->
+        <div class="table-responsive mt-0">
+            <table class="table table-sm table-bordered mb-0 text-nowrap" id="bop_table" style="font-size:0.82rem;">
+                <thead style="background-color:#212529; color:white; position:sticky; top:0; z-index:1;">
+                    <tr>
+                        <th class="px-2">Customer ID</th>
+                        <th class="px-2">ItemCreation Id</th>
+                        <th class="px-2">BOPCreation Id</th>
+                        <th class="px-2">Customer Name</th>
+                        <th class="px-2">Part Name</th>
+                        <th class="px-2">Drawing No</th>
+                        <th class="px-2">Drawing Rev No</th>
+                        <th class="px-2">Product Category</th>
+                        <th class="px-2">Project</th>
+                        <th class="px-2">Seq No</th>
+                        <th class="px-2">Operation No</th>
+                        <th class="px-2">Type</th>
+                        <th class="px-2">Cost Center No</th>
+                        <th class="px-2">Description</th>
+                        <th class="px-2">Categorisation</th>
+                        <th class="px-2">Run Time (Sec)</th>
+                        <th class="px-2">Run Time (Min)</th>
+                        <th class="px-2">BOQ</th>
+                        <th class="px-2">Total Run Time</th>
+                        <th class="px-2">Cycle Time</th>
+                        <th class="px-2">Total Cost</th>
+                        <th class="px-2">Action Status / Remark</th>
+                        <th class="px-2 text-center" style="min-width:70px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bop_tbody">
+                    <tr>
+                        <td colspan="22" class="text-center text-muted py-5" style="background:#fafafa;">
+                            <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>
+                            Select Customer ID, Item Creation ID and BOP Creation ID to load records
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record count badge -->
+        <div class="px-2 py-1 border-top" style="font-size:0.78rem; color:#555;">
+            <span id="bop_rec_count">0 record(s)</span>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ── 4. VIEW: RFQ TAB (frm_RFQ_Details) ── -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="view-rfq" style="display: none;">
+        <!-- ── Filter bar ── -->
+        <div class="p-3" style="background-color:#f8f9fa; border-bottom:1px solid #dee2e6;">
+            <div class="row align-items-end g-2">
+                <!-- Updated By filter -->
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0 fw-bold" style="min-width:120px;">Updated_By :</span>
+                        <select id="sel_rfq_updated_by" class="form-select form-select-sm border-secondary">
+                            <option value="ALL">ALL</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </form>
+            <!-- Status message -->
+            <div id="rfq_status_msg" class="mt-2" style="min-height:1.4rem;"></div>
+        </div>
+
+        <!-- ── RFQ table ── -->
+        <div class="table-responsive mt-0">
+            <table class="table table-sm table-bordered mb-0 text-nowrap" id="rfq_table" style="font-size:0.82rem;">
+                <thead style="background-color:#212529; color:white; position:sticky; top:0; z-index:1;">
+                    <tr>
+                        <th class="px-2">Customer_ID</th>
+                        <th class="px-2">CustomerName</th>
+                        <th class="px-2">ItemCreation_ID</th>
+                        <th class="px-2">BOPCreation_ID</th>
+                        <th class="px-2">BOC_Creation_ID</th>
+                        <th class="px-2">Is_Completed</th>
+                        <th class="px-2">Action_Date</th>
+                        <th class="px-2">Updated_By</th>
+                        <th class="px-2">RFQ Status</th>
+                        <th class="px-2" style="width:50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="rfq_tbody">
+                    <tr>
+                        <td colspan="10" class="text-center text-muted py-5" style="background:#fafafa;">
+                            <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>
+                            Select Updated_By filter to load RFQ records
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record count badge -->
+        <div class="px-2 py-1 border-top" style="font-size:0.78rem; color:#555;">
+            <span id="rfq_rec_count">0 record(s)</span>
+        </div>
     </div>
 
-    <div class="border" style="min-height: 200px; background-color: #fff;"></div>
 
-    <div class="table-responsive mt-3">
-        <table class="table table-sm table-bordered mb-0 text-nowrap" style="font-size: 0.85rem;">
-            <thead style="background-color: #212529; color: white;">
-                <tr>
-                    <th>Customer_ID <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>ItemCreation_Id <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>BOMCreation_Id <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>Part_Status <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>Entry_Type <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>Table_Id <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>Part_Number <i class="fas fa-filter fa-xs ml-1"></i></th>
-                    <th>Description <i class="fas fa-filter fa-xs ml-1"></i></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="height: 200px;">
-                    <td colspan="8" class="bg-light"></td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ── SHARED APPROVE / REJECT MODAL ── -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="modalRowAction" tabindex="-1" aria-labelledby="modalRowActionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+
+                <!-- Header -->
+                <div class="modal-header py-2 px-3" style="background:#2c3e50; color:white;">
+                    <h6 class="modal-title fw-bold" id="modalRowActionLabel">
+                        <i class="fas fa-edit me-2"></i>Update Approval Status
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body px-4 py-3">
+
+                    <!-- Hidden fields -->
+                    <input type="hidden" id="modal_record_type">
+                    <input type="hidden" id="modal_bom_id">
+                    <input type="hidden" id="modal_bop_id">
+                    <input type="hidden" id="modal_customer_id">
+                    <input type="hidden" id="modal_item_id">
+
+                    <!-- Autofilled display fields -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold text-secondary mb-1" style="font-size:0.78rem;">Customer ID</label>
+                            <input type="text" id="modal_display_customer" class="form-control form-control-sm bg-light" readonly
+                                   style="font-weight:600; color:#2c3e50;">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary mb-1" style="font-size:0.78rem;">Item Creation ID</label>
+                            <input type="text" id="modal_display_item" class="form-control form-control-sm bg-light" readonly
+                                   style="font-weight:600; color:#2c3e50;">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary mb-1" style="font-size:0.78rem;" id="modal_record_id_label">BOM / BOP Creation ID</label>
+                            <input type="text" id="modal_display_record_id" class="form-control form-control-sm bg-light" readonly
+                                   style="font-weight:600; color:#1a6bbf;">
+                        </div>
+                    </div>
+
+                    <!-- Hidden compat span (used by old JS) -->
+                    <span id="modal_record_id_display" style="display:none;"></span>
+
+                    <!-- Action Status selector -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" style="font-size:0.85rem;">Action Status</label>
+                        <select id="modal_action_status" class="form-select form-select-sm border-secondary">
+                            <option value="Sent for Approval">Sent for Approval</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <!-- Status message -->
+                    <div id="modal_status_msg" style="min-height:1.2rem;"></div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="btn_modal_save" class="btn btn-sm text-white px-4"
+                            style="background:#2c7be5;" onclick="saveRowAction()">
+                        <i class="fas fa-check me-1"></i> Save
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
+
 </div>
+
+
+<script>
+// ── CSRF helper ──────────────────────────────────────────────
+function getCookie(name) {
+    let v = null;
+    document.cookie.split(';').forEach(c => {
+        c = c.trim();
+        if (c.startsWith(name + '=')) v = decodeURIComponent(c.slice(name.length + 1));
+    });
+    return v;
+}
+const CSRF = getCookie('csrftoken');
+
+// ── URL helpers ───────────────────────────────────────────────
+const URL_CUSTOMERS            = "/ApproveRec/api/customers/";
+const URL_ITEMS                = "/ApproveRec/api/items/";
+const URL_BOM_IDS              = "/ApproveRec/api/bom_ids/";
+const URL_BOM_LINES            = "/ApproveRec/api/bom_lines/";
+const URL_SAVE_ACTION          = "/ApproveRec/api/save_action/";
+const URL_SAVE_ROW_ACTION      = "/ApproveRec/api/save_row_action/";
+const URL_BOM_NEW_PARTS        = "/ApproveRec/api/bom_new_parts/";
+const URL_SAVE_NEW_PART_ACTION = "/ApproveRec/api/save_new_part_action/";
+
+const URL_BOP_CUSTOMERS        = "/ApproveRec/api/bop_customers/";
+const URL_BOP_ITEMS            = "/ApproveRec/api/bop_items/";
+const URL_BOP_IDS              = "/ApproveRec/api/bop_ids/";
+const URL_BOP_LINES            = "/ApproveRec/api/bop_lines/";
+const URL_SAVE_BOP_ACTION      = "/ApproveRec/api/save_bop_action/";
+const URL_SAVE_BOP_ROW_ACTION  = "/ApproveRec/api/save_bop_row_action/";
+
+const URL_RFQ_UPDATED_BY = "/ApproveRec/api/rfq_updated_by/";
+const URL_RFQ_RECORDS    = "/ApproveRec/api/rfq_records/";
+const URL_RFQ_REOPEN     = "/ApproveRec/api/rfq_reopen/";
+
+// ── DOM refs ──────────────────────────────────────────────────
+const selCustomer     = document.getElementById('sel_customer');
+const selItem         = document.getElementById('sel_item');
+const selBom          = document.getElementById('sel_bom');
+const selActionStatus = document.getElementById('sel_action_status');
+const tbody           = document.getElementById('bom_tbody');
+const recCount        = document.getElementById('rec_count');
+const statusMsg       = document.getElementById('status_msg');
+
+const newpartTbody     = document.getElementById('newpart_tbody');
+const newpartRecCount  = document.getElementById('newpart_rec_count');
+const newpartStatusMsg = document.getElementById('newpart_status_msg');
+const list61           = document.getElementById('List61');
+
+const selBopCustomer     = document.getElementById('sel_bop_customer');
+const selBopItem         = document.getElementById('sel_bop_item');
+const selBopId           = document.getElementById('sel_bop_id');
+const selBopActionStatus = document.getElementById('sel_bop_action_status');
+const bopTbody           = document.getElementById('bop_tbody');
+const bopRecCount        = document.getElementById('bop_rec_count');
+const bopStatusMsg       = document.getElementById('bop_status_msg');
+
+const selRfqUpdatedBy = document.getElementById('sel_rfq_updated_by');
+const rfqTbody        = document.getElementById('rfq_tbody');
+const rfqRecCount     = document.getElementById('rfq_rec_count');
+const rfqStatusMsg    = document.getElementById('rfq_status_msg');
+
+// ── Tab Navigation Switching ──────────────────────────────────
+function switchTab(tabName) {
+    const tabs = ['bom', 'bom-newpart', 'bop', 'rfq'];
+    tabs.forEach(t => {
+        const tabEl = document.getElementById(`tab-${t}`);
+        const viewEl = document.getElementById(`view-${t}`);
+        if (t === tabName) {
+            tabEl.classList.add('active');
+            tabEl.style.backgroundColor = '#e2ebf5';
+            tabEl.style.fontWeight = '600';
+            if (viewEl) viewEl.style.display = 'block';
+        } else {
+            tabEl.classList.remove('active');
+            tabEl.style.backgroundColor = '#f8f9fa';
+            tabEl.style.fontWeight = 'normal';
+            if (viewEl) viewEl.style.display = 'none';
+        }
+    });
+
+    if (tabName === 'bom-newpart') {
+        loadBomNewParts();
+    } else if (tabName === 'bop') {
+        loadBopCustomers();
+    } else if (tabName === 'rfq') {
+        loadRfqUpdatedBy();
+    }
+}
+
+// ── VBA Check63_Click Implementation ──────────────────────────
+// Private Sub Check63_Click(): If Me.Check63.Value = -1 Then Me.List61.Visible = True Else Visible = False
+function Check63_Click() {
+    const chk = document.getElementById('Check63');
+    if (chk && list61) {
+        if (chk.checked) {
+            list61.style.display = 'block';
+        } else {
+            list61.style.display = 'none';
+        }
+    }
+}
+
+// ── Status message helper ──────────────────────────────────────
+function showMsg(msg, type='info') {
+    const cls = {success:'text-success', danger:'text-danger', info:'text-secondary', warning:'text-warning'}[type] || 'text-secondary';
+    statusMsg.innerHTML = `<small class="${cls}"><i class="fas fa-${type==='success'?'check-circle':type==='danger'?'exclamation-circle':'info-circle'} me-1"></i>${msg}</small>`;
+    if (type === 'success') setTimeout(() => statusMsg.innerHTML = '', 3000);
+}
+
+function showNewPartMsg(msg, type='info') {
+    const cls = {success:'text-success', danger:'text-danger', info:'text-secondary', warning:'text-warning'}[type] || 'text-secondary';
+    newpartStatusMsg.innerHTML = `<small class="${cls}"><i class="fas fa-${type==='success'?'check-circle':type==='danger'?'exclamation-circle':'info-circle'} me-1"></i>${msg}</small>`;
+    if (type === 'success') setTimeout(() => newpartStatusMsg.innerHTML = '', 3500);
+}
+
+// ── Populate select helper ────────────────────────────────────
+function fillSelect(sel, values, placeholder, disabled=false) {
+    sel.innerHTML = `<option value="">${placeholder}</option>`;
+    values.forEach(v => {
+        const o = document.createElement('option');
+        o.value = o.textContent = v;
+        sel.appendChild(o);
+    });
+    sel.disabled = disabled || values.length === 0;
+}
+
+// ── 1. Load customers on page load for BOM tab ─────────────────
+async function loadCustomers() {
+    try {
+        const res = await fetch(URL_CUSTOMERS);
+        const data = await res.json();
+        fillSelect(selCustomer, data.customers, data.customers.length ? '-- Select Customer --' : '-- No pending approvals --');
+        if (data.customers.length === 0) showMsg('No BOM records found with "Sent for Approval" remark.', 'warning');
+    } catch(e) {
+        fillSelect(selCustomer, [], '-- Error loading --');
+        showMsg('Error loading customers: ' + e.message, 'danger');
+    }
+}
+
+// Helper to reload BOM lines table based on active selections
+async function fetchBomLines() {
+    const cust  = selCustomer.value;
+    const item  = selItem.value;
+    const bomId = selBom.value;
+
+    if (!cust) {
+        clearTable('Select Customer ID to load records');
+        return;
+    }
+    showMsg('Loading BOM records...', 'info');
+    try {
+        const url = `${URL_BOM_LINES}?customer_id=${encodeURIComponent(cust)}&item_id=${encodeURIComponent(item)}&bom_id=${encodeURIComponent(bomId)}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+            throw new Error(`Server status ${res.status}`);
+        }
+        const data = await res.json();
+        if (data.error) {
+            showMsg('Error loading BOM lines: ' + data.error, 'danger');
+            clearTable('Error loading records');
+            return;
+        }
+        renderTable(data.records);
+        showMsg('', 'info');
+    } catch(e) {
+        showMsg('Error loading BOM lines: ' + e.message, 'danger');
+    }
+}
+
+// ── Customer changed ──────────────────────────────────────────
+selCustomer.addEventListener('change', async function() {
+    const cust = this.value;
+    fillSelect(selItem, [], '-- Select Customer first --', true);
+    fillSelect(selBom,  [], '-- Select Customer first --', true);
+    if (!cust) {
+        clearTable('Select Customer ID to load records');
+        return;
+    }
+
+    showMsg('Loading items & BOM IDs...', 'info');
+    try {
+        const [resItems, resBoms] = await Promise.all([
+            fetch(`${URL_ITEMS}?customer_id=${encodeURIComponent(cust)}`),
+            fetch(`${URL_BOM_IDS}?customer_id=${encodeURIComponent(cust)}`)
+        ]);
+        const dataItems = await resItems.json();
+        const dataBoms  = await resBoms.json();
+
+        fillSelect(selItem, dataItems.items, dataItems.items.length ? '-- Select Item --' : '-- All / Empty --');
+        fillSelect(selBom,  dataBoms.bom_ids, dataBoms.bom_ids.length ? '-- Select BOM ID --' : '-- No BOM IDs --');
+
+        await fetchBomLines();
+    } catch(e) {
+        showMsg('Error loading data: ' + e.message, 'danger');
+    }
+});
+
+// ── Item changed ──────────────────────────────────────────────
+selItem.addEventListener('change', async function() {
+    const cust = selCustomer.value;
+    const item = this.value;
+    fillSelect(selBom, [], '-- Select BOM ID --', true);
+    if (!cust) return;
+
+    showMsg('Loading BOM IDs...', 'info');
+    try {
+        const res = await fetch(`${URL_BOM_IDS}?customer_id=${encodeURIComponent(cust)}&item_id=${encodeURIComponent(item)}`);
+        const data = await res.json();
+        fillSelect(selBom, data.bom_ids, data.bom_ids.length ? '-- Select BOM ID --' : '-- No BOM IDs --');
+        await fetchBomLines();
+    } catch(e) {
+        showMsg('Error loading BOM IDs: ' + e.message, 'danger');
+    }
+});
+
+// ── BOM ID changed ────────────────────────────────────────────
+selBom.addEventListener('change', function() {
+    fetchBomLines();
+});
+
+// ── Render BOM table ──────────────────────────────────────────
+function renderTable(records) {
+    if (!records || records.length === 0) {
+        clearTable('No records found for the selected filters');
+        recCount.textContent = '0 record(s)';
+        return;
+    }
+    const cols = [
+        ['Customer_ID','Customer ID'],
+        ['ItemCreation_Id','ItemCreation Id'],
+        ['BOMCreation_Id','BOMCreation Id'],
+        ['Description','Description'],
+        ['Entry_Type','Entry Type'],
+        ['Part_Number','Part Number'],
+        ['part_description','Part Desc'],
+        ['Quantity','Qty'],
+        ['part_uom','UOM'],
+        ['Categorisation','Categorisation'],
+        ['Routing_Link_Code','Routing Link'],
+        ['start_date','Start Date'],
+        ['Part_Status','Part Status'],
+        ['Table_Id','Table Id'],
+        ['Series','Series'],
+        ['Version_Number','Version'],
+        ['Status','Status'],
+        ['Remark','Remark'],
+    ];
+
+    tbody.innerHTML = records.map(r => {
+        const remark  = (r['Remark'] || '').trim();
+        const remarkLower = remark.toLowerCase();
+        const isApproved = remarkLower === 'approved';
+        const isRejected = remarkLower === 'rejected';
+        const isSentForApproval = remarkLower === 'sent for approval';
+
+        const statusBadge = isApproved
+            ? `<span class="badge bg-success">Approved</span>`
+            : isRejected
+                ? `<span class="badge bg-danger">Rejected</span>`
+                : isSentForApproval
+                    ? `<span class="badge bg-warning text-dark">Sent for approval</span>`
+                    : remark
+                        ? `<span class="badge bg-secondary">${remark}</span>`
+                        : '';
+
+        // All records (including Approved) get an Edit button so they can be updated
+        const editBtn = `<button class="btn btn-xs py-0 px-2" style="font-size:0.75rem; ${isApproved ? 'background:#28a745;color:white;' : isRejected ? 'background:#dc3545;color:white;' : 'background:#2a6ebb;color:white;'}"
+             onclick="openRowModal('bom','${(r['BOMCreation_Id']||'').replace(/'/g,"\\'")}',${
+                JSON.stringify(r['Customer_ID']||'')},${
+                JSON.stringify(r['ItemCreation_Id']||'')},'${remark}')"
+           ><i class="fas fa-edit"></i> Edit</button>`;
+
+        return `<tr>
+            <td class="px-2">${r['Customer_ID'] ?? ''}</td>
+            <td class="px-2">${r['ItemCreation_Id'] ?? ''}</td>
+            <td class="px-2">${r['BOMCreation_Id'] ?? ''}</td>
+            <td class="px-2">${r['Description'] ?? ''}</td>
+            <td class="px-2">${r['Entry_Type'] ?? ''}</td>
+            <td class="px-2">${r['Part_Number'] ?? ''}</td>
+            <td class="px-2">${r['part_description'] ?? ''}</td>
+            <td class="px-2">${r['Quantity'] ?? ''}</td>
+            <td class="px-2">${r['part_uom'] ?? ''}</td>
+            <td class="px-2">${r['Categorisation'] ?? ''}</td>
+            <td class="px-2">${r['Routing_Link_Code'] ?? ''}</td>
+            <td class="px-2">${r['start_date'] ?? ''}</td>
+            <td class="px-2">${r['Part_Status'] ?? ''}</td>
+            <td class="px-2">${r['Table_Id'] ?? ''}</td>
+            <td class="px-2">${r['Series'] ?? ''}</td>
+            <td class="px-2">${r['Version_Number'] ?? ''}</td>
+            <td class="px-2">${r['Status'] ?? ''}</td>
+            <td class="px-2">${statusBadge}</td>
+            <td class="px-2 text-center">${editBtn}</td>
+        </tr>`;
+    }).join('');
+    recCount.textContent = `${records.length} record(s)`;
+}
+
+function clearTable(msg) {
+    tbody.innerHTML = `<tr><td colspan="19" class="text-center text-muted py-5" style="background:#fafafa;">
+        <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>${msg}</td></tr>`;
+    recCount.textContent = '0 record(s)';
+}
+
+// ── Save action status for BOM ────────────────────────────────
+async function saveAction() {
+    const cust   = selCustomer.value;
+    const bomId  = selBom.value;
+    const status = selActionStatus.value;
+
+    if (!cust || !bomId) {
+        showMsg('Please select Customer ID and BOM Creation ID before submitting.', 'warning');
+        return;
+    }
+
+    const btn = document.getElementById('btn_save_action');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    showMsg('Saving action status...', 'info');
+
+    try {
+        const res = await fetch(URL_SAVE_ACTION, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify({ customer_id: cust, bom_id: bomId, action_status: status })
+        });
+        let data;
+        try {
+            data = await res.json();
+        } catch(_) {
+            showMsg(`Server error (HTTP ${res.status}). Check server logs.`, 'danger');
+            return;
+        }
+        if (data.success) {
+            showMsg(`Action status updated to "${status}" successfully.`, 'success');
+            // If Approved or Rejected, record leaves "Sent for approval" — reload
+            // customer list so it also disappears from the dropdown if no more pending.
+            const isTerminal = status.toLowerCase() === 'approved' || status.toLowerCase() === 'rejected';
+            if (isTerminal) {
+                await loadCustomers();
+                fillSelect(document.getElementById('sel_item'), [], '-- Select Customer first --', true);
+                fillSelect(document.getElementById('sel_bom'),  [], '-- Select Item first --',    true);
+                clearTable('Record removed from approval queue');
+            } else {
+                await fetchBomLines();
+            }
+        } else {
+            showMsg(data.error || 'Failed to save action status.', 'danger');
+        }
+    } catch(e) {
+        showMsg('Error saving: ' + e.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Submit';
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// ── BOM NEW PART LOGIC (frm_Approve_NewPartDetails_Bom) ───────
+// ════════════════════════════════════════════════════════════════
+async function loadBomNewParts() {
+    const statusSel = document.getElementById('sel_newpart_status');
+    const statusVal = statusSel ? statusSel.value : 'Sent for approval';
+
+    showNewPartMsg('Loading BOM New Part records...', 'info');
+    try {
+        const url = `${URL_BOM_NEW_PARTS}?status=${encodeURIComponent(statusVal)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (data.error) {
+            showNewPartMsg('Error: ' + data.error, 'danger');
+            renderNewPartTable([]);
+            return;
+        }
+        renderNewPartTable(data.records);
+        showNewPartMsg('', 'info');
+    } catch(e) {
+        showNewPartMsg('Error loading New Parts: ' + e.message, 'danger');
+        renderNewPartTable([]);
+    }
+}
+
+function renderNewPartTable(records) {
+    if (!records || records.length === 0) {
+        newpartTbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted py-5" style="background:#fafafa;">
+            <i class="fas fa-info-circle fa-2x mb-2 d-block" style="opacity:0.3;"></i>No matching BOM New Part records found.
+        </td></tr>`;
+        newpartRecCount.textContent = '0 record(s)';
+        return;
+    }
+
+    const selectAllChk = document.getElementById('chk_select_all_newparts');
+    if (selectAllChk) selectAllChk.checked = false;
+
+    newpartTbody.innerHTML = records.map(r => {
+        const status = (r.part_status || '').trim();
+        const statusLower = status.toLowerCase();
+        const isApproved = statusLower === 'approved';
+        const isRejected = statusLower === 'rejected';
+        const isSent     = statusLower === 'sent for approval';
+
+        const statusBadge = isApproved
+            ? `<span class="badge bg-success">Approved</span>`
+            : isRejected
+                ? `<span class="badge bg-danger">Rejected</span>`
+                : isSent
+                    ? `<span class="badge bg-warning text-dark">Sent for approval</span>`
+                    : status
+                        ? `<span class="badge bg-secondary">${status}</span>`
+                        : '';
+
+        const rowStyle = isApproved
+            ? 'background-color:#f0fff4;'
+            : isRejected
+                ? 'background-color:#fff5f5;'
+                : '';
+
+        return `<tr style="${rowStyle}">
+            <td class="px-2 text-center">
+                <input type="checkbox" class="chk-newpart" value="${r.part_no}">
+            </td>
+            <td class="px-2 fw-bold">${r.part_no || ''}</td>
+            <td class="px-2">${r.part_description || ''}</td>
+            <td class="px-2">${r.base_uom || ''}</td>
+            <td class="px-2">${r.customer || ''}</td>
+            <td class="px-2">${r.classification || ''}</td>
+            <td class="px-2 text-end">${typeof r.cost_price === 'number' ? r.cost_price.toFixed(2) : (r.cost_price || '0.00')}</td>
+            <td class="px-2 text-end">${typeof r.settle_price === 'number' ? r.settle_price.toFixed(2) : (r.settle_price || '0.00')}</td>
+            <td class="px-2">${r.categorisation || ''}</td>
+            <td class="px-2">${statusBadge}</td>
+            <td class="px-2">${r.part_type || ''}</td>
+        </tr>`;
+    }).join('');
+
+    newpartRecCount.textContent = `${records.length} record(s)`;
+}
+
+
+function toggleSelectAllNewParts(masterChk) {
+    const chks = document.querySelectorAll('.chk-newpart');
+    chks.forEach(c => c.checked = masterChk.checked);
+}
+
+async function saveNewPartAction() {
+    const chks = Array.from(document.querySelectorAll('.chk-newpart:checked'));
+    const selectedPartNos = chks.map(c => c.value);
+    const actionStatus = document.getElementById('sel_newpart_action').value;
+
+    if (selectedPartNos.length === 0) {
+        showNewPartMsg('Please select at least one part row from the list.', 'warning');
+        return;
+    }
+
+    const btn = document.getElementById('btn_save_newpart_action');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    showNewPartMsg('Updating status...', 'info');
+
+    try {
+        const res = await fetch(URL_SAVE_NEW_PART_ACTION, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify({ part_nos: selectedPartNos, action_status: actionStatus })
+        });
+        let data;
+        try {
+            data = await res.json();
+        } catch(_) {
+            showNewPartMsg(`Server error (HTTP ${res.status}). Check server logs.`, 'danger');
+            return;
+        }
+        if (data.success) {
+            showNewPartMsg(`Updated ${data.updated} part(s) to "${actionStatus}".`, 'success');
+            // Switch filter to "All" so the updated records remain visible with their new badge
+            const statusSel = document.getElementById('sel_newpart_status');
+            if (statusSel) statusSel.value = '';
+            await loadBomNewParts();
+        } else {
+            showNewPartMsg(data.error || 'Failed to update action status.', 'danger');
+        }
+    } catch(e) {
+        showNewPartMsg('Error saving status: ' + e.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Submit Action';
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// ── BOP APPROVAL LOGIC (frm_Approve_BOP) ───────────────────────
+// ════════════════════════════════════════════════════════════════
+function showBopMsg(msg, type='info') {
+    const cls = {success:'text-success', danger:'text-danger', info:'text-secondary', warning:'text-warning'}[type] || 'text-secondary';
+    if (bopStatusMsg) {
+        bopStatusMsg.innerHTML = `<small class="${cls}"><i class="fas fa-${type==='success'?'check-circle':type==='danger'?'exclamation-circle':'info-circle'} me-1"></i>${msg}</small>`;
+        if (type === 'success') setTimeout(() => bopStatusMsg.innerHTML = '', 3500);
+    }
+}
+
+// ── 1. Load BOP customers on tab activation / init ─────────────
+async function loadBopCustomers() {
+    if (!selBopCustomer) return;
+    try {
+        const res = await fetch(URL_BOP_CUSTOMERS);
+        const data = await res.json();
+        fillSelect(selBopCustomer, data.customers, data.customers.length ? '-- Select Customer --' : '-- No BOP records found --');
+        if (data.customers.length === 0) showBopMsg('No BOP records found for approval.', 'warning');
+    } catch(e) {
+        fillSelect(selBopCustomer, [], '-- Error loading --');
+        showBopMsg('Error loading BOP customers: ' + e.message, 'danger');
+    }
+}
+
+// Helper to reload BOP lines table based on active selections
+async function fetchBopLines() {
+    const cust  = selBopCustomer.value;
+    const item  = selBopItem.value;
+    const bopId = selBopId.value;
+
+    if (!cust) {
+        clearBopTable('Select Customer ID to load records');
+        return;
+    }
+    showBopMsg('Loading BOP records...', 'info');
+    try {
+        const url = `${URL_BOP_LINES}?customer_id=${encodeURIComponent(cust)}&item_id=${encodeURIComponent(item)}&bop_id=${encodeURIComponent(bopId)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Server status ${res.status}`);
+        const data = await res.json();
+        if (data.error) {
+            showBopMsg('Error loading BOP lines: ' + data.error, 'danger');
+            clearBopTable('Error loading records');
+            return;
+        }
+        renderBopTable(data.records);
+        showBopMsg('', 'info');
+    } catch(e) {
+        showBopMsg('Error loading BOP lines: ' + e.message, 'danger');
+    }
+}
+
+// ── Customer changed ──────────────────────────────────────────
+if (selBopCustomer) {
+    selBopCustomer.addEventListener('change', async function() {
+        const cust = this.value;
+        fillSelect(selBopItem, [], '-- Select Customer first --', true);
+        fillSelect(selBopId,   [], '-- Select Customer first --', true);
+        if (!cust) {
+            clearBopTable('Select Customer ID to load records');
+            return;
+        }
+
+        showBopMsg('Loading items & BOP IDs...', 'info');
+        try {
+            const [resItems, resBopIds] = await Promise.all([
+                fetch(`${URL_BOP_ITEMS}?customer_id=${encodeURIComponent(cust)}`),
+                fetch(`${URL_BOP_IDS}?customer_id=${encodeURIComponent(cust)}`)
+            ]);
+            const dataItems  = await resItems.json();
+            const dataBopIds = await resBopIds.json();
+
+            fillSelect(selBopItem, dataItems.items, dataItems.items.length ? '-- Select Item --' : '-- All / Empty --');
+            fillSelect(selBopId,   dataBopIds.bop_ids, dataBopIds.bop_ids.length ? '-- Select BOP ID --' : '-- No BOP IDs --');
+
+            await fetchBopLines();
+        } catch(e) {
+            showBopMsg('Error loading BOP data: ' + e.message, 'danger');
+        }
+    });
+}
+
+// ── Item changed ──────────────────────────────────────────────
+if (selBopItem) {
+    selBopItem.addEventListener('change', async function() {
+        const cust = selBopCustomer.value;
+        const item = this.value;
+        fillSelect(selBopId, [], '-- Select BOP ID --', true);
+        if (!cust) return;
+
+        showBopMsg('Loading BOP IDs...', 'info');
+        try {
+            const res = await fetch(`${URL_BOP_IDS}?customer_id=${encodeURIComponent(cust)}&item_id=${encodeURIComponent(item)}`);
+            const data = await res.json();
+            fillSelect(selBopId, data.bop_ids, data.bop_ids.length ? '-- Select BOP ID --' : '-- No BOP IDs --');
+            await fetchBopLines();
+        } catch(e) {
+            showBopMsg('Error loading BOP IDs: ' + e.message, 'danger');
+        }
+    });
+}
+
+// ── BOP ID changed ────────────────────────────────────────────
+if (selBopId) {
+    selBopId.addEventListener('change', function() {
+        fetchBopLines();
+    });
+}
+
+// ── Render BOP table ──────────────────────────────────────────
+function renderBopTable(records) {
+    if (!bopTbody) return;
+    if (!records || records.length === 0) {
+        clearBopTable('No records found for the selected filters');
+        if (bopRecCount) bopRecCount.textContent = '0 record(s)';
+        return;
+    }
+    const cols = [
+        ['Customer_ID','Customer ID'],
+        ['ItemCreation_Id','ItemCreation Id'],
+        ['BOPCreation_Id','BOPCreation Id'],
+        ['Customer_Name','Customer Name'],
+        ['Part_Name','Part Name'],
+        ['Drawing_No','Drawing No'],
+        ['Drawing_Revision_No','Drawing Rev No'],
+        ['Product_Category','Product Category'],
+        ['Project','Project'],
+        ['Seq_No','Seq No'],
+        ['Operation_No','Operation No'],
+        ['Type','Type'],
+        ['Costcenter_No','Cost Center No'],
+        ['Description','Description'],
+        ['Categorisation','Categorisation'],
+        ['Run_Time_Sec','Run Time (Sec)'],
+        ['Run_Time_Min','Run Time (Min)'],
+        ['BOQ','BOQ'],
+        ['Total_Run_Time','Total Run Time'],
+        ['Cycle_Time','Cycle Time'],
+        ['Total_Cost','Total Cost'],
+        ['Action_Status','Action Status'],
+    ];
+
+    bopTbody.innerHTML = records.map(r => {
+        const status  = (r['Action_Status'] || '').trim();
+        const statusLower = status.toLowerCase();
+        const isApproved = statusLower === 'approved';
+        const isRejected = statusLower === 'rejected';
+        const isSentForApproval = statusLower === 'sent for approval' || statusLower === 'send for approval';
+        const statusBadge = isApproved
+            ? `<span class="badge bg-success">Approved</span>`
+            : isRejected
+                ? `<span class="badge bg-danger">Rejected</span>`
+                : status
+                    ? `<span class="badge bg-warning text-dark">${status}</span>`
+                    : '';
+        const editBtn = `<button class="btn btn-xs py-0 px-2" style="font-size:0.75rem; ${isApproved ? 'background:#28a745;color:white;' : isRejected ? 'background:#dc3545;color:white;' : 'background:#2a6ebb;color:white;'}"
+             onclick="openRowModal('bop',${JSON.stringify(r['BOPCreation_Id']||'')},${JSON.stringify(r['Customer_ID']||'')},${JSON.stringify(r['ItemCreation_Id']||'')},'${status}')"
+           ><i class="fas fa-edit"></i> Edit</button>`;
+        return `<tr>
+            <td class="px-2">${r['Customer_ID'] ?? ''}</td>
+            <td class="px-2">${r['ItemCreation_Id'] ?? ''}</td>
+            <td class="px-2">${r['BOPCreation_Id'] ?? ''}</td>
+            <td class="px-2">${r['Customer_Name'] ?? ''}</td>
+            <td class="px-2">${r['Part_Name'] ?? ''}</td>
+            <td class="px-2">${r['Drawing_No'] ?? ''}</td>
+            <td class="px-2">${r['Drawing_Revision_No'] ?? ''}</td>
+            <td class="px-2">${r['Product_Category'] ?? ''}</td>
+            <td class="px-2">${r['Project'] ?? ''}</td>
+            <td class="px-2">${r['Seq_No'] ?? ''}</td>
+            <td class="px-2">${r['Operation_No'] ?? ''}</td>
+            <td class="px-2">${r['Type'] ?? ''}</td>
+            <td class="px-2">${r['Costcenter_No'] ?? ''}</td>
+            <td class="px-2">${r['Description'] ?? ''}</td>
+            <td class="px-2">${r['Categorisation'] ?? ''}</td>
+            <td class="px-2">${r['Run_Time_Sec'] ?? ''}</td>
+            <td class="px-2">${r['Run_Time_Min'] ?? ''}</td>
+            <td class="px-2">${r['BOQ'] ?? ''}</td>
+            <td class="px-2">${r['Total_Run_Time'] ?? ''}</td>
+            <td class="px-2">${r['Cycle_Time'] ?? ''}</td>
+            <td class="px-2">${r['Total_Cost'] ?? ''}</td>
+            <td class="px-2">${statusBadge}</td>
+            <td class="px-2 text-center">${editBtn}</td>
+        </tr>`;
+    }).join('');
+    if (bopRecCount) bopRecCount.textContent = `${records.length} record(s)`;
+}
+
+function clearBopTable(msg) {
+    if (!bopTbody) return;
+    bopTbody.innerHTML = `<tr><td colspan="23" class="text-center text-muted py-5" style="background:#fafafa;">
+        <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>${msg}</td></tr>`;
+    if (bopRecCount) bopRecCount.textContent = '0 record(s)';
+}
+
+// ── Save action status for BOP ────────────────────────────────
+async function saveBopAction() {
+    const cust   = selBopCustomer.value;
+    const bopId  = selBopId.value;
+    const status = selBopActionStatus.value;
+
+    if (!cust || !bopId) {
+        showBopMsg('Please select Customer ID and BOP Creation ID before submitting.', 'warning');
+        return;
+    }
+
+    const btn = document.getElementById('btn_save_bop_action');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    }
+    showBopMsg('Saving BOP action status...', 'info');
+
+    try {
+        const res = await fetch(URL_SAVE_BOP_ACTION, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify({ customer_id: cust, bop_id: bopId, action_status: status })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showBopMsg(`Action status updated to "${status}" successfully.`, 'success');
+            await loadBopCustomers();
+            fillSelect(selBopItem, [], '-- Select Customer first --', true);
+            fillSelect(selBopId,   [], '-- Select Item first --',    true);
+            clearBopTable('Select filters to load records');
+        } else {
+            showBopMsg(data.error || 'Failed to save BOP action status.', 'danger');
+        }
+    } catch(e) {
+        showBopMsg('Error saving BOP status: ' + e.message, 'danger');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Submit';
+        }
+    }
+}
+
+// ── Init ──────────────────────────────────────────────────────
+loadCustomers();
+loadBopCustomers();
+
+// ════════════════════════════════════════════════════════════
+// ── PER-ROW EDIT MODAL LOGIC ──────────────────────────────
+// ════════════════════════════════════════════════════════════
+
+/**
+ * Open the shared approval modal for a single BOM or BOP row.
+ * type     - 'bom' | 'bop'
+ * recordId - BOMCreation_Id or BOPCreation_Id
+ * custId   - Customer_ID
+ * itemId   - ItemCreation_Id
+ * current  - current remark/action_status value
+ */
+function openRowModal(type, recordId, custId, itemId, current) {
+    // Hidden fields for form submission
+    document.getElementById('modal_record_type').value = type;
+    document.getElementById('modal_bom_id').value      = type === 'bom' ? recordId : '';
+    document.getElementById('modal_bop_id').value      = type === 'bop' ? recordId : '';
+    document.getElementById('modal_customer_id').value = custId;
+    document.getElementById('modal_item_id').value     = itemId;
+
+    // Autofill visible readonly fields
+    document.getElementById('modal_display_customer').value    = custId  || '';
+    document.getElementById('modal_display_item').value        = itemId  || '(none)';
+    document.getElementById('modal_display_record_id').value   = recordId || '';
+    document.getElementById('modal_record_id_label').textContent =
+        type === 'bom' ? 'BOM Creation ID' : 'BOP Creation ID';
+
+    // Compat span
+    document.getElementById('modal_record_id_display').textContent =
+        `${type.toUpperCase()} ID: ${recordId}  |  Customer: ${custId}`;
+
+    // Pre-select current action status
+    const sel = document.getElementById('modal_action_status');
+    const cur = (current || '').trim().toLowerCase();
+    Array.from(sel.options).forEach(o => {
+        o.selected = o.value.toLowerCase() === cur;
+    });
+
+    document.getElementById('modal_status_msg').innerHTML = '';
+    new bootstrap.Modal(document.getElementById('modalRowAction')).show();
+}
+
+async function saveRowAction() {
+    const type       = document.getElementById('modal_record_type').value;
+    const customerId = document.getElementById('modal_customer_id').value;
+    const itemId     = document.getElementById('modal_item_id').value;
+    const status     = document.getElementById('modal_action_status').value;
+    const msgEl      = document.getElementById('modal_status_msg');
+    const btn        = document.getElementById('btn_modal_save');
+
+    let url, body;
+    if (type === 'bom') {
+        url  = URL_SAVE_ROW_ACTION;
+        body = { customer_id: customerId, bom_id: document.getElementById('modal_bom_id').value, action_status: status };
+    } else {
+        url  = URL_SAVE_BOP_ROW_ACTION;
+        body = { customer_id: customerId, item_id: itemId, bop_id: document.getElementById('modal_bop_id').value, action_status: status };
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    msgEl.innerHTML = '<small class="text-secondary">Saving...</small>';
+
+    try {
+        const res  = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+            msgEl.innerHTML = `<small class="text-success"><i class="fas fa-check-circle me-1"></i>Status updated to "${status}".</small>`;
+            const isTerminal = status.toLowerCase() === 'approved' || status.toLowerCase() === 'rejected';
+            // Close modal and refresh the relevant table / dropdowns
+            setTimeout(async () => {
+                bootstrap.Modal.getInstance(document.getElementById('modalRowAction')).hide();
+                if (type === 'bom') {
+                    if (isTerminal) {
+                        await loadCustomers();
+                        fillSelect(document.getElementById('sel_item'), [], '-- Select Customer first --', true);
+                        fillSelect(document.getElementById('sel_bom'),  [], '-- Select Item first --',    true);
+                        clearTable('Record removed from approval queue');
+                    } else {
+                        await fetchBomLines();
+                    }
+                } else {
+                    if (isTerminal) {
+                        await loadBopCustomers();
+                        fillSelect(selBopItem, [], '-- Select Customer first --', true);
+                        fillSelect(selBopId,   [], '-- Select Item first --',    true);
+                        clearBopTable('Record removed from approval queue');
+                    } else {
+                        await fetchBopLines();
+                    }
+                }
+            }, 800);
+        } else {
+            msgEl.innerHTML = `<small class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>${data.error || 'Failed to save.'}</small>`;
+        }
+    } catch(e) {
+        msgEl.innerHTML = `<small class="text-danger">Error: ${e.message}</small>`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Save';
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+// ── RFQ TAB LOGIC (mirrors cmbBox_Updated_By + btnEdit_RfqStatus) ──
+// ════════════════════════════════════════════════════════════
+
+function showRfqMsg(msg, type='info') {
+    const cls = {success:'text-success', danger:'text-danger', info:'text-secondary', warning:'text-warning'}[type] || 'text-secondary';
+    rfqStatusMsg.innerHTML = `<small class="${cls}"><i class="fas fa-${type==='success'?'check-circle':type==='danger'?'exclamation-circle':'info-circle'} me-1"></i>${msg}</small>`;
+    if (type === 'success') setTimeout(() => rfqStatusMsg.innerHTML = '', 3000);
+}
+
+// Load Updated_By dropdown: 'ALL' + distinct values
+async function loadRfqUpdatedBy() {
+    try {
+        const res  = await fetch(URL_RFQ_UPDATED_BY);
+        const data = await res.json();
+        selRfqUpdatedBy.innerHTML = '<option value="ALL">ALL</option>';
+        (data.updated_by || []).forEach(v => {
+            const o = document.createElement('option');
+            o.value = o.textContent = v;
+            selRfqUpdatedBy.appendChild(o);
+        });
+        await fetchRfqRecords();
+    } catch(e) {
+        showRfqMsg('Error loading Updated_By list: ' + e.message, 'danger');
+    }
+}
+
+// Fetch and render RFQ records (mirrors cmbBox_Updated_By_AfterUpdate)
+async function fetchRfqRecords() {
+    const updatedBy = selRfqUpdatedBy ? selRfqUpdatedBy.value : 'ALL';
+    showRfqMsg('Loading RFQ records...', 'info');
+    try {
+        const url = `${URL_RFQ_RECORDS}?updated_by=${encodeURIComponent(updatedBy)}`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        if (data.error) {
+            showRfqMsg('Error: ' + data.error, 'danger');
+            clearRfqTable('Error loading records');
+            return;
+        }
+        renderRfqTable(data.records);
+        showRfqMsg('', 'info');
+    } catch(e) {
+        showRfqMsg('Error loading RFQ records: ' + e.message, 'danger');
+        clearRfqTable('Error loading records');
+    }
+}
+
+// Render RFQ table rows
+function renderRfqTable(records) {
+    if (!rfqTbody) return;
+    if (!records || records.length === 0) {
+        clearRfqTable('No RFQ records found for the selected filter');
+        if (rfqRecCount) rfqRecCount.textContent = '0 record(s)';
+        return;
+    }
+    const cols = [
+        'Customer_ID', 'CustomerName', 'ItemCreation_ID',
+        'BOPCreation_ID', 'BOC_Creation_ID', 'Is_Completed',
+        'Action_Date', 'Updated_By', 'RFQ_Status'
+    ];
+    rfqTbody.innerHTML = records.map(r => {
+        const cells = cols.map(k => {
+            const val = r[k] ?? '';
+            if (k === 'RFQ_Status') {
+                const isClosed = val === 'Closed';
+                const badgeCls = isClosed ? 'badge bg-danger-subtle text-danger border border-danger-subtle' : 'badge bg-success-subtle text-success border border-success-subtle';
+                return `<td class="px-2 text-center"><span class="${badgeCls}" style="font-size:0.75rem; font-weight:600;">${val}</span></td>`;
+            }
+            if (k === 'Is_Completed') {
+                const isYes = String(val).toLowerCase() === 'yes';
+                return `<td class="px-2 text-center"><span class="${isYes ? 'text-danger fw-bold' : 'text-muted'}">${val}</span></td>`;
+            }
+            return `<td class="px-2">${val}</td>`;
+        }).join('');
+        const isClosed = (r['RFQ_Status'] === 'Closed');
+        const editBtn = `<td class="px-2 text-center" style="width:50px;">
+            <button class="btn btn-sm ${isClosed ? 'btn-outline-primary' : 'btn-light text-muted border-0'} py-0 px-2"
+                    title="${isClosed ? 'Reopen RFQ' : 'RFQ is already open'}"
+                    onclick="reopenRfq('${r['ID']}')"
+                    ${!isClosed ? 'disabled' : ''}
+                    style="border-radius:3px;">
+                <i class="fas fa-edit" style="font-size:0.8rem;"></i>
+            </button>
+        </td>`;
+        return `<tr>${cells}${editBtn}</tr>`;
+    }).join('');
+    if (rfqRecCount) rfqRecCount.textContent = `${records.length} record(s)`;
+}
+
+function clearRfqTable(msg) {
+    if (!rfqTbody) return;
+    rfqTbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted py-5" style="background:#fafafa;">
+        <i class="fas fa-filter fa-2x mb-2 d-block" style="opacity:0.25;"></i>${msg}</td></tr>`;
+    if (rfqRecCount) rfqRecCount.textContent = '0 record(s)';
+}
+
+// Reopen RFQ (mirrors btnEdit_RfqStatus_Click VBA)
+async function reopenRfq(rowId) {
+    if (!confirm('Do you want to reopen this RFQ?')) return;
+    try {
+        const res  = await fetch(URL_RFQ_REOPEN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify({ row_id: rowId })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showRfqMsg('RFQ reopened successfully.', 'success');
+            await fetchRfqRecords();
+        } else {
+            showRfqMsg(data.error || 'Failed to reopen RFQ.', 'danger');
+        }
+    } catch(e) {
+        showRfqMsg('Error reopening RFQ: ' + e.message, 'danger');
+    }
+}
+
+// Updated_By dropdown change handler
+if (selRfqUpdatedBy) {
+    selRfqUpdatedBy.addEventListener('change', fetchRfqRecords);
+}
+</script>
 {% endblock %}

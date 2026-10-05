@@ -443,9 +443,10 @@ def save_bop_form(request):
                 bop_record.action_status = "Created"
             else:
                 # --- EDIT WORKFLOW (UPDATE) ---
-                # Access Business Rule validation: Block editing on Approved records
-                if bop_record.action_status == "Approved":
-                    return JsonResponse({"error": "Action Blocked: Approved BOP records cannot be edited."}, status=400)
+                # Access Business Rule validation: Block editing only on records pending approval (locked)
+                curr_status = (bop_record.action_status or "").strip().lower()
+                if curr_status in ["send for approval", "sent for approval", "pending_approval"]:
+                    return JsonResponse({"error": "Action Blocked: BOP record is currently pending approval and locked."}, status=400)
 
                 # Keep existing bopcreation_id and table_id intact.
                 # Update status from form if explicitly provided, else flag as Updated

@@ -12,4 +12,5 @@ urlpatterns = [
     path("BlanketSales/api/add_bso_line/", views.add_bso_line, name="add_bso_line"),
     path("BlanketSales/api/save_bso_line/", views.save_bso_line, name="save_bso_line"),
     path("BlanketSales/api/delete_bso_line/", views.delete_bso_line, name="delete_bso_line"),
+    path("BlanketSales/api/get_hsn_codes/", views.get_hsn_codes, name="get_hsn_codes"),
 ]

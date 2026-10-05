@@ -120,10 +120,12 @@
     <!-- Customer Code -->
     <div class="row">
         <label>Select Customer Code:</label>
-        <select>
-            <option>ALL</option>
-            <option>1001</option>
-            <option>1002</option>
+        <select id="cmbBox_CustCode">
+            <option value="">-- Select Customer --</option>
+            <option value="ALL">ALL</option>
+            {% for cid in customers %}
+            <option value="{{ cid }}">{{ cid }}</option>
+            {% endfor %}
         </select>
     </div>
 

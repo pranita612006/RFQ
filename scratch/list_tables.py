@@ -1,10 +1,12 @@
-import django, os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-import sys; sys.path.insert(0, 'd:\\N-RFQ')
-django.setup()
-from django.db import connection
-cursor = connection.cursor()
-cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name")
-tables = [r[0] for r in cursor.fetchall()]
-for t in tables:
-    print(t)
+import sqlite3
+
+conn = sqlite3.connect('db.sqlite3')
+c = conn.cursor()
+
+c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+tables = [r[0] for r in c.fetchall()]
+print("All tables in db.sqlite3:")
+for t in sorted(tables):
+    print(" -", t)
+
+conn.close()
