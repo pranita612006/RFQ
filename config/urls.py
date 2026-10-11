@@ -12,10 +12,14 @@ urlpatterns = [
         name="ecn_request_page",
     ),
 
+    # INITIAL DASHBOARD WHEN SITE OPENS (v1)
+    path("", page_views.dashboard_v1, name="index"),
+
     # DASHBOARD URLS
     path("dashboard/v1/", page_views.dashboard_v1, name="dashboard_v1"),
     path("dashboard/v2/", page_views.dashboard_v2, name="dashboard_v2"),
     path("dashboard/v3/", page_views.dashboard_v3, name="dashboard_v3"),
+    path("dashboard/search/", page_views.dashboard_search, name="dashboard_search"),
 
     # APP URLS
     path("", include("apps.opportunities.urls")),

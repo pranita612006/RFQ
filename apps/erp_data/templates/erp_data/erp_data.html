@@ -1,117 +1,29 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ERP Data Page</title>
-
+<!-- Google Fonts: Permanent Marker & Montserrat -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        margin: 0;
-        padding: 0;
-    }
-
-    h2 {
-        background-color: #2a6ebb;
-        color: white;
-        padding: 16px 24px;
-        font-size: 22px;
-        margin: 0;
-    }
-
-    .form-section {
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 30px;
-        max-width: 950px;
-        margin: 30px auto;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-
-    .row {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    label {
-        width: 200px;
-        font-weight: bold;
-        font-size: 15px;
-        color: #333;
-    }
-
-    input, select {
-        flex: 1;
-        height: 36px;
-        padding: 6px 10px;
-        font-size: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .btn-group {
-        margin: 25px 0;
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        background-color: #2a6ebb;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background-color 0.2s ease;
-    }
-
-    .btn:hover {
-        background-color: #1f4f8a;
-    }
-
-    .green-btn {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background-color 0.2s ease;
-        margin-left: 10px;
-    }
-
-    .green-btn:hover {
-        background-color: #218838;
-    }
-
-    .note {
-        font-size: 13px;
-        color: #666;
-        margin-top: 10px;
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 25px 0 15px;
-        color: #2a6ebb;
-    }
+    .erp-data-container .page-card { background:#fff; border:1px solid #c8d6e8; border-radius:8px; max-width:950px; margin:24px auto; box-shadow:0 3px 10px rgba(0,0,0,0.1); overflow:hidden; font-family:'Montserrat',sans-serif; }
+    .erp-data-container .card-header { background:#2E266D; display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:6px 6px 0 0; }
+    .erp-data-container .card-header h2 { font-family:'Permanent Marker',cursive; color:#fff; font-size:1.5rem; margin:0; }
+    .erp-data-container .card-body { padding:28px 30px; }
+    .erp-data-container .row { display: flex; align-items: center; margin-bottom: 18px; }
+    .erp-data-container label { width: 200px; font-weight: 700; font-size: 14px; color: #333; font-family:'Montserrat',sans-serif; }
+    .erp-data-container input, .erp-data-container select { flex: 1; height: 36px; padding: 6px 10px; font-size: 14px; border: 1px solid #c8d6e8; border-radius: 5px; font-family:'Montserrat',sans-serif; }
+    .erp-data-container input:focus, .erp-data-container select:focus { outline:none; border-color:#2E266D; box-shadow:0 0 0 2px rgba(46,38,109,0.15); }
+    .erp-data-container .btn-group { margin: 22px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+    .erp-data-container .btn { background:#FF3131 !important; color:white !important; border:2px solid #2E266D !important; padding:8px 22px; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; transition:background 0.2s, box-shadow 0.2s; }
+    .erp-data-container .btn:hover { background:#e02525 !important; box-shadow:0 2px 6px rgba(46,38,109,0.35); }
+    .erp-data-container .green-btn { background:#FF3131 !important; color:white !important; border:2px solid #2E266D !important; padding:8px 18px; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; transition:background 0.2s; margin-left:8px; }
+    .erp-data-container .green-btn:hover { background:#e02525 !important; box-shadow:0 2px 6px rgba(46,38,109,0.35); }
+    .erp-data-container .note { font-size:13px; color:#666; margin-top:8px; font-style:italic; }
+    .erp-data-container .section-title { font-size:15px; font-weight:700; margin:22px 0 12px; color:#2E266D; text-transform:uppercase; letter-spacing:.4px; border-bottom:2px solid #2E266D; padding-bottom:4px; }
 </style>
-</head>
 
-<body>
-
-<h2>ERP Data Page</h2>
-
-<div class="form-section">
+<div class="erp-data-container pb-4">
+<div class="page-card">
+  <div class="card-header"><h2>ERP Data</h2></div>
+  <div class="card-body">
     <!-- Customer Code Selection Context -->
     <div class="row">
         <label>Customer Code:</label>
@@ -187,7 +99,8 @@
         <button class="green-btn" onclick="processBopTool()">Update BOP Tool</button>
         <button class="green-btn" onclick="downloadTemplate('BOPTool')">Template Download</button>
     </div>
-</div>
+  </div><!-- /card-body -->
+</div><!-- /page-card -->
 
 <script>
     function validatePath(filePath) {
@@ -284,7 +197,5 @@
         alert(`Executed Extraction SQL Query:\n${query}\n\nTemplate generated:\n${generatedFileName}`);
     }
 </script>
-
-</body>
-</html>
+</div><!-- /erp-data-container -->
 {% endblock %}

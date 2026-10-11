@@ -28,6 +28,27 @@ import random
 import json
 
 
+def _send_bop_email(to_list, cc_list, subject, html_body):
+    """Helper to send BOP completion notification emails."""
+    try:
+        from django.core.mail import EmailMultiAlternatives
+        from django.conf import settings
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@voss.net')
+        to = to_list if isinstance(to_list, list) else [to_list]
+        cc = cc_list if isinstance(cc_list, list) else ([cc_list] if cc_list else None)
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body="Please view this email in an HTML-supported client.",
+            from_email=from_email,
+            to=to,
+            cc=cc,
+        )
+        email.attach_alternative(html_body, "text/html")
+        email.send(fail_silently=False)
+    except Exception as exc:
+        print(f"[WARN] Failed to send email '{subject}': {exc}")
+
+
 def _item_creation_id_variants(item_creation_id):
     """Normalize Item Creation ID formats used across Access-linked tables."""
     raw = str(item_creation_id or "").strip()
@@ -1423,9 +1444,23 @@ def complete_cell_alignment(request):
                 import traceback as _tb
                 print(f"[WARN] ECN log insert failed: {ecn_err}\n{_tb.format_exc()}")
                 
+        # Call BOPCellAllignmentEmail
+        item_id = (parent_bop.itemcreation_id if parent_bop else "") or (records[0].itemcreation_id if records else "")
+        _send_bop_email(
+            to_list=["BOP_Creation@voss.net"],
+            cc_list=None,
+            subject=f"Item Creation:{item_id}",
+            html_body=(
+                f"Hi<br><br>"
+                f"Item created with ID:{item_id}created for new RFQ<br><br>"
+                f"BOP Cell Allignment Completed.<br><br>"
+                f"Regards,<br>Voss Team"
+            )
+        )
+
         return JsonResponse({
             "status": "success",
-            "message": "Section completed successfully.",
+            "message": f"Cell Alignment completed successfully! Email notification sent to BOP_Creation@voss.net for Item {item_id}.",
             "completed_on": today.strftime("%Y-%m-%d")
         })
     except Exception as e:
@@ -1609,9 +1644,23 @@ def complete_bop_tab(request):
                 import traceback as _tb
                 print(f"[WARN] ECN log insert failed: {ecn_err}\n{_tb.format_exc()}")
                 
+        # Call BOPTabEmail
+        item_id = (parent_bop.itemcreation_id if parent_bop else "") or (records[0].itemcreation_id if records else "")
+        _send_bop_email(
+            to_list=["abc@gmail.com"],
+            cc_list=["sdf@gamil.com"],
+            subject=f"Item Creation:{item_id}",
+            html_body=(
+                f"Hi<br><br>"
+                f"Item created with ID:{item_id}created for new RFQ<br><br>"
+                f"Request you to work on BOP Tab Creation!<br><br>"
+                f"Regards,<br>Voss Team"
+            )
+        )
+
         return JsonResponse({
             "status": "success",
-            "message": "Section completed successfully.",
+            "message": f"BOP Tab completed successfully! Email notification sent to abc@gmail.com for Item {item_id}.",
             "completed_on": today.strftime("%Y-%m-%d")
         })
     except Exception as e:
@@ -1766,9 +1815,23 @@ def complete_bop_tolling(request):
                 import traceback as _tb
                 print(f"[WARN] ECN log insert failed: {ecn_err}\n{_tb.format_exc()}")
                 
+        # Call BOPTollingEmail
+        item_id = (parent_bop.itemcreation_id if parent_bop else "") or (records[0].itemcreation_id if records else "")
+        _send_bop_email(
+            to_list=["abc@gmail.com"],
+            cc_list=["sdf@gamil.com"],
+            subject=f"Item Creation:{item_id}",
+            html_body=(
+                f"Hi<br><br>"
+                f"Item created with ID:{item_id}created for new RFQ<br><br>"
+                f"Request you to work on BOP Tooling.<br><br>"
+                f"Regards,<br>Voss Team"
+            )
+        )
+
         return JsonResponse({
             "status": "success",
-            "message": "Section completed successfully.",
+            "message": f"BOP Tooling completed successfully! Email notification sent to abc@gmail.com for Item {item_id}.",
             "completed_on": today.strftime("%Y-%m-%d")
         })
     except Exception as e:

@@ -594,11 +594,16 @@ def delete_item(request):
 
 
 def get_item_list(request):
-    """Return JSON list of items for the active customer (for grid + dropdown refresh)."""
-    customer_id = request.GET.get("customer_id", "")
+    """Return JSON list of items for the active customer matching SQL query fields."""
+    customer_id = request.GET.get("customer_id", "").strip()
     items = list(
         ItemCard.objects.filter(customer_id=customer_id)
-        .values("no", "description", "template_name", "status", "hsn_sac_code", "last_date_modified")
+        .values(
+            "no", "customer_id", "template_name", "description", "base_unit_of_measure",
+            "shelf_no", "cell", "cell_type", "item_category_code", "product_group_code",
+            "status", "fixture_no", "no_of_meft", "no_of_parts", "customer_name",
+            "revision_no", "customer_vendor_code", "hsn_sac_code", "last_date_modified"
+        )
     )
     return JsonResponse({"items": items})
 
@@ -622,6 +627,16 @@ def ecn_request_page(request):
     cell_types = CellType.objects.all()
     hsn_codes = HSNCode.objects.all()
 
+    cust_vendor_code = ""
+    cust_short_name = ""
+    try:
+        ci = CustomerInfo.objects.filter(customer_id=customer_id).first()
+        if ci:
+            cust_vendor_code = ci.primary_contact_no or ""
+            cust_short_name = ci.shortname or ""
+    except Exception:
+        pass
+
     return render(request, "item_creation/frm_itemcreation_ecn.html", {
         "customer_id": customer_id,
         "customer_name": customer_name,
@@ -633,6 +648,8 @@ def ecn_request_page(request):
         "cells": cells,
         "cell_types": cell_types,
         "hsn_codes": hsn_codes,
+        "cust_vendor_code": cust_vendor_code,
+        "cust_short_name": cust_short_name,
     })
 
 
@@ -756,15 +773,28 @@ def get_ecn_item_details(request):
             "ecn_count": ecn_count,
         }
 
+    # RFQ lock check
+    is_locked = _is_rfq_completed(customer_id, item_no)
+
     # ECN history rows for the table
     history = []
     with connection.cursor() as cur:
         cur.execute(
-            """SELECT ecn_id, ecn_type, "No", description, template_name,
-                      revision_no, status, last_date_modified
+            """SELECT ecn_id, ecn_type, customerid, "No", revision_no, template_name,
+                      description, base_unit_of_measure, shelf_no, cell, cell_type,
+                      item_category_code, product_group_code, status, last_date_modified,
+                      fixture_no, no_of_meft, no_of_parts, customer_name,
+                      customer_vendor_code, hsn_sac_code, costing_method,
+                      inventory_posting_group, price_profit_calculation, gen_prod_posting_group,
+                      replenishment_system, qc_applicable, manufacturing_policy,
+                      assembly_policy, reordering_policy, include_inventory, gst_credit,
+                      flushing_method, template_applied, rounding_precision, gst_group_code
                FROM tbl_itemcard_ecn
                WHERE "No"=%s AND customerid=%s
-               ORDER BY ecn_id""",
+               ORDER BY CASE
+                          WHEN ecn_id ~ '^ECN:[0-9]+$' THEN CAST(SUBSTRING(ecn_id FROM 5) AS INT)
+                          ELSE 0
+                        END ASC""",
             [item_no, customer_id],
         )
         cols = [c[0] for c in cur.description]
@@ -772,6 +802,7 @@ def get_ecn_item_details(request):
             history.append(dict(zip(cols, row)))
 
     data["history"] = history
+    data["is_locked"] = is_locked
     return JsonResponse(data)
 
 

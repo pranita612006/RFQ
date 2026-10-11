@@ -1,11 +1,90 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<div class="container-fluid full-dashboard bg-white pb-5">
-    <div class="d-flex justify-content-between align-items-center pt-2 px-2">
-        <h2 class="mb-0" style="color: #2E266D; font-weight: normal; font-size: 1.75rem; font-family: 'Permanent Marker', cursive;">Blanket Sales Order</h2>
-        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm px-4"><i><u>Back</u></i></a>
-    </div>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body, .container-fluid, select, input, button, label, table, th, td { font-family: 'Montserrat', sans-serif; }
+  /* Card Header */
+  .bso-card { background:#fff; border:1px solid #c8d6e8; border-radius:8px; margin:16px; box-shadow:0 3px 10px rgba(0,0,0,0.1); overflow:hidden; }
+  .bso-card-header { background:#2E266D; display:flex; justify-content:space-between; align-items:center; padding:12px 20px; }
+  .bso-card-title { font-family:'Permanent Marker',cursive; color:#fff; font-size:1.4rem; margin:0; }
+  .btn-bso-back { background:transparent; border:2px solid #fff; color:#fff; font-family:'Montserrat',sans-serif; font-weight:600; font-size:0.85rem; padding:4px 14px; border-radius:4px; cursor:pointer; transition:all 0.2s; }
+  .btn-bso-back:hover { background:#fff; color:#2E266D; }
+  /* Buttons */
+  .btn, .btn-sm { font-family:'Montserrat',sans-serif !important; font-weight:600 !important; }
+  #btn_BSOCreate, #btn_BSOEdit, #btn_BSOSave, #btn_BSOLineCreate, #btn_BSOLineEdit, #btn_BSOLineSave, #btn_BSOLineDelete, #btn_ExportBSO {
+    background:#FF3131 !important; color:#fff !important; border:2px solid #2E266D !important;
+    border-radius:6px !important; font-family:'Montserrat',sans-serif !important; font-weight:600 !important;
+    transition:background 0.2s, box-shadow 0.2s !important;
+  }
+  #btn_BSOCreate:hover, #btn_BSOEdit:hover, #btn_BSOSave:hover, #btn_BSOLineCreate:hover, #btn_BSOLineEdit:hover, #btn_BSOLineSave:hover, #btn_BSOLineDelete:hover, #btn_ExportBSO:hover {
+    background:#e02525 !important; box-shadow:0 2px 6px rgba(46,38,109,0.35) !important;
+  }
+  #btn_BSOCreate:disabled, #btn_BSOEdit:disabled, #btn_BSOSave:disabled { opacity:0.5 !important; }
+  /* Section separator */
+  .bso-section-title { font-size:0.82rem; font-weight:700; color:#2E266D; text-transform:uppercase; letter-spacing:.5px; border-bottom:2px solid #2E266D; padding-bottom:4px; margin:12px 0 8px; }
+
+  /* ── Lines Table ─────────────────────────────────────────────────── */
+  .bso-lines-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1rem;
+    color: #2E266D;
+    margin: 16px 0 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  #tblBSOLines {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.79rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 0;
+  }
+  #tblBSOLines thead tr th {
+    background-color: #212529 !important;
+    color: #FFFFFF !important;
+    border: 1px solid #373b3e !important;
+    padding: 7px 8px;
+    text-align: center;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 0.76rem;
+    vertical-align: middle;
+  }
+  #tblBSOLines tbody td {
+    border: 1px solid #c8d6e8;
+    padding: 5px 8px;
+    color: #333;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  #tblBSOLines tbody tr:nth-child(even) td { background: #f5f8fc; }
+  #tblBSOLines tbody tr:hover td { background: #eaf1fb; cursor: pointer; }
+  #tblBSOLines .btn-line-edit {
+    background: #FF3131;
+    color: #fff;
+    border: 2px solid #2E266D;
+    border-radius: 5px;
+    padding: 2px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  #tblBSOLines .btn-line-edit:hover {
+    background: #e02525;
+    box-shadow: 0 2px 6px rgba(46,38,109,0.3);
+  }
+</style>
+<div class="bso-card">
+  <div class="bso-card-header">
+    <h4 class="bso-card-title">Blanket Sales Order</h4>
+    <button class="btn-bso-back" onclick="history.back()">&#8592; Back</button>
+  </div>
+  <div class="px-3 pb-4">
 
     <hr class="my-2">
 
@@ -163,9 +242,9 @@
         </div>
 
         <div class="mt-2">
-            <button type="button" id="btn_BSOCreate" class="btn btn-sm text-white px-4 mr-1" style="background-color:#5b74a3;">Create</button>
-            <button type="button" id="btn_BSOEdit" class="btn btn-sm text-white px-4 mr-1" style="background-color:#5b74a3;" disabled>Edit</button>
-            <button type="button" id="btn_BSOSave" class="btn btn-sm text-white px-4" style="background-color:#5b74a3;">Save</button>
+            <button type="button" id="btn_BSOCreate" class="btn btn-sm text-white px-4 mr-1">Create</button>
+            <button type="button" id="btn_BSOEdit" class="btn btn-sm text-white px-4 mr-1" disabled>Edit</button>
+            <button type="button" id="btn_BSOSave" class="btn btn-sm text-white px-4">Save</button>
         </div>
     </form>
 
@@ -173,7 +252,7 @@
 
     <!-- ═══════════════════════════ LINE ITEM FORM ═══════════════════════════ -->
     <div class="px-2">
-        <h6 class="text-primary font-weight-bold" style="text-decoration:underline;font-size:0.95rem;">Create Line Item</h6>
+        <p style="font-size:0.95rem; font-weight:700; color:#2E266D; margin-bottom:8px; font-family:'Montserrat',sans-serif; letter-spacing:.3px;">Create Line Item</p>
         <form id="bsoLineForm" onsubmit="return false;">
             <input type="hidden" id="selected_line_id" value="">
             <div class="row">
@@ -304,18 +383,19 @@
                 </div>
             </div>
 
-            <div class="mt-3 d-flex align-items-center">
-                <button type="button" id="btn_LineAdd" class="btn btn-sm text-white px-4 mr-1" style="background-color:#5b74a3;">Add</button>
-                <button type="button" id="btn_LineSave" class="btn btn-sm text-white px-4 mr-1" style="background-color:#5b74a3;">Save</button>
-                <button type="button" id="btn_LineDelete" class="btn btn-sm text-white px-4 mr-4" style="background-color:#5b74a3;">Delete</button>
-                <div class="small font-weight-bold">Update line <span id="update_line_badge" class="badge badge-primary px-2 py-1">-</span></div>
+            <div class="mt-3 d-flex align-items-center gap-2">
+                <button type="button" id="btn_LineAdd" class="btn btn-sm px-4 mr-1" style="background:#FF3131;color:#fff;border:2px solid #2E266D;border-radius:6px;font-family:'Montserrat',sans-serif;font-weight:600;">Add</button>
+                <button type="button" id="btn_LineSave" class="btn btn-sm px-4 mr-1" style="background:#FF3131;color:#fff;border:2px solid #2E266D;border-radius:6px;font-family:'Montserrat',sans-serif;font-weight:600;">Save</button>
+                <button type="button" id="btn_LineDelete" class="btn btn-sm px-4 mr-4" style="background:#FF3131;color:#fff;border:2px solid #2E266D;border-radius:6px;font-family:'Montserrat',sans-serif;font-weight:600;">Delete</button>
+                <div style="font-size:0.82rem;font-weight:700;color:#333;font-family:'Montserrat',sans-serif;">Update line <span id="update_line_badge" style="background:#2E266D;color:#fff;padding:2px 10px;border-radius:10px;font-size:0.8rem;">-</span></div>
             </div>
         </form>
 
         <!-- Lines Table -->
-        <div class="mt-4 table-responsive">
-            <table class="table table-bordered table-hover table-sm text-center" id="tblBSOLines" style="font-size:0.82rem;">
-                <thead class="thead-light">
+        <p class="bso-lines-title">Line Items</p>
+        <div class="table-responsive" style="border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(46,38,109,0.12);">
+            <table id="tblBSOLines">
+                <thead>
                     <tr>
                         <th>#</th>
                         <th>Line No</th>
@@ -326,7 +406,7 @@
                         <th>UOM</th>
                         <th>Qty</th>
                         <th>Unit Price</th>
-                        <th>Line Amt (Excl Tax)</th>
+                        <th>Line Amt<br>(Excl Tax)</th>
                         <th>Disc%</th>
                         <th>Shipment Dt</th>
                         <th>Outstanding Qty</th>
@@ -345,7 +425,7 @@
                 </thead>
                 <tbody id="bsoLinesTableBody">
                     <tr>
-                        <td colspan="24" class="text-muted py-3">No line items. Select an Item and BSO to view or add lines.</td>
+                        <td colspan="24" style="text-align:center;color:#999;padding:16px;">No line items. Select an item and BSO to view or add lines.</td>
                     </tr>
                 </tbody>
             </table>
@@ -812,8 +892,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${row.rm_base ?? '-'}</td>
                         <td>${row.boc_base ?? '-'}</td>
                         <td>${row.remarks || '-'}</td>
-                        <td>
-                            <button type="button" class="btn btn-xs btn-outline-primary py-0 px-1" style="font-size:0.75rem;" onclick="selectLineRowById(${row.id_field})">Edit</button>
+                        <td style="text-align:center;">
+                            <button type="button" class="btn-line-edit" onclick="selectLineRowById(${row.id_field})">Edit</button>
                         </td>
                     `;
                     tr.addEventListener('click', () => selectLineRow(row));

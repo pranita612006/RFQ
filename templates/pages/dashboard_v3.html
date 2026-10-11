@@ -1,746 +1,550 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block title %}Voss Dashboard 3 {% endblock %}
+{% block title %}FlowNexis | Dashboard v3 - Customer Account & Commercial Progress{% endblock title %}
 
-{% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+{% block extrastyle %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f5fb;
-    color: #333;
+  .dash-container {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0c4a6e;
+    padding: 16px 20px 32px;
+    background: #f0f9ff;
+  }
+  
+  /* TOP DASHBOARD NAV BAR */
+  .dash-topbar {
+    background: #ffffff;
+    border: 1px solid #e0f2fe;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.04);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dash-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dash-title-group h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #0369a1;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dash-pill-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+  }
+  
+  /* DASHBOARD SWITCHER TABS */
+  .dash-tabs {
+    display: inline-flex;
+    background: #e0f2fe;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+  }
+  .dash-tab-btn {
+    padding: 6px 14px;
     font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #0369a1;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
   }
- 
-  /* ── TOP BAR ── */
-  .top-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #fff; padding: 7px 14px;
-    border-bottom: 1px solid #e0e0e0;
+  .dash-tab-btn:hover {
+    color: #082f49;
+    background: rgba(255,255,255,0.7);
   }
-  .top-left { display: flex; align-items: center; gap: 10px; }
-  .upload-btn {
-    display: flex; align-items: center; gap: 5px;
-    border: 1px solid #bbb; background: #f5f5f5;
-    padding: 4px 10px; font-size: 11px; cursor: pointer;
-    border-radius: 3px;
+  .dash-tab-btn.active {
+    background: #ffffff;
+    color: #0284c7;
+    box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
   }
-  .upload-btn:hover { background: #e8e8e8; }
-  #logoImg { height: 28px; display: none; }
-  .dash-title { font-size: 17px; font-weight: 600; color: #222; }
-  .updated-badge {
-    font-size: 11px; background: #1a237e; color: #fff;
-    padding: 4px 10px; border-radius: 3px;
+
+  /* CUSTOMER SELECTOR CARD */
+  .customer-selector-card {
+    background: #ffffff;
+    border: 1px solid #e0f2fe;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
   }
- 
-  /* ── FILTERS ── */
-  .filters-bar {
-    background: #fff; padding: 8px 14px; border-bottom: 1px solid #eee;
-    display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end;
+  .cust-select-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 280px;
   }
-  .fg { display: flex; flex-direction: column; gap: 2px; }
-  .fg label { font-size: 10px; color: #888; font-weight: 500; }
-  .fg input, .fg select {
-    border: 1px solid #ccc; padding: 4px 7px; font-size: 11px;
-    border-radius: 3px; background: #fff; min-width: 100px;
+  .cust-dropdown {
+    border: 1.5px solid #bae6fd;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0369a1;
+    background: #f0f9ff;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    max-width: 420px;
   }
-  .fg select { min-width: 140px; }
- 
-  /* ── MAIN ── */
-  .main { padding: 12px 14px; }
- 
-  /* ── KPI CARDS ── */
+  .cust-dropdown:focus {
+    border-color: #0284c7;
+    background: #ffffff;
+  }
+  .cust-badge-detail {
+    font-size: 12px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    padding: 6px 14px;
+    border-radius: 8px;
+    color: #0369a1;
+  }
+
+  /* KPI ROW */
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 14px;
+    margin-bottom: 16px;
   }
   .kpi-card {
-    background: #fff; border-radius: 6px;
-    padding: 10px 13px; border: 1px solid #e5e5e5;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e0f2fe;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.04);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
-  .kpi-label { font-size: 11px; color: #1a237e; font-weight: 600; margin-bottom: 5px; }
-  .kpi-val { font-size: 22px; font-weight: 700; color: #222; margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
-  .kpi-arrow { font-size: 13px; }
-  .arr-up { color: #43a047; }
-  .arr-down { color: #e53935; }
-  .kpi-sub { font-size: 10px; color: #777; }
-  .kpi-sub .pos { color: #43a047; font-weight: 600; }
-  .kpi-sub .neg { color: #e53935; font-weight: 600; }
- 
-  /* ── CHART CARDS ── */
-  .charts-row { display: grid; gap: 11px; margin-bottom: 11px; }
-  .col2 { grid-template-columns: 1fr 1fr; }
-  .col1 { grid-template-columns: 1fr; }
-  .col2-narrow { grid-template-columns: 1fr 2fr; }
- 
-  .chart-card {
-    background: #fff; border-radius: 6px; padding: 13px 14px;
-    border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(2, 132, 199, 0.1);
   }
-  .chart-title { font-size: 12px; font-weight: 600; color: #222; margin-bottom: 8px; }
-  .chart-box { position: relative; }
- 
-  /* Legend line */
-  .leg { display: flex; gap: 14px; margin-bottom: 5px; flex-wrap: wrap; }
-  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #555; }
-  .leg-dot { width: 9px; height: 9px; border-radius: 50%; }
-  .leg-sq { width: 10px; height: 10px; border-radius: 2px; }
- 
-  /* ── US MAP SECTION ── */
-  .map-section { margin-bottom: 11px; }
-  .map-card {
-    background: #fff; border-radius: 6px; padding: 13px 14px;
-    border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
   }
-  .map-subtitle { font-size: 10px; color: #888; margin-bottom: 6px; }
-  .map-scale-bar {
-    display: flex; align-items: center; gap: 0; margin-bottom: 8px;
+  .kpi-label {
+    font-size: 11px;
+    color: #0284c7;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.25;
   }
-  .scale-label { font-size: 10px; color: #555; min-width: 16px; }
-  .scale-gradient {
-    flex: 1; height: 10px;
-    background: linear-gradient(to right, #e8eaf6, #3949ab);
-    border-radius: 2px; margin: 0 6px;
+  .kpi-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0369a1;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
   }
-  .map-wrap { display: flex; justify-content: center; }
-  #usMap { width: 100%; max-width: 440px; height: 220px; }
- 
-  /* ── TABLE ── */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  thead th {
-    background: #3949ab; color: #fff; padding: 8px 11px;
+  .kpi-trend {
+    font-size: 11px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
+  }
+  .trend-badge {
+    background: #e0f2fe;
+    color: #0284c7;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  /* CHARTS GRIDS */
+  .charts-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+
+  .dash-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid #e0f2fe;
+    box-shadow: 0 1px 3px rgba(2, 132, 199, 0.04);
+  }
+  .dash-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0369a1;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chart-box { position: relative; width: 100%; }
+
+  /* TABLES */
+  .dash-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dash-table thead th {
+    background: #0284c7; color: #ffffff; padding: 9px 12px;
     text-align: left; font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.3px;
   }
-  tbody tr:nth-child(even) { background: #f7f8fc; }
-  tbody tr:hover { background: #eef0fb; }
-  tbody td { padding: 7px 11px; border-bottom: 1px solid #eee; font-size: 12px; }
- 
-  @media (max-width: 900px) {
+  .dash-table tbody tr:nth-child(even) { background: #f0f9ff; }
+  .dash-table tbody tr:hover { background: #e0f2fe; }
+  .dash-table tbody td { padding: 9px 12px; border-bottom: 1px solid #e0f2fe; font-size: 12px; }
+
+  /* PROGRESS BAR */
+  .prog-wrap {
+    width: 100%;
+    height: 7px;
+    background: #e0f2fe;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .prog-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+    border-radius: 4px;
+  }
+
+  @media (max-width: 1100px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .col2, .col2-narrow { grid-template-columns: 1fr; }
+    .charts-row-2 { grid-template-columns: 1fr; }
   }
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     .kpi-grid { grid-template-columns: 1fr; }
+    .dash-topbar { flex-direction: column; align-items: flex-start; }
+    .customer-selector-card { flex-direction: column; align-items: flex-start; }
   }
 </style>
-</head>
-<body>
- 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="top-left">
-    <button class="upload-btn" onclick="document.getElementById('logoInput').click()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Upload Logo
-    </button>
-    <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="handleLogo(event)">
-    <img id="logoImg" alt="Logo">
-    <span class="dash-title">Dashboard 3</span>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="dash-container">
+
+  <!-- TOP DASHBOARD BAR WITH INSTANT VERSION SWITCHER -->
+  <div class="dash-topbar">
+    <div class="dash-title-group">
+      <h2>
+        <i class="fas fa-user-check" style="color: #0284c7;"></i>
+        Dashboard v3
+      </h2>
+      <span class="dash-pill-tag">Customer Account & Commercial Progress</span>
+    </div>
+
+    <div class="dash-tabs">
+      <a href="{% url 'dashboard_v1' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v1
+      </a>
+      <a href="{% url 'dashboard_v2' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v2
+      </a>
+      <a href="{% url 'dashboard_v3' %}" class="dash-tab-btn active">
+        <i class="fas fa-check-circle"></i> Dashboard v3
+      </a>
+    </div>
   </div>
-  <span class="updated-badge">Data Last Updated on | 01 Jan 2025</span>
-</div>
- 
-<!-- FILTERS -->
-<div class="filters-bar">
-  <div class="fg">
-    <label>Start date</label>
-    <input type="date" id="startDate" value="2024-01-01">
+
+  <!-- INTERACTIVE CUSTOMER SELECTOR BAR -->
+  <div class="customer-selector-card">
+    <div class="cust-select-group">
+      <label class="m-0 font-weight-bold" style="color:#0369a1;white-space:nowrap;">
+        <i class="fas fa-search mr-1"></i> Select Customer Account:
+      </label>
+      <select class="cust-dropdown" onchange="window.location.href='?customer_id=' + this.value;">
+        {% for c in d.customers_list %}
+        <option value="{{ c.customer_id }}" {% if d.selected_customer.customer_id == c.customer_id %}selected{% endif %}>
+          {{ c.customer_id }} - {{ c.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if d.selected_customer %}
+    <div class="cust-badge-detail">
+      <strong>{{ d.selected_customer.name }}</strong>
+      <span class="mx-2">|</span> ID: <strong>{{ d.selected_customer.customer_id }}</strong>
+      {% if d.selected_customer.city %}<span class="mx-2">|</span> Location: {{ d.selected_customer.city }}{% endif %}
+    </div>
+    {% endif %}
   </div>
-  <div class="fg">
-    <label>End date</label>
-    <input type="date" id="endDate" value="2024-12-31">
-  </div>
-  <div class="fg">
-    <label>US State/Region</label>
-    <select id="stateFilter">
-      <option>All</option>
-      <option>California</option><option>Texas</option><option>Florida</option>
-      <option>New York</option><option>Illinois</option><option>Washington</option>
-    </select>
-  </div>
-  <div class="fg">
-    <label>Traffic Source</label>
-    <select id="trafficFilter">
-      <option>All</option>
-      <option>Organic</option><option>Direct</option><option>Paid Search</option>
-      <option>Social Media</option><option>Referral</option><option>Email</option>
-      <option>Display Ads</option><option>Video</option>
-    </select>
-  </div>
-  <div class="fg">
-    <label>Visitor Type</label>
-    <select id="visitorFilter">
-      <option>All</option>
-      <option>New</option><option>Returning</option>
-    </select>
-  </div>
-</div>
- 
-<!-- MAIN -->
-<div class="main">
- 
-  <!-- KPI ROW 1 -->
+
+  <!-- CUSTOMER ACCOUNT REAL KPIS -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Total Monthly Revenue (USD)</div>
-      <div class="kpi-val">2.84 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 2.56 <span class="pos">(+10.9%)</span></div>
+      <div class="kpi-label">Customer RFQ Opportunities</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.stats.total_opps }}</span>
+        <span style="color:#0284c7;" class="ml-1"><i class="fas fa-clipboard-list"></i></span>
+      </div>
+      <div class="kpi-trend">Active Projects Under Evaluation</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Month-over-Month Visitor Growth (%)</div>
-      <div class="kpi-val">12.3 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 8.9 <span class="pos">(+38.2%)</span></div>
+      <div class="kpi-label">Annual Projected Volume</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.stats.total_volume }}<small style="font-size:12px;font-weight:600"> pcs</small></span>
+        <span style="color:#0284c7;" class="ml-1"><i class="fas fa-chart-line"></i></span>
+      </div>
+      <div class="kpi-trend">Sum of Account Forecasts</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Total Orders This Month (count)</div>
-      <div class="kpi-val">74.6 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 67.2 <span class="pos">(+11.0%)</span></div>
+      <div class="kpi-label">Catalog Part Numbers Developed</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.stats.items_developed }}</span>
+        <span style="color:#0284c7;" class="ml-1"><i class="fas fa-barcode"></i></span>
+      </div>
+      <div class="kpi-trend">Customer Item Cards</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Average Order Value (USD)</div>
-      <div class="kpi-val">38.07 <span class="kpi-arrow arr-down">▲</span></div>
-      <div class="kpi-sub">vs prev month 38.10 <span class="neg">(-0.1%)</span></div>
+      <div class="kpi-label">Blanket Sales Orders Issued</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.stats.total_blanket_orders }}</span>
+        <span style="color:#0284c7;" class="ml-1"><i class="fas fa-file-invoice"></i></span>
+      </div>
+      <div class="kpi-trend">Commercial Supply Contracts</div>
     </div>
   </div>
- 
-  <!-- KPI ROW 2 -->
-  <div class="kpi-grid" style="margin-bottom:12px;">
-    <div class="kpi-card">
-      <div class="kpi-label">Month-over-Month Revenue Growth (%)</div>
-      <div class="kpi-val">10.9 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 7.2 <span class="pos">(+51.4%)</span></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Average Chat Response Time (minutes)</div>
-      <div class="kpi-val">2.3 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 2.8 <span class="neg">(-17.9%)</span></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Chat Conversion Rate (%)</div>
-      <div class="kpi-val">24.7 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 22.1 <span class="pos">(+11.8%)</span></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Average Customer Satisfaction Score (score)</div>
-      <div class="kpi-val">4.6 <span class="kpi-arrow arr-up">▲</span></div>
-      <div class="kpi-sub">vs prev month 4.4 <span class="pos">(+4.5%)</span></div>
-    </div>
-  </div>
- 
-  <!-- ROW: Revenue Trend | Conversion Rate Trend -->
-  <div class="charts-row col2">
-    <div class="chart-card">
-      <div class="chart-title">Revenue Trend - Current Month vs. Previous 11 Months</div>
-      <div class="leg">
-        <div class="leg-item"><div class="leg-dot" style="background:#3949ab;"></div> Revenue</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#90a4ae;"></div> Previous Year</div>
+
+  <!-- DYNAMIC DATA TABLES: CATALOG ITEMS DEVELOPED & RFQ OPPORTUNITIES -->
+  <div class="dash-card mb-3">
+    <div class="dash-card-title flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-3">
+        <span>
+          <i class="fas fa-database mr-1" style="color:#0284c7;"></i>
+          Live Records for {{ d.selected_customer.name|default:"Selected Account" }}
+        </span>
       </div>
-      <div class="chart-box" style="height:175px;">
-        <canvas id="revenueTrendChart"></canvas>
+
+      <!-- TABLE VIEW SWITCHER TABS -->
+      <div class="d-inline-flex" style="background:#e0f2fe;padding:3px;border-radius:8px;gap:3px;">
+        <button type="button" id="tabBtnItems" class="btn btn-xs font-weight-bold"
+                style="border-radius:6px;padding:4px 12px;background:#ffffff;color:#0284c7;border:none;box-shadow:0 1px 3px rgba(2,132,199,0.15);"
+                onclick="showTable('items')">
+          <i class="fas fa-barcode mr-1"></i> Catalog Part Numbers ({{ d.customer_items|length }})
+        </button>
+        <button type="button" id="tabBtnOpps" class="btn btn-xs font-weight-bold text-muted"
+                style="border-radius:6px;padding:4px 12px;background:transparent;border:none;"
+                onclick="showTable('opps')">
+          <i class="fas fa-tasks mr-1"></i> RFQ Project Pipeline ({{ d.customer_opps|length }})
+        </button>
       </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Conversion Rate Trend - Current Month vs. Previous 11 Months</div>
-      <div class="leg">
-        <div class="leg-item"><div class="leg-dot" style="background:#3949ab;"></div> Conversion Rate</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#90a4ae;"></div> Previous Year</div>
-      </div>
-      <div class="chart-box" style="height:175px;">
-        <canvas id="convRateTrendChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW: Daily Visitor Count | Chat Volume Trend -->
-  <div class="charts-row col2">
-    <div class="chart-card">
-      <div class="chart-title">Daily Visitor Count - Last 30 Days</div>
-      <div class="chart-box" style="height:195px;">
-        <canvas id="dailyVisitorChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Chat Volume Trend - Last 30 Days</div>
-      <div class="chart-box" style="height:195px;">
-        <canvas id="chatVolumeChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW: New vs Returning | Visitor Traffic Source -->
-  <div class="charts-row col2">
-    <div class="chart-card">
-      <div class="chart-title">New vs. Returning Visitors This Month</div>
-      <div class="leg">
-        <div class="leg-item"><div class="leg-sq" style="background:#3949ab;"></div> New Visitors</div>
-        <div class="leg-item"><div class="leg-sq" style="background:#90a4ae;"></div> Returning Visitors</div>
-      </div>
-      <div class="chart-box" style="height:195px;">
-        <canvas id="newReturnChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Visitor Traffic Source Distribution</div>
-      <div class="chart-box" style="height:215px;">
-        <canvas id="trafficSourceChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- US MAP -->
-  <div class="map-section">
-    <div class="map-card">
-      <div class="chart-title">Visitors by US State/Region</div>
-      <div class="map-subtitle">United States of America</div>
-      <div class="map-scale-bar">
-        <span class="scale-label">0</span>
-        <div class="scale-gradient"></div>
-        <span class="scale-label">10</span>
-      </div>
-      <div class="map-wrap">
-        <svg id="usMap" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg"></svg>
-      </div>
-    </div>
-  </div>
- 
-  <!-- Top 10 Traffic Sources -->
-  <div class="charts-row col1" style="margin-bottom:11px;">
-    <div class="chart-card">
-      <div class="chart-title">Top 10 Traffic Sources</div>
-      <div class="chart-box" style="height:160px;">
-        <canvas id="top10TrafficChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- Visitor Growth Rate Table -->
-  <div class="chart-card">
-    <div class="chart-title">Visitor Growth Rate (%)</div>
-    <div class="table-wrap" style="margin-top:8px;">
-      <table>
+
+    <!-- 1. CATALOG ITEMS DEVELOPED TABLE (tbl_itemcard - from Item Creation) -->
+    <div id="tableContainerItems" style="overflow-x:auto;">
+      <table class="dash-table">
         <thead>
           <tr>
-            <th>Region</th>
-            <th>Current Month Visitors (k)</th>
-            <th>Previous Month Visitors (k)</th>
-            <th>Growth Rate (%)</th>
+            <th>Part Number (No)</th>
+            <th>Description</th>
+            <th>Template / Category</th>
+            <th>Customer Name</th>
+            <th>Status</th>
+            <th>Last Date Modified</th>
           </tr>
         </thead>
-        <tbody id="growthTableBody"></tbody>
+        <tbody>
+          {% for it in d.customer_items %}
+          <tr>
+            <td><strong>{{ it.no }}</strong></td>
+            <td>{{ it.description|default:"—" }}</td>
+            <td><span class="badge" style="background:#e0f2fe;color:#0284c7;font-weight:600;">{{ it.type|default:it.template_name|default:"Standard" }}</span></td>
+            <td>{{ it.customername|default:d.selected_customer.name }}</td>
+            <td><span class="badge badge-success">{{ it.status|default:"Active" }}</span></td>
+            <td><small class="text-muted">{{ it.last_date_modified|default:"—" }}</small></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              <i class="fas fa-box-open mr-1"></i> No items developed yet in Item Creation for {{ d.selected_customer.name|default:"this customer" }}.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. RFQ OPPORTUNITIES TABLE (tbl_opportunitymaster) -->
+    <div id="tableContainerOpps" style="overflow-x:auto; display:none;">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>Item No</th>
+            <th>Project / Part Name</th>
+            <th>Segment</th>
+            <th>Annual Volume</th>
+            <th>Stage & Progress Status</th>
+            <th>Target Progress</th>
+            <th>Salesperson</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for op in d.customer_opps %}
+          <tr>
+            <td><strong>{{ op.item_no }}</strong></td>
+            <td>{{ op.project_name|default:op.part_name|default:"RFQ Part" }}</td>
+            <td>{{ op.segment_description|default:"General" }}</td>
+            <td><strong>{{ op.calc_volume }}</strong> pcs</td>
+            <td>
+              <span class="badge" style="background:#e0f2fe;color:#0284c7;font-weight:bold;">
+                {{ op.stage_name }}
+              </span>
+            </td>
+            <td style="min-width:140px;">
+              <div class="d-flex justify-content-between align-items-center" style="font-size:10px;font-weight:600;color:#0369a1;">
+                <span>Progression</span><span>{{ op.stage_pct }}%</span>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-bar" style="width: {{ op.stage_pct }}%;"></div>
+              </div>
+            </td>
+            <td>{{ op.salesperson_code|default:"—" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              <i class="fas fa-clipboard mr-1"></i> No RFQ opportunities registered for {{ d.selected_customer.name|default:"this customer" }}.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
- 
-</div><!-- /main -->
- 
-<script>
-// ── LOGO ──
-function handleLogo(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => { const i = document.getElementById('logoImg'); i.src = ev.target.result; i.style.display = 'block'; };
-  r.readAsDataURL(f);
-}
- 
-// ── CHART DEFAULTS ──
-Chart.defaults.font.size = 10;
-Chart.defaults.font.family = "'Segoe UI', Tahoma, sans-serif";
-Chart.defaults.color = '#666';
- 
-const BLUE   = '#3949ab';
-const BLUE2  = '#5c6bc0';
-const LGRAY  = '#90a4ae';
-const TEAL   = '#00acc1';
-const PURPLE = '#7e57c2';
-const CYAN   = '#26c6da';
-const GREEN  = '#43a047';
-const ORANGE = '#fb8c00';
-const PINK   = '#ec407a';
- 
-const months12s = ['Jan 2...','Feb 2...','Mar 2...','Apr 2...','May 2...','Jun 2...','Jul 2...','Aug 2...','Sep 2...','Oct 2...','Nov 2...','Dec 2...'];
- 
-// ── 1. Revenue Trend ──
-new Chart(document.getElementById('revenueTrendChart'), {
-  type: 'line',
-  data: {
-    labels: months12s,
-    datasets: [
-      {
-        label: 'Revenue',
-        data: [2.1, 2.2, 2.25, 2.3, 2.4, 2.5, 2.55, 2.6, 2.65, 2.7, 2.78, 2.84],
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.08)',
-        tension: 0.35, pointRadius: 3, pointBackgroundColor: BLUE,
-        fill: false, borderWidth: 2
-      },
-      {
-        label: 'Previous Year',
-        data: [1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.28, 2.32, 2.38, 2.45],
-        borderColor: LGRAY, backgroundColor: 'rgba(144,164,174,0.06)',
-        tension: 0.35, pointRadius: 3, pointBackgroundColor: LGRAY,
-        fill: false, borderWidth: 1.5, borderDash: [4,3]
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 1.5, max: 4, ticks: { stepSize: 0.5, callback: v => v.toFixed(1) }, grid: { color: '#f0f0f0' },
-           title: { display: true, text: 'Revenue', font: { size: 10 } } },
-      x: { grid: { display: false }, ticks: { maxRotation: 30 } }
-    }
-  }
-});
- 
-// ── 2. Conversion Rate Trend ──
-new Chart(document.getElementById('convRateTrendChart'), {
-  type: 'line',
-  data: {
-    labels: months12s,
-    datasets: [
-      {
-        label: 'Conversion Rate',
-        data: [2.9, 3.0, 3.05, 3.1, 3.15, 3.2, 3.28, 3.32, 3.38, 3.4, 3.44, 3.5],
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.08)',
-        tension: 0.35, pointRadius: 3, pointBackgroundColor: BLUE,
-        fill: false, borderWidth: 2
-      },
-      {
-        label: 'Previous Year',
-        data: [2.7, 2.78, 2.85, 2.9, 2.95, 3.0, 3.05, 3.08, 3.12, 3.16, 3.2, 3.25],
-        borderColor: LGRAY,
-        tension: 0.35, pointRadius: 3, pointBackgroundColor: LGRAY,
-        fill: false, borderWidth: 1.5, borderDash: [4,3]
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 2.5, max: 4, ticks: { stepSize: 0.25, callback: v => v.toFixed(2) }, grid: { color: '#f0f0f0' },
-           title: { display: true, text: 'Conversion Rate', font: { size: 10 } } },
-      x: { grid: { display: false }, ticks: { maxRotation: 30 } }
-    }
-  }
-});
- 
-// ── 3. Daily Visitor Count ──
-(function() {
-  const labels = [], data = [];
-  for (let i = 1; i <= 30; i++) {
-    labels.push(i % 5 === 0 ? `D.${i}` : 'D.');
-    data.push(58 + Math.round(i * 1.1 + Math.sin(i * 0.5) * 8 + Math.random() * 5));
-  }
-  new Chart(document.getElementById('dailyVisitorChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.15)',
-        tension: 0.4, pointRadius: 2, pointBackgroundColor: BLUE,
-        fill: true, borderWidth: 1.5
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { min: 60, max: 150, ticks: { stepSize: 15 }, grid: { color: '#f0f0f0' },
-             title: { display: true, text: 'Daily Visitors', font: { size: 10 } } },
-        x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
+
+  <script>
+    function showTable(type) {
+      const itemsContainer = document.getElementById('tableContainerItems');
+      const oppsContainer = document.getElementById('tableContainerOpps');
+      const btnItems = document.getElementById('tabBtnItems');
+      const btnOpps = document.getElementById('tabBtnOpps');
+
+      if (type === 'items') {
+        itemsContainer.style.display = 'block';
+        oppsContainer.style.display = 'none';
+        btnItems.style.background = '#ffffff';
+        btnItems.style.color = '#0284c7';
+        btnItems.classList.remove('text-muted');
+        btnItems.style.boxShadow = '0 1px 3px rgba(2,132,199,0.15)';
+        btnOpps.style.background = 'transparent';
+        btnOpps.classList.add('text-muted');
+        btnOpps.style.boxShadow = 'none';
+      } else {
+        itemsContainer.style.display = 'none';
+        oppsContainer.style.display = 'block';
+        btnOpps.style.background = '#ffffff';
+        btnOpps.style.color = '#0284c7';
+        btnOpps.classList.remove('text-muted');
+        btnOpps.style.boxShadow = '0 1px 3px rgba(2,132,199,0.15)';
+        btnItems.style.background = 'transparent';
+        btnItems.classList.add('text-muted');
+        btnItems.style.boxShadow = 'none';
       }
     }
-  });
-})();
- 
-// ── 4. Chat Volume Trend ──
-(function() {
-  const labels = [], data = [];
-  for (let i = 1; i <= 30; i++) {
-    labels.push(i % 5 === 0 ? `D.${i}` : 'D.');
-    data.push(490 + Math.round(i * 18 + Math.sin(i * 0.6) * 60 + Math.random() * 40));
-  }
-  new Chart(document.getElementById('chatVolumeChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.15)',
-        tension: 0.4, pointRadius: 2, pointBackgroundColor: BLUE,
-        fill: true, borderWidth: 1.5
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { min: 400, max: 2000, ticks: { stepSize: 200, callback: v => v.toLocaleString() }, grid: { color: '#f0f0f0' },
-             title: { display: true, text: 'Chat Conversations', font: { size: 10 } } },
-        x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
-      }
-    }
-  });
-})();
- 
-// ── 5. New vs Returning Bar Chart ──
-new Chart(document.getElementById('newReturnChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Wee...', 'Wee...', 'Wee...', 'Wee...', 'Wee...'],
-    datasets: [
-      {
-        label: 'New Visitors',
-        data: [420, 480, 510, 590, 720],
-        backgroundColor: BLUE,
-        barPercentage: 0.5
-      },
-      {
-        label: 'Returning Visitors',
-        data: [580, 620, 640, 680, 430],
-        backgroundColor: LGRAY,
-        barPercentage: 0.5
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 300, max: 1000, ticks: { stepSize: 100 }, grid: { color: '#f0f0f0' },
-           title: { display: true, text: 'New Visitors', font: { size: 10 } } },
-      x: { grid: { display: false }, title: { display: true, text: 'Week', font: { size: 10 } } }
-    }
-  }
-});
- 
-// ── 6. Traffic Source Donut ──
-new Chart(document.getElementById('trafficSourceChart'), {
-  type: 'doughnut',
-  data: {
-    labels: [
-      'Organic\n487230 (20%)',
-      'Direct\n412150 (17%)',
-      'Paid Search\n356890 (15%)',
-      'Social Media\n298670 (12%)',
-      'Referral\n245320 (10%)',
-      'Email\n189450 (8%)',
-      'Display Ads\n156780 (6%)',
-      'Video\n98340 (4%)',
-      'Other\n~8%'
-    ],
-    datasets: [{
-      data: [20, 17, 15, 12, 10, 8, 6, 4, 8],
-      backgroundColor: [BLUE, TEAL, PURPLE, '#5c6bc0', CYAN, GREEN, ORANGE, PINK, LGRAY],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: { font: { size: 9 }, padding: 4, boxWidth: 10 }
-      }
-    },
-    cutout: '55%'
-  }
-});
- 
-// ── 7. Top 10 Traffic Sources (horizontal bar) ──
-new Chart(document.getElementById('top10TrafficChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Googl...', 'Googl...', 'Insta...', 'Twitt...', 'YouTu...', 'Faceb...', 'Bing...', 'Email...', 'Refer...', 'Direct...'],
-    datasets: [{
-      data: [580, 480, 320, 280, 240, 200, 170, 140, 110, 85],
-      backgroundColor: BLUE,
-      borderRadius: 2,
-      barThickness: 14
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { min: 5, max: 600, ticks: { stepSize: 80 }, grid: { color: '#f0f0f0' } },
-      y: { grid: { display: false } }
-    }
-  }
-});
- 
-// ── 8. US MAP (SVG with state paths) ──
-(function drawUSMap() {
-  const svg = document.getElementById('usMap');
-  // State data: intensity 1-10
-  const stateData = {
-    CA: 10, TX: 9, FL: 8, NY: 9, IL: 7, PA: 6, OH: 5, GA: 7,
-    NC: 6, MI: 5, NJ: 6, VA: 6, WA: 7, AZ: 6, MA: 5, TN: 5,
-    IN: 4, MO: 4, MD: 5, WI: 4, CO: 6, MN: 4, SC: 4, AL: 3,
-    LA: 4, KY: 3, OR: 5, OK: 3, CT: 4, UT: 5, IA: 3, NV: 5,
-    AR: 3, MS: 2, KS: 3, NE: 3, NM: 3, WV: 2, ID: 3, HI: 4,
-    ME: 2, NH: 3, RI: 3, MT: 2, DE: 3, SD: 2, AK: 3, ND: 2,
-    DC: 5, VT: 2, WY: 2
-  };
- 
-  function hexBlend(t) {
-    // interpolate from #e8eaf6 to #3949ab
-    const r = Math.round(232 + (57-232)*t);
-    const g = Math.round(234 + (73-234)*t);
-    const b = Math.round(246 + (171-246)*t);
-    return `rgb(${r},${g},${b})`;
-  }
- 
-  // Simplified US state paths (approximate polygons)
-  const states = [
-    // Contiguous states using simplified coordinate boxes
-    // [id, x, y, w, h, label_x, label_y]
-    ['WA',  65,  52, 68, 52, 99, 78],
-    ['OR',  65, 104, 68, 62,  99,135],
-    ['CA',  58, 166, 68,110,  92,221],
-    ['NV', 128, 148, 54, 82, 155,189],
-    ['ID', 126,  60, 68, 88, 160, 104],
-    ['MT', 134,  30,122, 58, 195,  59],
-    ['WY', 178, 118,102, 58, 229,147],
-    ['UT', 182, 176, 62, 72, 213,212],
-    ['AZ', 183, 248, 78, 80, 222,288],
-    ['CO', 196, 174,102, 58, 247,203],
-    ['NM', 197, 252, 84, 78, 239,291],
-    ['ND', 260,  34,100, 54, 310,  61],
-    ['SD', 258,  88,102, 56, 309,116],
-    ['NE', 260, 144,118, 46, 319,167],
-    ['KS', 264, 190,116, 50, 322,215],
-    ['OK', 264, 240,128, 46, 328,263],
-    ['TX', 258, 280,142,120, 329,340],
-    ['MN', 360,  36, 90, 76, 405,  74],
-    ['IA', 362, 112,100, 52, 412,138],
-    ['MO', 362, 164,104, 62, 414,195],
-    ['AR', 362, 226,100, 54, 412,253],
-    ['LA', 362, 280,100, 60, 412,310],
-    ['WI', 412,  50, 76, 62, 450,  81],
-    ['IL', 422, 112, 62, 80, 453,152],
-    ['MS', 422, 256, 62, 62, 453,287],
-    ['TN', 422, 208,112, 46, 478,231],
-    ['KY', 424, 162,110, 46, 479,185],
-    ['MI', 490,  36, 82, 76, 531,  74],
-    ['IN', 484, 112, 58, 72, 513,148],
-    ['OH', 542, 100, 68, 72, 576,136],
-    ['WV', 552, 158, 60, 54, 582,185],
-    ['VA', 556, 178,100, 44, 606,200],
-    ['NC', 564, 222,108, 46, 618,245],
-    ['SC', 578, 246, 72, 46, 614,269],
-    ['GA', 534, 252, 78, 72, 573,288],
-    ['AL', 502, 252, 60, 72, 532,288],
-    ['FL', 528, 324, 80,100, 568,374],
-    ['PA', 574, 100, 88, 54, 618,127],
-    ['NY', 600,  50,100, 64, 650,  82],
-    ['NJ', 662, 120, 32, 46, 678,143],
-    ['DE', 666, 144, 26, 30, 679,159],
-    ['MD', 590, 154, 86, 30, 633,169],
-    ['CT', 664,  96, 36, 24, 682,108],
-    ['RI', 700,  88, 22, 22, 711,  99],
-    ['MA', 640,  72, 80, 28, 680,  86],
-    ['VT', 650,  44, 32, 32, 666,  60],
-    ['NH', 684,  40, 28, 36, 698,  58],
-    ['ME', 700,  14, 60, 54, 730,  41],
-  ];
- 
-  states.forEach(([id, x, y, w, h, lx, ly]) => {
-    const val = stateData[id] || 2;
-    const t = (val - 1) / 9;
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', x); rect.setAttribute('y', y);
-    rect.setAttribute('width', w); rect.setAttribute('height', h);
-    rect.setAttribute('fill', hexBlend(t));
-    rect.setAttribute('stroke', '#fff'); rect.setAttribute('stroke-width', '1.5');
-    rect.setAttribute('rx', '1');
- 
-    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-    title.textContent = `${id}: ${val}/10`;
-    rect.appendChild(title);
- 
-    rect.addEventListener('mouseenter', function(e) {
-      this.setAttribute('stroke', '#1a237e');
-      this.setAttribute('stroke-width', '2.5');
-    });
-    rect.addEventListener('mouseleave', function() {
-      this.setAttribute('stroke', '#fff');
-      this.setAttribute('stroke-width', '1.5');
-    });
- 
-    svg.appendChild(rect);
- 
-    if (w > 40 && h > 26) {
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', lx); text.setAttribute('y', ly);
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('font-size', '8');
-      text.setAttribute('fill', val > 6 ? '#fff' : '#555');
-      text.setAttribute('font-family', 'Segoe UI, sans-serif');
-      text.textContent = id;
-      svg.appendChild(text);
-    }
-  });
- 
-  // Alaska (inset)
-  const ak = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  ak.setAttribute('x', 60); ak.setAttribute('y', 440);
-  ak.setAttribute('width', 90); ak.setAttribute('height', 70);
-  ak.setAttribute('fill', hexBlend(0.22)); ak.setAttribute('stroke','#fff'); ak.setAttribute('stroke-width','1.5'); ak.setAttribute('rx','1');
-  const akT = document.createElementNS('http://www.w3.org/2000/svg','title'); akT.textContent='AK: 3/10'; ak.appendChild(akT);
-  svg.appendChild(ak);
-  const akL = document.createElementNS('http://www.w3.org/2000/svg','text');
-  akL.setAttribute('x',105); akL.setAttribute('y',479); akL.setAttribute('text-anchor','middle');
-  akL.setAttribute('font-size','9'); akL.setAttribute('fill','#555'); akL.setAttribute('font-family','Segoe UI, sans-serif');
-  akL.textContent='AK'; svg.appendChild(akL);
- 
-  // Hawaii (inset)
-  const hi = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  hi.setAttribute('x', 180); hi.setAttribute('y', 460);
-  hi.setAttribute('width', 60); hi.setAttribute('height', 36);
-  hi.setAttribute('fill', hexBlend(0.33)); hi.setAttribute('stroke','#fff'); hi.setAttribute('stroke-width','1.5'); hi.setAttribute('rx','1');
-  const hiT = document.createElementNS('http://www.w3.org/2000/svg','title'); hiT.textContent='HI: 4/10'; hi.appendChild(hiT);
-  svg.appendChild(hi);
-  const hiL = document.createElementNS('http://www.w3.org/2000/svg','text');
-  hiL.setAttribute('x',210); hiL.setAttribute('y',482); hiL.setAttribute('text-anchor','middle');
-  hiL.setAttribute('font-size','9'); hiL.setAttribute('fill','#555'); hiL.setAttribute('font-family','Segoe UI, sans-serif');
-  hiL.textContent='HI'; svg.appendChild(hiL);
-})();
- 
-// ── GROWTH TABLE ──
-const growthData = [
-  { region: 'California',  curr: 287.4, prev: 256.2, rate: 12.2 },
-  { region: 'Texas',       curr: 234.8, prev: 209.3, rate: 12.2 },
-  { region: 'Florida',     curr: 198.6, prev: 177.1, rate: 12.2 },
-  { region: 'New York',    curr: 176.3, prev: 157.2, rate: 12.1 },
-  { region: 'Illinois',    curr: 145.2, prev: 129.8, rate: 11.9 },
-  { region: 'Washington',  curr: 132.7, prev: 118.5, rate: 12.0 },
-  { region: 'Georgia',     curr: 121.4, prev: 108.3, rate: 12.1 },
-  { region: 'Arizona',     curr: 115.8, prev: 103.4, rate: 12.0 },
-];
- 
-const tbody = document.getElementById('growthTableBody');
-growthData.forEach(r => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${r.region}</td><td>${r.curr}</td><td>${r.prev}</td><td>${r.rate}</td>`;
-  tbody.appendChild(tr);
-});
- 
-// ── FILTER FEEDBACK ──
-['startDate','endDate','stateFilter','trafficFilter','visitorFilter'].forEach(id => {
-  document.getElementById(id).addEventListener('change', () => {
-    document.querySelector('.updated-badge').textContent =
-      `Filters applied — ${new Date().toLocaleDateString()}`;
-  });
-});
-</script>
-{% endblock %}
+  </script>
+
+  <!-- COMMERCIAL ORDERS & OVERALL TOP ACCOUNTS BENCHMARK -->
+  <div class="charts-row-2">
+    <!-- Commercial Blanket Orders for this Customer -->
+    <div class="dash-card">
+      <div class="dash-card-title">
+        <span><i class="fas fa-file-contract mr-1" style="color:#0284c7;"></i> Commercial Blanket Orders</span>
+        <span class="badge badge-light border">{{ d.customer_blanket_so|length }} Orders</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>BSO ID</th>
+              <th>Order No</th>
+              <th>Order Date</th>
+              <th>Location</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in d.customer_blanket_so %}
+            <tr>
+              <td><strong>{{ b.bsocreationid|default:"BSO" }}</strong></td>
+              <td>{{ b.no|default:"—" }}</td>
+              <td>{{ b.orderdate|default:"—" }}</td>
+              <td>{{ b.locationcode|default:"Plant" }}</td>
+              <td><span class="badge badge-success">{{ b.status|default:"Active" }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-2">No blanket orders placed yet for this account.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Top Accounts in Organization -->
+    <div class="dash-card">
+      <div class="dash-card-title">
+        <span><i class="fas fa-trophy mr-1" style="color:#0284c7;"></i> Top Enterprise Client Accounts (Company Portfolio)</span>
+        <span class="text-muted" style="font-size:11px;">Ranked by Project Volume</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Customer ID</th>
+              <th>Total Projects</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in d.top_accounts %}
+            <tr>
+              <td><strong>{{ a.customername }}</strong></td>
+              <td><code>{{ a.customerid }}</code></td>
+              <td><span class="badge" style="background:#e0f2fe;color:#0284c7;">{{ a.count_opps }} RFQs</span></td>
+              <td>
+                <a href="?customer_id={{ a.customerid }}" class="btn btn-xs btn-outline-primary" style="font-size:10px;padding:2px 8px;">
+                  View Account
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-2">No accounts ranked.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}

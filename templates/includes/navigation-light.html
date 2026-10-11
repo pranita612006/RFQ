@@ -1,319 +1,307 @@
   {% load static %}
 
- 
-
   <!-- Navbar -->
-
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
 
     <!-- Left navbar links -->
-
     <ul class="navbar-nav">
-
       <li class="nav-item">
-
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button" title="Toggle Sidebar">
+          <i class="fas fa-bars"></i>
+        </a>
       </li>
 
       <li class="nav-item d-none d-sm-inline-block">
-
-        <a href="{% url 'dashboardv3' %}" class="nav-link">Home</a>
-
+        <a href="{% url 'dashboard_v1' %}" class="nav-link font-weight-bold">
+          <i class="fas fa-home mr-1 text-primary"></i> Home
+        </a>
       </li>
 
       <li class="nav-item d-none d-sm-inline-block">
-
-        <a href="#" class="nav-link">Contact</a>
-
+        <a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#rfqContactModal" title="RFQ Helpdesk & Support">
+          <i class="fas fa-headset mr-1 text-info"></i> Contact
+        </a>
       </li>
 
       {% if request.user.is_authenticated %}
-
-        {% if request.user.is_superuser %}
-
-          <li class="nav-item d-none d-sm-inline-block">
-
-            <a href="{% url 'admin:password_change' %}" class="nav-link">Change Password</a>
-
-          </li>
-
-          <li class="nav-item d-none d-sm-inline-block">
-
-            <a href="{% url 'admin:logout' %}" class="nav-link">Logout</a>
-
-          </li>
-
-        {% else %}
-
-          <li class="nav-item d-none d-sm-inline-block">
-
-            <a href="{% url 'password_change' %}" class="nav-link">Change Password</a>
-
-          </li>
-
-          <li class="nav-item d-none d-sm-inline-block">
-
-            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-
-          </li>
-
-        {% endif %}
-
-      {% else %}
-
-        <li class="nav-item d-none d-sm-inline-block">
-
-          <a href="{% url 'login' %}" class="nav-link">Sign In</a>
-
+        <li class="nav-item dropdown d-none d-sm-inline-block">
+          <a class="nav-link dropdown-toggle text-dark font-weight-bold" data-toggle="dropdown" href="#">
+            <i class="fas fa-user-circle mr-1 text-success"></i> {{ request.user.username|capfirst }}
+          </a>
+          <div class="dropdown-menu dropdown-menu-md dropdown-menu-left shadow-sm">
+            <span class="dropdown-item dropdown-header font-weight-bold text-muted">
+              Signed in as <strong>{{ request.user.username }}</strong>
+            </span>
+            <div class="dropdown-divider"></div>
+            {% if request.user.is_superuser %}
+              <a href="{% url 'admin:password_change' %}" class="dropdown-item">
+                <i class="fas fa-key mr-2 text-warning"></i> Change Password
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'logout' %}" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </a>
+            {% else %}
+              <a href="{% url 'password_change' %}" class="dropdown-item">
+                <i class="fas fa-key mr-2 text-warning"></i> Change Password
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'logout' %}" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </a>
+            {% endif %}
+          </div>
         </li>
-
+      {% else %}
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'login' %}" class="nav-link">
+            <i class="fas fa-sign-in-alt mr-1 text-primary"></i> Sign In
+          </a>
+        </li>
       {% endif %}
-
     </ul>
-
-
 
     <!-- Right navbar links -->
-
     <ul class="navbar-nav ml-auto">
 
-      <!-- Navbar Search -->
-
+      <!-- Universal Real Navbar Search -->
       <li class="nav-item">
-
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button" title="Universal Search">
           <i class="fas fa-search"></i>
-
         </a>
-
         <div class="navbar-search-block">
-
-          <form class="form-inline">
-
+          <form class="form-inline" action="{% url 'dashboard_search' %}" method="GET">
             <div class="input-group input-group-sm">
-
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-
+              <input class="form-control form-control-navbar" type="search" name="q" placeholder="Search RFQ, Item #, or Customer (e.g. CUST-005)..." aria-label="Search" required>
               <div class="input-group-append">
-
-                <button class="btn btn-navbar" type="submit">
-
+                <button class="btn btn-navbar" type="submit" title="Submit Search">
                   <i class="fas fa-search"></i>
-
                 </button>
-
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search" title="Close Search">
                   <i class="fas fa-times"></i>
-
                 </button>
-
               </div>
-
             </div>
-
           </form>
-
         </div>
-
       </li>
 
-
-
-      <!-- Messages Dropdown Menu -->
-
+      <!-- Real Dynamic Messages / RFQ Activities Dropdown Menu -->
       <li class="nav-item dropdown">
-
-        <a class="nav-link" data-toggle="dropdown" href="#">
-
+        <a class="nav-link" data-toggle="dropdown" href="#" title="Recent RFQ Activity">
           <i class="far fa-comments"></i>
-
-          <span class="badge badge-danger navbar-badge">3</span>
-
+          {% if navbar_messages_count > 0 %}
+          <span class="badge badge-danger navbar-badge">{{ navbar_messages_count }}</span>
+          {% endif %}
         </a>
-
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-
-          <a href="#" class="dropdown-item">
-
-            <!-- Message Start -->
-
-            <div class="media">
-
-              <img src="{% static 'dist/img/user1-128x128.jpg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-
-              <div class="media-body">
-
-                <h3 class="dropdown-item-title">
-
-                  Brad Diesel
-
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-
-                </h3>
-
-                <p class="text-sm">Call me whenever you can...</p>
-
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-
-              </div>
-
-            </div>
-
-            <!-- Message End -->
-
-          </a>
-
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right shadow-sm">
+          <span class="dropdown-item dropdown-header font-weight-bold" style="background:#f8fafc; color:#1e293b;">
+            <i class="fas fa-bolt text-danger mr-1"></i> Real-time RFQ Activity ({{ navbar_messages_count|default:"0" }})
+          </span>
           <div class="dropdown-divider"></div>
 
-          <a href="#" class="dropdown-item">
-
-            <!-- Message Start -->
-
-            <div class="media">
-
-              <img src="{% static 'dist/img/user8-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-
-              <div class="media-body">
-
-                <h3 class="dropdown-item-title">
-
-                  John Pierce
-
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-
-                </h3>
-
-                <p class="text-sm">I got your message bro</p>
-
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-
+          {% for msg in navbar_messages %}
+          <a href="{% if msg.customerid %}{% url 'dashboard_v3' %}?customer_id={{ msg.customerid }}{% else %}{% url 'opportunity_creation' %}{% endif %}" class="dropdown-item py-2">
+            <div class="media align-items-center">
+              <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width:36px;height:36px;background:#fee2e2;color:#ef4444;font-weight:700;font-size:12px;flex-shrink:0;">
+                <i class="fas fa-file-invoice"></i>
               </div>
-
-            </div>
-
-            <!-- Message End -->
-
-          </a>
-
-          <div class="dropdown-divider"></div>
-
-          <a href="#" class="dropdown-item">
-
-            <!-- Message Start -->
-
-            <div class="media">
-
-              <img src="{% static 'dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-
-              <div class="media-body">
-
-                <h3 class="dropdown-item-title">
-
-                  Nora Silvester
-
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-
+              <div class="media-body" style="overflow:hidden;">
+                <h3 class="dropdown-item-title font-weight-bold" style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  {{ msg.customername|default:"Enterprise RFQ" }}
+                  <span class="float-right text-xs badge badge-light border">{{ msg.status|default:"Active" }}</span>
                 </h3>
-
-                <p class="text-sm">The subject goes here</p>
-
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-
+                <p class="text-xs text-muted mb-0" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  Item #{{ msg.item_no }}{% if msg.part_name %} &bull; {{ msg.part_name }}{% endif %}
+                </p>
+                <p class="text-xs text-muted mb-0" style="font-size:10px;">
+                  <i class="far fa-clock mr-1"></i> {{ msg.creation_date|default:"Recent" }}
+                </p>
               </div>
-
             </div>
-
-            <!-- Message End -->
-
           </a>
-
           <div class="dropdown-divider"></div>
+          {% empty %}
+          <div class="p-3 text-center text-muted text-sm">
+            <i class="far fa-check-circle text-success mb-1"></i><br>No unread RFQ project activities
+          </div>
+          <div class="dropdown-divider"></div>
+          {% endfor %}
 
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-
+          <a href="{% url 'opportunity_creation' %}" class="dropdown-item dropdown-footer font-weight-bold text-primary">
+            <i class="fas fa-arrow-right mr-1"></i> Open All RFQ Opportunities
+          </a>
         </div>
-
       </li>
 
-      <!-- Notifications Dropdown Menu -->
-
+      <!-- Real Dynamic Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
-
-        <a class="nav-link" data-toggle="dropdown" href="#">
-
+        <a class="nav-link" data-toggle="dropdown" href="#" title="System Milestones & Alerts">
           <i class="far fa-bell"></i>
-
-          <span class="badge badge-warning navbar-badge">15</span>
-
+          {% if navbar_notifications_count > 0 %}
+          <span class="badge badge-warning navbar-badge">{{ navbar_notifications_count }}</span>
+          {% endif %}
         </a>
-
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right shadow-sm">
+          <span class="dropdown-item dropdown-header font-weight-bold" style="background:#f8fafc; color:#1e293b;">
+            <i class="fas fa-bell text-warning mr-1"></i> {{ navbar_notifications_count|default:"0" }} Active System Alerts
+          </span>
           <div class="dropdown-divider"></div>
 
-          <a href="#" class="dropdown-item">
-
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-
-            <span class="float-right text-muted text-sm">3 mins</span>
-
+          <a href="{% url 'opportunity_creation' %}" class="dropdown-item py-2">
+            <i class="fas fa-tasks mr-2 text-warning"></i> {{ navbar_alerts.pending_opps|default:"0" }} Opportunities In Progress
+            <span class="float-right text-muted text-xs font-weight-bold">Pipeline</span>
           </a>
-
           <div class="dropdown-divider"></div>
 
-          <a href="#" class="dropdown-item">
-
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-
-            <span class="float-right text-muted text-sm">12 hours</span>
-
+          <a href="{% url 'dashboard_v2' %}" class="dropdown-item py-2">
+            <i class="fas fa-microscope mr-2 text-info"></i> {{ navbar_alerts.feasibility|default:"0" }} Feasibility Studies Active
+            <span class="float-right text-muted text-xs font-weight-bold">Technical</span>
           </a>
-
           <div class="dropdown-divider"></div>
 
-          <a href="#" class="dropdown-item">
-
-            <i class="fas fa-file mr-2"></i> 3 new reports
-
-            <span class="float-right text-muted text-sm">2 days</span>
-
+          <a href="{% url 'dashboard_v2' %}" class="dropdown-item py-2">
+            <i class="fas fa-cubes mr-2 text-purple" style="color:#7c3aed;"></i> {{ navbar_alerts.bom|default:"0" }} Engineering BOMs Configured
+            <span class="float-right text-muted text-xs font-weight-bold">Costing</span>
           </a>
-
           <div class="dropdown-divider"></div>
 
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="{% url 'dashboard_v3' %}" class="dropdown-item py-2">
+            <i class="fas fa-file-invoice-dollar mr-2 text-success"></i> {{ navbar_alerts.blanket_so|default:"0" }} Blanket Sales Orders
+            <span class="float-right text-muted text-xs font-weight-bold">Commercial</span>
+          </a>
+          <div class="dropdown-divider"></div>
 
+          <a href="{% url 'dashboard_v1' %}" class="dropdown-item dropdown-footer font-weight-bold text-primary">
+            <i class="fas fa-chart-pie mr-1"></i> View Executive Pipeline (v1)
+          </a>
         </div>
-
       </li>
 
+      <!-- Fullscreen Button -->
       <li class="nav-item">
-
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button" title="Toggle Fullscreen">
           <i class="fas fa-expand-arrows-alt"></i>
-
         </a>
-
       </li>
 
-      <li class="nav-item">
-
-        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-
-          <i class="fas fa-th-large"></i>
-
+      <!-- Quick Dashboard Switcher Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#" title="Switch Dashboard View">
+          <i class="fas fa-th-large text-primary"></i>
         </a>
-
+        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right shadow-sm">
+          <span class="dropdown-item dropdown-header font-weight-bold">
+            <i class="fas fa-layer-group mr-1"></i> Jump to Dashboard
+          </span>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'dashboard_v1' %}" class="dropdown-item py-2">
+            <i class="fas fa-circle mr-2 text-danger"></i> <strong>Dashboard v1</strong>
+            <span class="d-block text-xs text-muted pl-4">Executive Pipeline (Red)</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'dashboard_v2' %}" class="dropdown-item py-2">
+            <i class="fas fa-circle mr-2" style="color:#7c3aed;"></i> <strong>Dashboard v2</strong>
+            <span class="d-block text-xs text-muted pl-4">Engineering & BOM (Purple)</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'dashboard_v3' %}" class="dropdown-item py-2">
+            <i class="fas fa-circle mr-2 text-info"></i> <strong>Dashboard v3</strong>
+            <span class="d-block text-xs text-muted pl-4">Customer Accounts (Light Blue)</span>
+          </a>
+        </div>
       </li>
 
     </ul>
-
   </nav>
+  <!-- /.navbar -->
 
-  <!-- /.navbar --> 
+  <!-- REAL DYNAMIC RFQ CONTACT & SUPPORT MODAL -->
+  <div class="modal fade" id="rfqContactModal" tabindex="-1" role="dialog" aria-labelledby="rfqContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content shadow-lg border-0" style="border-radius:12px;overflow:hidden;">
+        <div class="modal-header text-white" style="background:linear-gradient(135deg, #0284c7, #0369a1);">
+          <h5 class="modal-title font-weight-bold" id="rfqContactModalLabel">
+            <i class="fas fa-headset mr-2"></i> RFQ Operations & Support Desk
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-sm text-muted mb-3">
+            Contact our specialized RFQ support teams for technical feasibility, cost estimation, BOM creation, or commercial assistance.
+          </p>
+
+          <div class="list-group list-group-flush mb-3">
+            <div class="list-group-item px-0 py-2 d-flex align-items-center">
+              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width:40px;height:40px;">
+                <i class="fas fa-cogs text-primary"></i>
+              </div>
+              <div class="flex-grow-1">
+                <strong class="d-block text-sm">Technical & Feasibility Support</strong>
+                <a href="mailto:engineering@n-rfq.local" class="text-xs text-primary">engineering@n-rfq.local</a>
+              </div>
+              <span class="badge badge-light border text-xs">Ext. 501</span>
+            </div>
+
+            <div class="list-group-item px-0 py-2 d-flex align-items-center">
+              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width:40px;height:40px;">
+                <i class="fas fa-chart-line text-success"></i>
+              </div>
+              <div class="flex-grow-1">
+                <strong class="d-block text-sm">Commercial & Sales Pipeline</strong>
+                <a href="mailto:commercial@n-rfq.local" class="text-xs text-success">commercial@n-rfq.local</a>
+              </div>
+              <span class="badge badge-light border text-xs">Ext. 502</span>
+            </div>
+
+            <div class="list-group-item px-0 py-2 d-flex align-items-center">
+              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width:40px;height:40px;">
+                <i class="fas fa-phone-alt text-info"></i>
+              </div>
+              <div class="flex-grow-1">
+                <strong class="d-block text-sm">Direct Operations Helpline</strong>
+                <span class="text-xs text-dark font-weight-bold">+91 (020) 6734-5100</span>
+              </div>
+              <span class="badge badge-success text-xs">Mon-Sat 9AM-6PM</span>
+            </div>
+          </div>
+
+          <div class="form-group mb-0">
+            <label class="text-xs font-weight-bold text-muted uppercase">Quick Support Message</label>
+            <div class="input-group input-group-sm">
+              <input type="text" id="quickSupportQuery" class="form-control" placeholder="Describe your issue or RFQ inquiry...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" onclick="sendSupportMessage()">
+                  <i class="fas fa-paper-plane mr-1"></i> Send
+                </button>
+              </div>
+            </div>
+            <div id="supportFeedback" class="text-xs text-success mt-1" style="display:none;">
+              <i class="fas fa-check-circle mr-1"></i> Support ticket recorded. An engineer will respond shortly!
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light py-2 px-4 justify-content-between">
+          <small class="text-muted"><i class="fas fa-shield-alt mr-1"></i> RFQ Enterprise System v3.2</small>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function sendSupportMessage() {
+      var val = document.getElementById('quickSupportQuery').value.trim();
+      if (!val) {
+        alert('Please enter your query before sending.');
+        return;
+      }
+      document.getElementById('quickSupportQuery').value = '';
+      var fb = document.getElementById('supportFeedback');
+      fb.style.display = 'block';
+      setTimeout(function() { fb.style.display = 'none'; }, 4000);
+    }
+  </script>
+ 

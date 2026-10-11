@@ -2,13 +2,132 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
-<div class="container-fluid full-dashboard">
-  <h2>Feasibility Form</h2>
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  /* Base typography: Montserrat for all text except headings */
+  .feas-container,
+  .feas-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
 
-  <div class="container-fluid mt-4">
-  <div class="card card-primary">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title mb-0">Initial Details</h3>
+  /* Headings: Permanent Marker */
+  .feas-page-heading,
+  .feas-card-title {
+    font-family: 'Permanent Marker', cursive !important;
+  }
+
+  .feas-page-heading {
+    color: #2E266D;
+  }
+
+  .feas-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  .feas-card-title {
+    color: #FFFFFF !important;
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  .btn-feas-back {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-feas-back:hover {
+    background-color: #FFFFFF;
+    color: #2E266D !important;
+  }
+
+  /* Labels and inputs styling */
+  .feas-container label {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .feas-container .form-control:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  /* Buttons in Red (#FF3131) with Blue Border (#2E266D) & Spacing */
+  .feas-container .btn-feas-action,
+  .feas-container .card-footer .btn {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 7px 22px;
+    margin-right: 8px !important;
+    margin-bottom: 4px;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+  }
+
+  .feas-container .btn-feas-action:hover,
+  .feas-container .card-footer .btn:hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35);
+  }
+
+  .feas-container .btn-feas-action:disabled,
+  .feas-container .card-footer .btn:disabled {
+    background-color: #ff8585 !important;
+    border: 2px solid #7b75a6 !important;
+    color: #FFFFFF !important;
+    opacity: 0.65;
+  }
+
+  /* Records Table styling matching Item Creation table */
+  .grid-card-title {
+    font-family: 'Permanent Marker', cursive !important;
+    color: #2E266D !important;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  #recordsTable thead.table-dark th {
+    background-color: #212529 !important;
+    color: #FFFFFF !important;
+    border-color: #373b3e !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+    padding: 9px 12px;
+  }
+
+  #recordsTable td {
+    padding: 8px 12px;
+    vertical-align: middle;
+  }
+</style>
+<div class="container-fluid full-dashboard feas-container">
+  <h2 class="feas-page-heading">Feasibility Form</h2>
+
+  <div class="container-fluid mt-3 px-0">
+  <div class="card card-primary shadow-sm">
+    <div class="feas-card-header">
+      <h3 class="feas-card-title">Initial Details</h3>
+      <button type="button" class="btn-feas-back" id="btn-back">← Back</button>
     </div>
 
     <form id="feasibilityForm" method="post" novalidate>
@@ -119,11 +238,12 @@
   </div>
 
 
-  <div class="card card-primary mt-3">
+  <div class="card card-primary mt-3 shadow-sm">
+    <div class="feas-card-header">
+      <h4 class="feas-card-title" style="font-size: 1.15rem;">Feasibility Checklist</h4>
+    </div>
     
       <div class="card-body">
-        <!-- Checklist Section -->
-        <h5 class="mt-4">Feasibility Checklist</h5>
 
         <!-- Example Row -->
         <div class="form-group">
@@ -1969,7 +2089,7 @@
           </td>
 
           <td>
-            <button type="button" id="editBtn" class="btn btn-primary btn-sm" style="background-color: #5b74a3;">Edit</button>
+            <button type="button" id="editBtn" class="btn btn-feas-action btn-sm">Edit</button>
           </td>
         </tr>
 
@@ -1985,11 +2105,11 @@
           <td><input type="text" id="pm_date" name="pm_date" class="form-control"></td>
 
           <td>
-            <button type="submit" class="btn btn-success btn-sm" style="background-color: #5b74a3;" id="middleCreateBtn">Create</button>
+            <button type="submit" class="btn btn-feas-action btn-sm" id="middleCreateBtn">Create</button>
           </td>
 
           <td>
-            <button type="button" class="btn btn-secondary btn-sm" style="background-color: #5b74a3;">Complete</button>
+            <button type="button" class="btn btn-feas-action btn-sm" id="middleCompleteBtn">Complete</button>
           </td>
         </tr>
 
@@ -2002,20 +2122,20 @@
   </div>
 
       <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success" id="saveBtn">Save</button>
+        <button type="submit" class="btn btn-feas-action" id="saveBtn">Save</button>
       </div>
     </form>
   </div>
   
-  <!-- Inserted Records Table -->
-  <div class="card card-primary mt-4">
-    <div class="card-header">
-      <h3 class="card-title mb-0">Existing Feasibility Records</h3>
+  <!-- Inserted Records Table (Styled like Item Creation table) -->
+  <div class="card mt-3 shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0 grid-card-title">Existing Feasibility Records</h5>
     </div>
-    <div class="card-body">
+    <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-bordered table-striped" id="recordsTable">
-          <thead>
+        <table class="table table-sm table-bordered table-hover mb-0" id="recordsTable">
+          <thead class="table-dark">
             <tr>
               <th>Item No</th>
               <th>Customer Name</th>
@@ -2075,14 +2195,14 @@ function toggleFormFields(isEditable) {
     });
 
     if (editBtn) {
-            editBtn.textContent = isEditable ? "Lock Fields" : "Edit Data";
-            editBtn.className = isEditable ? "btn btn-success" : "btn btn-warning";
+            editBtn.textContent = isEditable ? "Lock Fields" : "Edit";
+            editBtn.className = "btn btn-feas-action btn-sm";
         }
 }
 
 document.getElementById('editBtn')?.addEventListener('click', function() {
     // Determine if we should unlock or lock based on current button text
-    const shouldUnlock = (this.textContent.trim() === "Edit Data");
+    const shouldUnlock = (this.textContent.trim() === "Edit Data" || this.textContent.trim() === "Edit");
     toggleFormFields(shouldUnlock); 
 });
 

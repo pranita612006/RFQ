@@ -43,9 +43,9 @@ class ActiveCustomerMiddleware:
 
         # Attach the customer dictionary directly to the request object
         request.active_customer = {
-            'id': request.session.get('active_customer_id'),
-            'name': request.session.get('active_customer_name'),
-            'search_name': request.session.get('active_customer_search_name'),
+            'id': request.session.get('active_customer_id') or '',
+            'name': request.session.get('active_customer_name') or '',
+            'search_name': request.session.get('active_customer_search_name') or '',
         }
         
         # Helper boolean

@@ -1,4 +1,24 @@
 {% load static %}
+<style>
+  #dt-view-consolidate table th,
+  #dt-view-entry table th {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    background-color: #8fb4e1 !important;
+    border: 1px solid #718096 !important;
+  }
+  #dt-view-consolidate table td,
+  #dt-view-entry table td,
+  #dt-view-consolidate table td span,
+  #dt-view-entry table td span {
+    color: #000000 !important;
+    border: 1px solid #718096 !important;
+  }
+  #dt-view-consolidate table td input,
+  #dt-view-entry table td input {
+    color: #000000 !important;
+  }
+</style>
 {# default_view_mode: dt_entry unless explicitly set to consolidate #}
 {% with eff_mode=view_mode|default:"dt_entry" %}
 <div style="padding: 16px; font-family: 'Inter', 'Segoe UI', sans-serif;">
@@ -9,14 +29,14 @@
             id="subtab-btn-consolidate"
             data-subtab="consolidate"
             onclick="window.switchDTViewMode('consolidate')"
-            style="cursor: pointer; padding: 5px 16px; font-size: 0.78rem; font-weight: {% if eff_mode == 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: {% if eff_mode == 'consolidate' %}2px solid #1e3a8a{% else %}1px solid #1e3a8a{% endif %}; background: {% if eff_mode == 'consolidate' %}#ffffff{% else %}#f3f4f6{% endif %}; color: {% if eff_mode == 'consolidate' %}#172554{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+            style="cursor: pointer; padding: 6px 18px; font-size: 0.82rem; font-weight: {% if eff_mode == 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: 1px solid #1e3a8a; background: {% if eff_mode == 'consolidate' %}#ffffff{% else %}#f3f4f6{% endif %}; color: {% if eff_mode == 'consolidate' %}#172554{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
       Consolidate View
     </button>
     <button type="button"
             id="subtab-btn-dtentry"
             data-subtab="dt_entry"
             onclick="window.switchDTViewMode('dt_entry')"
-            style="cursor: pointer; padding: 5px 16px; font-size: 0.78rem; font-weight: {% if eff_mode != 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: {% if eff_mode != 'consolidate' %}2px solid #172554{% else %}1px solid #d1d5db{% endif %}; background: {% if eff_mode != 'consolidate' %}#172554{% else %}#f3f4f6{% endif %}; color: {% if eff_mode != 'consolidate' %}#ffffff{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+            style="cursor: pointer; padding: 6px 18px; font-size: 0.82rem; font-weight: {% if eff_mode != 'consolidate' %}700{% else %}600{% endif %}; border-radius: 4px; border: 1px solid #172554; background: {% if eff_mode != 'consolidate' %}#172554{% else %}#f3f4f6{% endif %}; color: {% if eff_mode != 'consolidate' %}#ffffff{% else %}#374151{% endif %}; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
       DT Entry
     </button>
   </div>
@@ -29,20 +49,20 @@
     <!-- Top Parameters & Export Bar -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
       <!-- Discount Rate & Life Cycle Info Box -->
-      <div style="border: 1px solid #9ca3af; background: #ffffff; font-size: 0.75rem;">
-        <div style="display: flex; border-bottom: 1px solid #9ca3af;">
-          <div style="padding: 4px 12px; background: #eff6ff; border-right: 1px solid #9ca3af; font-weight: 600; color: #1f2937; min-width: 150px;">
+      <div style="border: 1px solid #718096; background: #ffffff; font-size: 0.75rem;">
+        <div style="display: flex; border-bottom: 1px solid #718096;">
+          <div style="padding: 4px 12px; background: #ffffff; border-right: 1px solid #718096; font-weight: 700; color: #000000; min-width: 150px;">
             Discount Rate(in %) :
           </div>
-          <div style="padding: 4px 16px; font-weight: 700; color: #111827; text-align: center; min-width: 60px;">
+          <div style="padding: 4px 16px; font-weight: 700; color: #000000; text-align: center; min-width: 60px;">
             {{ discount_rate|default:"10" }}
           </div>
         </div>
         <div style="display: flex;">
-          <div style="padding: 4px 12px; background: #eff6ff; border-right: 1px solid #9ca3af; font-weight: 600; color: #1f2937; min-width: 150px;">
+          <div style="padding: 4px 12px; background: #ffffff; border-right: 1px solid #718096; font-weight: 700; color: #000000; min-width: 150px;">
             Life Cycle(Years) :
           </div>
-          <div style="padding: 4px 16px; font-weight: 700; color: #111827; text-align: center; min-width: 60px;">
+          <div style="padding: 4px 16px; font-weight: 700; color: #000000; text-align: center; min-width: 60px;">
             {{ life_cycle|default:"5" }}
           </div>
         </div>
@@ -52,24 +72,24 @@
       <button type="button"
               id="btn-export-consolidate"
               onclick="window.exportDTConsolidate()"
-              style="cursor: pointer; padding: 5px 22px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: 1px solid #1e3a8a; background: #ffffff; color: #172554; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+              style="cursor: pointer; padding: 6px 22px; font-size: 0.82rem; font-weight: 600; border-radius: 4px; border: 1px solid #1e3a8a; background: #ffffff; color: #172554; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
         Export
       </button>
     </div>
 
     <!-- Multi-Year Consolidate Table -->
     <div style="overflow-x: auto;">
-      <table style="border-collapse: collapse; border: 1px solid #9ca3af; font-size: 0.75rem; background: #ffffff; min-width: 100%;">
+      <table style="border-collapse: collapse; border: 1px solid #718096; font-size: 0.78rem; background: #ffffff; min-width: 100%;">
         <thead>
-          <tr style="background-color: #9cbde4;">
-            <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 320px;">
+          <tr style="background-color: #8fb4e1;">
+            <th style="border: 1px solid #718096; padding: 8px 16px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; min-width: 320px;">
               Category
             </th>
-            <th style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 80px;">
+            <th style="border: 1px solid #718096; padding: 8px 12px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; min-width: 80px;">
               Currency
             </th>
             {% for y in consolidate_years %}
-            <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; min-width: 105px;">
+            <th style="border: 1px solid #718096; padding: 8px 16px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; min-width: 105px;">
               {{ y }}
             </th>
             {% endfor %}
@@ -78,14 +98,14 @@
         <tbody>
           {% for row in consolidate_assignments %}
           <tr style="background: {% cycle '#ffffff' '#f8fafc' %};">
-            <td style="border: 1px solid #9ca3af; padding: 8px 12px; color: #111827; font-weight: 500; white-space: nowrap;">
+            <td style="border: 1px solid #718096; padding: 8px 12px; color: #000000; font-weight: 500; white-space: nowrap;">
               {{ row.category_name }}
             </td>
-            <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; color: #1f2937; font-weight: 600;">
+            <td style="border: 1px solid #718096; padding: 8px 12px; text-align: center; color: #000000; font-weight: 600;">
               {{ row.currency|default:"INR" }}
             </td>
             {% for yc in row.year_costs %}
-            <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: right; font-weight: 500; color: #111827; white-space: nowrap;">
+            <td style="border: 1px solid #718096; padding: 8px 12px; text-align: right; font-weight: 500; color: #000000; white-space: nowrap;">
               {{ yc.formatted_cost }}
             </td>
             {% endfor %}
@@ -93,7 +113,7 @@
           {% endfor %}
           {% if not consolidate_assignments %}
           <tr>
-            <td colspan="10" style="border: 1px solid #9ca3af; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
+            <td colspan="10" style="border: 1px solid #718096; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
               No data available. Select an Item Creation ID to load data.
             </td>
           </tr>
@@ -124,24 +144,24 @@
 
         <!-- Table with Year Centered Header -->
         <div style="display: inline-block;">
-          <table style="border-collapse: collapse; border: 1px solid #9ca3af; font-size: 0.75rem; background: #ffffff; min-width: 540px;">
+          <table style="border-collapse: collapse; border: 1px solid #718096; font-size: 0.78rem; background: #ffffff; min-width: 540px;">
             <thead>
               <!-- Year label row -->
               <tr>
                 <th colspan="2" style="border: none; background: transparent; padding: 0;"></th>
-                <th style="border: none; background: transparent; text-align: center; font-weight: 700; color: #111827; font-size: 0.875rem; padding-bottom: 6px; padding-top: 0;">
+                <th style="border: none; background: transparent; text-align: center; font-weight: 700; color: #000000; font-size: 0.9rem; padding-bottom: 6px; padding-top: 0;">
                   {{ assignment_year|default:"2026" }}
                 </th>
               </tr>
               <!-- Column headings -->
-              <tr style="background-color: #9cbde4;">
-                <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 320px;">
+              <tr style="background-color: #8fb4e1;">
+                <th style="border: 1px solid #718096; padding: 8px 16px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; width: 320px;">
                   Category
                 </th>
-                <th style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 70px;">
+                <th style="border: 1px solid #718096; padding: 8px 12px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; width: 70px;">
                   INR
                 </th>
-                <th style="border: 1px solid #9ca3af; padding: 8px 16px; text-align: center; font-weight: 700; color: #1f2937; font-size: 0.75rem; letter-spacing: 0.05em; width: 150px;">
+                <th style="border: 1px solid #718096; padding: 8px 16px; text-align: center; font-weight: 700; color: #000000; font-size: 0.78rem; letter-spacing: 0.03em; width: 150px;">
                   Cost
                 </th>
               </tr>
@@ -149,14 +169,14 @@
             <tbody>
               {% for item in assignments %}
               <tr style="background: {% cycle '#ffffff' '#f8fafc' %};" data-category="{{ item.category_name }}">
-                <td style="border: 1px solid #9ca3af; padding: 8px 12px; color: #111827; font-weight: 500; white-space: nowrap;">
+                <td style="border: 1px solid #718096; padding: 8px 12px; color: #000000; font-weight: 500; white-space: nowrap;">
                   {{ item.category_name }}
                   <input type="hidden" name="categories[]" value="{{ item.category_name }}">
                 </td>
-                <td style="border: 1px solid #9ca3af; padding: 8px 12px; text-align: center; color: #1f2937; font-weight: 600;">
+                <td style="border: 1px solid #718096; padding: 8px 12px; text-align: center; color: #000000; font-weight: 600;">
                   {{ item.currency|default:"INR" }}
                 </td>
-                <td style="border: 1px solid #9ca3af; padding: 6px; text-align: right; font-weight: 500; color: #111827;">
+                <td style="border: 1px solid #718096; padding: 6px; text-align: right; font-weight: 500; color: #000000;">
                   <span class="dt-cost-display" data-category="{{ item.category_name }}" style="display: {% if is_editing %}none{% else %}inline{% endif %}; padding: 4px 8px;">
                     {% if item.assigned_value is not None %}{{ item.assigned_value|floatformat:2 }}{% else %}—{% endif %}
                   </span>
@@ -167,13 +187,13 @@
                          placeholder="0.00"
                          class="dt-cost-input"
                          data-category="{{ item.category_name }}"
-                         style="display: {% if is_editing %}block{% else %}none{% endif %}; width: 100%; text-align: right; padding: 4px 8px; font-size: 0.75rem; border: 1px solid #60a5fa; border-radius: 3px; background: #ffffff; color: #111827; box-sizing: border-box;">
+                         style="display: {% if is_editing %}block{% else %}none{% endif %}; width: 100%; text-align: right; padding: 4px 8px; font-size: 0.75rem; border: 1px solid #60a5fa; border-radius: 3px; background: #ffffff; color: #000000; box-sizing: border-box;">
                 </td>
               </tr>
               {% endfor %}
               {% if not assignments %}
               <tr>
-                <td colspan="3" style="border: 1px solid #9ca3af; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
+                <td colspan="3" style="border: 1px solid #718096; padding: 24px; text-align: center; color: #6b7280; font-style: italic;">
                   No categories found. Please configure DT Category List first.
                 </td>
               </tr>

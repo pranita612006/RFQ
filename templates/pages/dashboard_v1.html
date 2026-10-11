@@ -1,966 +1,615 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block title %}Voss Dashboard 1 {% endblock %}
+{% block title %}FlowNexis | Dashboard v1 - Executive RFQ & Pipeline Intelligence{% endblock title %}
 
-{% block content %}
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+{% block extrastyle %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f0f2f8;
-    --card: #ffffff;
-    --primary: #4f46e5;
-    --primary-light: #818cf8;
-    --accent: #7c3aed;
-    --text: #1e1b4b;
-    --text-muted: #6b7280;
-    --border: #e5e7eb;
-    --green: #10b981;
-    --red: #ef4444;
-    --sidebar-w: 0px;
-    --radius: 14px;
-    --shadow: 0 2px 12px rgba(79,70,229,0.07);
+  .dash-container {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e1b4b;
+    padding: 16px 20px 32px;
+    background: #fff5f5;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 13px;
-    min-height: 100vh;
-  }
- 
-  /* TOP HEADER */
-  .topbar {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+  
+  /* TOP DASHBOARD NAV BAR */
+  .dash-topbar {
+    background: #ffffff;
+    border: 1px solid #fee2e2;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 1px 6px rgba(79,70,229,0.06);
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.04);
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  .topbar-left { display: flex; align-items: center; gap: 16px; }
-  .upload-logo-btn {
-    border: 1.5px dashed var(--primary-light);
-    background: #f5f3ff;
-    color: var(--primary);
+  .dash-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dash-title-group h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #881337;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dash-pill-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+  
+  /* DASHBOARD SWITCHER TABS */
+  .dash-tabs {
+    display: inline-flex;
+    background: #fef2f2;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+  }
+  .dash-tab-btn {
     padding: 6px 14px;
-    border-radius: 8px;
     font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #9f1239;
+    text-decoration: none !important;
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: all 0.15s ease;
   }
-  .upload-logo-btn svg { width:14px; height:14px; }
-  .brand { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
- 
-  .data-updated {
-    font-size: 11px;
-    color: var(--text-muted);
-    background: #f9fafb;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
+  .dash-tab-btn:hover {
+    color: #881337;
+    background: rgba(255,255,255,0.7);
   }
- 
-  /* FILTERS BAR */
-  .filters-bar {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
+  .dash-tab-btn.active {
+    background: #ffffff;
+    color: #dc2626;
+    box-shadow: 0 1px 4px rgba(220, 38, 38, 0.12);
+  }
+
+  /* ACTIVE CUSTOMER SCOPE BANNER */
+  .customer-scope-banner {
+    background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
     flex-wrap: wrap;
+    gap: 10px;
   }
-  .filter-group { display: flex; align-items: center; gap: 8px; }
-  .filter-label { font-size: 11px; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
-  .filter-select {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 5px 10px;
-    font-family: inherit;
-    font-size: 12px;
-    color: var(--text);
-    background: #fafafa;
-    outline: none;
-    cursor: pointer;
+  
+  /* KPI ROW */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
   }
-  .filter-input {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 5px 10px;
-    font-family: inherit;
-    font-size: 12px;
-    color: var(--text);
-    background: #fafafa;
-    outline: none;
-    width: 110px;
-  }
- 
-  /* MAIN LAYOUT */
-  .main { padding: 20px 24px; display: flex; flex-direction: column; gap: 18px; }
- 
-  /* KPI CARDS ROW */
-  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
   .kpi-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #fee2e2;
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.04);
     position: relative;
     overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
-  .kpi-card::after {
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(220, 38, 38, 0.1);
+  }
+  .kpi-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    border-radius: 3px 3px 0 0;
+    background: linear-gradient(90deg, #dc2626, #fb7185);
   }
-  .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; line-height: 1.3; }
-  .kpi-value { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -1px; line-height: 1; }
+  .kpi-label {
+    font-size: 11px;
+    color: #881337;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .kpi-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: #881337;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
   .kpi-trend {
     font-size: 11px;
     margin-top: 6px;
     display: flex;
     align-items: center;
-    gap: 3px;
-    color: var(--text-muted);
+    gap: 4px;
+    color: #64748b;
   }
-  .kpi-trend .badge {
-    background: #d1fae5;
-    color: #065f46;
+  .trend-badge {
+    background: #fee2e2;
+    color: #dc2626;
     border-radius: 4px;
-    padding: 1px 5px;
+    padding: 1px 6px;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
   }
-  .arrow-up { color: var(--green); font-size: 14px; }
- 
-  /* CHARTS GRID */
-  .charts-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-  .charts-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .charts-grid-2-wide { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; }
- 
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+
+  /* LIFECYCLE FUNNEL BAR */
+  .lifecycle-bar {
+    background: #ffffff;
+    border: 1px solid #fee2e2;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.03);
   }
-  .card-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 14px;
-    letter-spacing: -0.2px;
-  }
-  .chart-wrap { position: relative; }
-  .chart-wrap canvas { max-width: 100%; }
- 
-  /* DONUT LEGEND */
-  .donut-row { display: flex; gap: 6px; flex-direction: column; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .legend-val { margin-left: auto; font-weight: 600; color: var(--text); font-size: 11px; }
- 
-  /* PIPELINE */
-  .pipeline-list { display: flex; flex-direction: column; gap: 8px; }
-  .pipeline-item { display: flex; align-items: center; gap: 8px; }
-  .pipeline-label { font-size: 11px; color: var(--text-muted); width: 80px; flex-shrink: 0; }
-  .pipeline-bar-wrap { flex: 1; height: 14px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
-  .pipeline-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-  .pipeline-val { font-size: 11px; font-weight: 600; width: 55px; text-align: right; flex-shrink: 0; }
- 
-  /* MAP PLACEHOLDER */
-  .map-placeholder {
-    background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
-    border-radius: 10px;
-    height: 200px;
+  .lifecycle-steps {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .lifecycle-node {
+    flex: 1;
+    min-width: 130px;
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
     position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
   }
-  .map-placeholder svg { width: 100%; height: 100%; opacity: 0.6; }
- 
-  /* GAUGE */
-  .gauge-wrap { display: flex; flex-direction: column; align-items: center; }
-  .gauge-value { font-size: 28px; font-weight: 700; color: var(--text); margin-top: -30px; }
-  .gauge-sub { font-size: 11px; color: var(--text-muted); }
- 
-  /* SALES REP TABLE */
-  .rep-list { display: flex; flex-direction: column; gap: 7px; }
-  .rep-item { display: flex; align-items: center; gap: 8px; }
-  .rep-name { font-size: 11px; color: var(--text-muted); width: 70px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rep-bar-wrap { flex: 1; height: 12px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
-  .rep-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
-  .rep-val { font-size: 11px; font-weight: 600; width: 30px; text-align: right; }
- 
-  /* PAGE VIEWS TREEMAP */
-  .treemap { display: grid; gap: 4px; grid-template-columns: 3fr 2fr 1.5fr; grid-template-rows: auto auto; height: 180px; }
-  .treemap-cell {
-    border-radius: 8px;
+  .lifecycle-node:hover {
+    background: #fee2e2;
+    border-color: #dc2626;
+  }
+  .node-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: #dc2626;
+    line-height: 1.1;
+  }
+  .node-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #881337;
+    margin-top: 4px;
+  }
+
+  /* CHARTS GRIDS */
+  .charts-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+
+  .dash-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid #fee2e2;
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.04);
+  }
+  .dash-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #881337;
+    margin-bottom: 12px;
     display: flex;
-    align-items: flex-end;
-    padding: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #fff;
-    flex-direction: column;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
   }
-  .treemap-cell span { font-size: 10px; font-weight: 400; opacity: 0.85; }
- 
-  /* CHAT TABLE */
-  .chat-table { width: 100%; border-collapse: collapse; }
-  .chat-table th {
-    text-align: left; font-size: 11px; color: var(--text-muted);
-    font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border);
+  .chart-box { position: relative; width: 100%; }
+
+  /* TABLES */
+  .dash-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dash-table thead th {
+    background: #dc2626; color: #ffffff; padding: 9px 12px;
+    text-align: left; font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.3px;
   }
-  .chat-table td { padding: 8px 8px; font-size: 12px; border-bottom: 1px solid #f3f4f6; }
-  .chat-table tr:last-child td { border-bottom: none; }
-  .change-pos { color: var(--green); font-weight: 600; }
-  .change-neg { color: var(--red); font-weight: 600; }
- 
-  /* AGENT PERFORMANCE */
-  .agent-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  .agent-table th {
-    text-align: center; font-size: 10px; color: var(--text-muted);
-    font-weight: 500; padding: 5px 6px; border-bottom: 1px solid var(--border);
+  .dash-table tbody tr:nth-child(even) { background: #fff5f5; }
+  .dash-table tbody tr:hover { background: #fee2e2; }
+  .dash-table tbody td { padding: 9px 12px; border-bottom: 1px solid #fee2e2; font-size: 12px; }
+
+  .badge-status {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
   }
-  .agent-table th:first-child { text-align: left; }
-  .agent-table td { padding: 5px 6px; text-align: center; border-bottom: 1px solid #f9fafb; }
-  .agent-table td:first-child { text-align: left; font-weight: 500; }
-  .agent-cell {
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-weight: 600;
-    font-size: 11px;
-  }
-  .agent-high { background: #312e81; color: #fff; }
-  .agent-med { background: #4f46e5; color: #fff; }
-  .agent-low { background: #818cf8; color: #fff; }
- 
-  /* VISITORS */
-  .visitors-bar-legend { display: flex; gap: 12px; margin-bottom: 8px; }
-  .v-legend { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
-  .v-dot { width: 10px; height: 10px; border-radius: 2px; }
- 
-  /* RESPONSIVE */
+  .status-progress { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+  .status-notstart { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+  .status-complete { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+
   @media (max-width: 1200px) {
-    .kpi-row { grid-template-columns: repeat(3, 1fr); }
-    .charts-grid-3 { grid-template-columns: 1fr 1fr; }
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .charts-row-2 { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
-    .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .charts-grid-3, .charts-grid-2, .charts-grid-2-wide { grid-template-columns: 1fr; }
-    .main { padding: 12px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .dash-topbar { flex-direction: column; align-items: flex-start; }
+    .lifecycle-steps { flex-direction: column; }
+    .lifecycle-node { width: 100%; }
   }
 </style>
-</head>
-<body>
- 
-<!-- TOP BAR -->
-<div class="topbar">
-  <div class="topbar-left">
-    <button class="upload-logo-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Upload Logo
-    </button>
-    <span class="brand">Voss Dashboard</span>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="dash-container">
+
+  <!-- TOP DASHBOARD BAR WITH INSTANT VERSION SWITCHER -->
+  <div class="dash-topbar">
+    <div class="dash-title-group">
+      <h2>
+        <i class="fas fa-fire-alt text-danger"></i>
+        Dashboard v1
+      </h2>
+      <span class="dash-pill-tag">Executive RFQ & Commercial Pipeline</span>
+    </div>
+
+    <div class="dash-tabs">
+      <a href="{% url 'dashboard_v1' %}" class="dash-tab-btn active">
+        <i class="fas fa-check-circle"></i> Dashboard v1
+      </a>
+      <a href="{% url 'dashboard_v2' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v2
+      </a>
+      <a href="{% url 'dashboard_v3' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v3
+      </a>
+    </div>
   </div>
-  <div class="data-updated">Data Last Updated on 01/01/2024</div>
-</div>
- 
-<!-- FILTERS BAR -->
-<div class="filters-bar">
-  <div class="filter-group">
-    <span class="filter-label">Start date</span>
-    <input type="date" class="filter-input" value="2023-01-01">
+
+  <!-- ACTIVE CUSTOMER SCOPE BANNER -->
+  {% if has_active_customer %}
+  <div class="customer-scope-banner">
+    <div>
+      <span class="badge badge-danger mr-2">Active Customer Scope</span>
+      <strong style="color:#881337;font-size:14px;">{{ global_customer_name }}</strong>
+      <span class="text-muted ml-2" style="font-size:12px;">(ID: {{ global_customer_id }})</span>
+    </div>
+    {% if d.active_customer_stats %}
+    <div class="d-flex align-items-center gap-3">
+      <span style="font-size:12px;color:#881337;">
+        <strong>{{ d.active_customer_stats.opp_count }}</strong> Projects Registered
+      </span>
+      <span style="font-size:12px;color:#881337;">
+        <strong>{{ d.active_customer_stats.total_volume }}</strong> Units Projected
+      </span>
+      <span style="font-size:12px;color:#881337;">
+        <strong>{{ d.active_customer_stats.bso_count }}</strong> Blanket SOs
+      </span>
+    </div>
+    {% endif %}
   </div>
-  <div class="filter-group">
-    <span class="filter-label">End date</span>
-    <input type="date" class="filter-input" value="2023-12-31">
-  </div>
-  <div class="filter-group">
-    <span class="filter-label">Geographic Location</span>
-    <select class="filter-select"><option>All</option></select>
-  </div>
-  <div class="filter-group">
-    <span class="filter-label">Sales Representative</span>
-    <select class="filter-select"><option>All</option></select>
-  </div>
-  <div class="filter-group">
-    <span class="filter-label">Product Category</span>
-    <select class="filter-select"><option>All</option></select>
-  </div>
-  <div class="filter-group">
-    <span class="filter-label">Traffic Source</span>
-    <select class="filter-select"><option>All</option></select>
-  </div>
-</div>
- 
-<!-- MAIN CONTENT -->
-<div class="main">
- 
-  <!-- KPI ROW -->
-  <div class="kpi-row">
+  {% endif %}
+
+  <!-- REAL KPI CARDS ROW -->
+  <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Total Sales Revenue (USD)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">1.85<small style="font-size:13px;font-weight:500">B</small></span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Active RFQ Opportunities</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_opps }}</span>
+        <span class="text-danger ml-1"><i class="fas fa-project-diagram"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 1.62 <span class="badge">+14.2%</span></div>
+      <div class="kpi-trend">Live in Pipeline <span class="trend-badge">Active</span></div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Sales Growth Rate (%)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">14.2</span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Annual Projected Volume</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_volume }}<small style="font-size:12px;font-weight:600"> pcs</small></span>
+        <span class="text-danger ml-1"><i class="fas fa-boxes"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 8.7 <span class="badge">+5.5%</span></div>
+      <div class="kpi-trend">Sum of Project Forecasts</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Completed Transactions (count)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">3.24<small style="font-size:13px;font-weight:500">K</small></span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Registered Client Accounts</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_customers }}</span>
+        <span class="text-danger ml-1"><i class="fas fa-building"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 2.91 <span class="badge">+11.3%</span></div>
+      <div class="kpi-trend">Enterprise Database Base</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Average Transaction Value (USD)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">571</span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Item / Part Codes Created</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_items }}</span>
+        <span class="text-danger ml-1"><i class="fas fa-barcode"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 557 <span class="badge">+2.5%</span></div>
+      <div class="kpi-trend">Catalog Part Master</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Total Unique Visitors (count)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">487.3<small style="font-size:13px;font-weight:500">K</small></span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Feasibility Reviews Conducted</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_feasibility }}</span>
+        <span class="text-danger ml-1"><i class="fas fa-check-double"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 421.8 <span class="badge">+15.5%</span></div>
+      <div class="kpi-trend">Technical Assessments</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Conversion Rate (%)</div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="kpi-value">3.8</span>
-        <span class="arrow-up">▲</span>
+      <div class="kpi-label">Blanket Sales Orders</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_blanket_so }}</span>
+        <span class="text-danger ml-1"><i class="fas fa-file-contract"></i></span>
       </div>
-      <div class="kpi-trend">vs prev 3.2 <span class="badge">+0.6%</span></div>
+      <div class="kpi-trend">Commercial Execution</div>
     </div>
   </div>
- 
-  <!-- ROW 2: Sales by Category | Sales Trend | Pipeline -->
-  <div class="charts-grid-3">
-    <div class="card">
-      <div class="card-title">Sales by Product Category</div>
-      <div style="display:flex;gap:12px;align-items:center;">
-        <div style="width:130px;height:130px;flex-shrink:0;">
-          <canvas id="categoryDonut"></canvas>
-        </div>
-        <div class="donut-row" style="flex:1;">
-          <div class="legend-item"><span class="legend-dot" style="background:#4f46e5"></span>Electronics<span class="legend-val">24%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Software<span class="legend-val">19%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span>Services<span class="legend-val">13%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#c4b5fd"></span>Hardware<span class="legend-val">12%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#ddd6fe"></span>Consulting<span class="legend-val">9%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#818cf8"></span>Support<span class="legend-val">7%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#6d28d9"></span>Training<span class="legend-val">5%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#ede9fe"></span>Licensing<span class="legend-val">3%</span></div>
-        </div>
-      </div>
+
+  <!-- RFQ LIFECYCLE PROGRESSION FUNNEL -->
+  <div class="lifecycle-bar">
+    <div class="d-flex justify-content-between align-items-center">
+      <strong style="color:#881337;font-size:13px;">
+        <i class="fas fa-stream text-danger mr-2"></i> Real RFQ Workflow Pipeline Progression
+      </strong>
+      <span class="text-muted" style="font-size:11px;">Cross-Department Data Traceability</span>
     </div>
- 
-    <div class="card">
-      <div class="card-title">Sales Trend Over Time</div>
-      <div class="chart-wrap" style="height:170px;">
-        <canvas id="salesTrend"></canvas>
+    <div class="lifecycle-steps">
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.opportunity }}</div>
+        <div class="node-label">1. Opportunities</div>
       </div>
-    </div>
- 
-    <div class="card">
-      <div class="card-title">Sales Pipeline Status</div>
-      <div class="pipeline-list">
-        <div class="pipeline-item">
-          <span class="pipeline-label">Lead</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:100%;background:#312e81;"></div></div>
-          <span class="pipeline-val">125.4k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Prospect</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:70%;background:#4f46e5;"></div></div>
-          <span class="pipeline-val">87.3k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Negotiation</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:42%;background:#6d28d9;"></div></div>
-          <span class="pipeline-val">52.1k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Qualified</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:34%;background:#7c3aed;"></div></div>
-          <span class="pipeline-val">42.8k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Proposal</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:30%;background:#8b5cf6;"></div></div>
-          <span class="pipeline-val">38.3k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Closed Won</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:12%;background:#a78bfa;"></div></div>
-          <span class="pipeline-val">15.7k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Contract</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:5%;background:#c4b5fd;"></div></div>
-          <span class="pipeline-val">6.3k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Lost</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:3%;background:#ef4444;"></div></div>
-          <span class="pipeline-val">3.8k</span>
-        </div>
-        <div class="pipeline-item">
-          <span class="pipeline-label">Stalled</span>
-          <div class="pipeline-bar-wrap"><div class="pipeline-bar" style="width:2%;background:#f87171;"></div></div>
-          <span class="pipeline-val">1.9k</span>
-        </div>
+      <div class="text-danger font-weight-bold d-none d-md-block">➔</div>
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.feasibility }}</div>
+        <div class="node-label">2. Feasibility Form</div>
+      </div>
+      <div class="text-danger font-weight-bold d-none d-md-block">➔</div>
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.bom }}</div>
+        <div class="node-label">3. BOM Creation</div>
+      </div>
+      <div class="text-danger font-weight-bold d-none d-md-block">➔</div>
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.bop }}</div>
+        <div class="node-label">4. BOP Operations</div>
+      </div>
+      <div class="text-danger font-weight-bold d-none d-md-block">➔</div>
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.boc }}</div>
+        <div class="node-label">5. BOC Sourcing</div>
+      </div>
+      <div class="text-danger font-weight-bold d-none d-md-block">➔</div>
+      <div class="lifecycle-node">
+        <div class="node-num">{{ d.lifecycle_counts.blanket_so }}</div>
+        <div class="node-label">6. Blanket SOs</div>
       </div>
     </div>
   </div>
- 
-  <!-- ROW 3: Map | Traffic Source -->
-  <div class="charts-grid-2">
-    <div class="card">
-      <div class="card-title">Visitors by Geographic Location</div>
-      <div class="map-placeholder">
-        <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-          <!-- Simplified world map shapes -->
-          <rect width="800" height="400" fill="#eef2ff" rx="10"/>
-          <!-- North America -->
-          <ellipse cx="170" cy="160" rx="110" ry="75" fill="#4f46e5" opacity="0.7"/>
-          <!-- South America -->
-          <ellipse cx="230" cy="290" rx="60" ry="80" fill="#818cf8" opacity="0.6"/>
-          <!-- Europe -->
-          <ellipse cx="420" cy="130" rx="60" ry="50" fill="#6d28d9" opacity="0.75"/>
-          <!-- Africa -->
-          <ellipse cx="420" cy="250" rx="65" ry="85" fill="#7c3aed" opacity="0.55"/>
-          <!-- Asia -->
-          <ellipse cx="590" cy="150" rx="130" ry="80" fill="#4f46e5" opacity="0.65"/>
-          <!-- Australia -->
-          <ellipse cx="640" cy="300" rx="60" ry="45" fill="#a78bfa" opacity="0.5"/>
-          <!-- Dots for cities -->
-          <circle cx="160" cy="150" r="5" fill="#fff" opacity="0.9"/>
-          <circle cx="430" cy="120" r="4" fill="#fff" opacity="0.9"/>
-          <circle cx="580" cy="140" r="6" fill="#fff" opacity="0.9"/>
-          <circle cx="640" cy="290" r="4" fill="#fff" opacity="0.9"/>
-          <circle cx="220" cy="280" r="4" fill="#fff" opacity="0.9"/>
-        </svg>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-muted);">
-        <span>0</span><span>High Density →</span><span>10</span>
+
+  <!-- CHARTS ROW: Segments & Sales Reps -->
+  <div class="charts-row-2">
+    <div class="dash-card">
+      <div class="dash-card-title">Opportunities by Market Segment</div>
+      <div class="chart-box" style="height:210px;">
+        <canvas id="segmentChart"></canvas>
       </div>
     </div>
- 
-    <div class="card">
-      <div class="card-title">Visitors by Traffic Source</div>
-      <div style="display:flex;gap:12px;align-items:center;">
-        <div style="width:140px;height:140px;flex-shrink:0;">
-          <canvas id="trafficDonut"></canvas>
-        </div>
-        <div class="donut-row" style="flex:1;">
-          <div class="legend-item"><span class="legend-dot" style="background:#312e81"></span>Organic<span class="legend-val">29%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#4f46e5"></span>Direct<span class="legend-val">23%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Paid<span class="legend-val">13%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span>Referral<span class="legend-val">9%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#c4b5fd"></span>Social<span class="legend-val">8%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#818cf8"></span>Email<span class="legend-val">6%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:#ede9fe"></span>Affiliate<span class="legend-val">4%</span></div>
-        </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Opportunities by Sales Representative</div>
+      <div class="chart-box" style="height:210px;">
+        <canvas id="salesRepChart"></canvas>
       </div>
     </div>
   </div>
- 
-  <!-- ROW 4: Revenue Forecast | New vs Returning -->
-  <div class="charts-grid-2">
-    <div class="card">
-      <div class="card-title">Revenue Forecast vs. Actual Revenue</div>
-      <div class="chart-wrap" style="height:180px;">
-        <canvas id="revenueForecast"></canvas>
+
+  <!-- REAL OPPORTUNITIES & ITEM CARDS TABLES -->
+  <div class="dash-card">
+    <div class="dash-card-title flex-wrap gap-2">
+      <span><i class="fas fa-database text-danger mr-1"></i> Live Records from Database</span>
+
+      <!-- TABS -->
+      <div class="d-inline-flex" style="background:#fee2e2;padding:3px;border-radius:8px;gap:3px;">
+        <button type="button" id="tabBtnV1Opps" class="btn btn-xs font-weight-bold"
+                style="border-radius:6px;padding:4px 12px;background:#ffffff;color:#dc2626;border:none;box-shadow:0 1px 3px rgba(220,38,38,0.15);"
+                onclick="showV1Table('opps')">
+          <i class="fas fa-list-alt mr-1"></i> RFQ Opportunities ({{ d.recent_opportunities|length }})
+        </button>
+        <button type="button" id="tabBtnV1Items" class="btn btn-xs font-weight-bold text-muted"
+                style="border-radius:6px;padding:4px 12px;background:transparent;border:none;"
+                onclick="showV1Table('items')">
+          <i class="fas fa-barcode mr-1"></i> Catalog Item Cards ({{ d.recent_items|length }})
+        </button>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">New vs. Returning Visitors</div>
-      <div class="chart-wrap" style="height:180px;">
-        <canvas id="visitorsChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW 5: Chat Conversion | Avg Response Time -->
-  <div class="charts-grid-2">
-    <div class="card">
-      <div class="card-title">Chat Conversion Rate and Satisfaction</div>
-      <div style="display:flex;gap:10px;margin-bottom:8px;">
-        <div class="v-legend"><div class="v-dot" style="background:#4f46e5;"></div>Chat Abandonment Rate</div>
-        <div class="v-legend"><div class="v-dot" style="background:#7c3aed;"></div>Chat Conversion Rate</div>
-        <div class="v-legend"><div class="v-dot" style="background:#a78bfa;"></div>Customer Satisfaction</div>
-      </div>
-      <div class="chart-wrap" style="height:160px;">
-        <canvas id="chatConversion"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Average Chat Response Time</div>
-      <div class="gauge-wrap" style="padding:10px 0;">
-        <canvas id="gaugeChart" width="220" height="130"></canvas>
-        <div class="gauge-value">38</div>
-        <div class="gauge-sub">Target: 45</div>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW 6: Sales by Rep | Top Products -->
-  <div class="charts-grid-2">
-    <div class="card">
-      <div class="card-title">Sales by Sales Representative</div>
-      <div class="rep-list">
-        <div class="rep-item">
-          <span class="rep-name">James</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:95%;"></div></div>
-          <span class="rep-val">350</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">Marcus</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:78%;"></div></div>
-          <span class="rep-val">290</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">David</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:65%;"></div></div>
-          <span class="rep-val">240</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">Robert</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:50%;"></div></div>
-          <span class="rep-val">185</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">Michael</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:35%;"></div></div>
-          <span class="rep-val">130</span>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Top Performing Products</div>
-      <div class="rep-list">
-        <div class="rep-item">
-          <span class="rep-name">Cloud Suite</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:95%;"></div></div>
-          <span class="rep-val">480</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">SecurePro</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:80%;"></div></div>
-          <span class="rep-val">400</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">Integrator</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:62%;"></div></div>
-          <span class="rep-val">310</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">ReportX</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:48%;"></div></div>
-          <span class="rep-val">240</span>
-        </div>
-        <div class="rep-item">
-          <span class="rep-name">API Connect</span>
-          <div class="rep-bar-wrap"><div class="rep-bar" style="width:30%;"></div></div>
-          <span class="rep-val">150</span>
-        </div>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW 7: Page Views | Chat Agent Performance -->
-  <div class="charts-grid-2">
-    <div class="card">
-      <div class="card-title">Page Views and Most Visited Pages</div>
-      <div class="treemap">
-        <div class="treemap-cell" style="background:#312e81;grid-row:span 2;">Product Overview<span>3M</span></div>
-        <div class="treemap-cell" style="background:#4f46e5;">Features<span>2M</span></div>
-        <div class="treemap-cell" style="background:#6d28d9;">Blog<span>1M</span></div>
-        <div class="treemap-cell" style="background:#7c3aed;">Pricing Page<span>2M</span></div>
-        <div class="treemap-cell" style="background:#8b5cf6;">Documentation<span>2M</span></div>
-        <div class="treemap-cell" style="background:#a78bfa;font-size:10px;">Case Studies<span>1M</span></div>
-        <div class="treemap-cell" style="background:#c4b5fd;color:#312e81;font-size:10px;">Contact Us<span>700k</span></div>
-        <div class="treemap-cell" style="background:#ddd6fe;color:#312e81;font-size:10px;">FAQ<span>400k</span></div>
-      </div>
-    </div>
- 
-    <div class="card">
-      <div class="card-title">Chat Agent Performance</div>
-      <p style="font-size:10px;color:var(--text-muted);margin-bottom:10px;">Metrics with a darker color show a more pronounced relationship</p>
-      <table class="agent-table">
+
+    <!-- 1. RFQ OPPORTUNITIES TABLE (tbl_opportunitymaster) -->
+    <div id="v1TableOpps" style="overflow-x:auto;">
+      <table class="dash-table">
         <thead>
           <tr>
-            <th>Agent</th>
-            <th>Resolution Rate (%)</th>
-            <th>Response Time (s)</th>
-            <th>Customer Satisfaction</th>
-            <th>First Contact Resolution</th>
-            <th>Handling Time (min)</th>
+            <th>Item No</th>
+            <th>Project Name</th>
+            <th>Customer Name</th>
+            <th>Salesperson</th>
+            <th>Segment</th>
+            <th>Annual Volume</th>
+            <th>Part Price (₹/$)</th>
+            <th>Status</th>
+            <th>Creation Date</th>
           </tr>
         </thead>
-        <tbody id="agentTableBody"></tbody>
+        <tbody>
+          {% for o in d.recent_opportunities %}
+          <tr>
+            <td><strong>{{ o.item_no }}</strong></td>
+            <td>{{ o.project_name|default:o.part_name|default:"RFQ Item" }}</td>
+            <td>{{ o.customername|default:"Customer" }}</td>
+            <td><span class="badge badge-light border">{{ o.salesperson_code|default:"—" }}</span></td>
+            <td>{{ o.segment_description|default:"General" }}</td>
+            <td><strong>{{ o.calc_volume }}</strong> pcs</td>
+            <td>{{ o.calc_price|default:"—" }}</td>
+            <td>
+              {% if "progress" in o.status|lower %}
+                <span class="badge-status status-progress">{{ o.status }}</span>
+              {% elif "complete" in o.status|lower or "won" in o.status|lower %}
+                <span class="badge-status status-complete">{{ o.status }}</span>
+              {% else %}
+                <span class="badge-status status-notstart">{{ o.status|default:"Draft" }}</span>
+              {% endif %}
+            </td>
+            <td>{{ o.creation_date|default:"—" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="9" class="text-center text-muted py-3">No opportunity records available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. CATALOG ITEM CARDS TABLE (tbl_itemcard) -->
+    <div id="v1TableItems" style="overflow-x:auto; display:none;">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>Part Number (No)</th>
+            <th>Description</th>
+            <th>Template Name</th>
+            <th>Customer Name</th>
+            <th>Status</th>
+            <th>Last Date Modified</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in d.recent_items %}
+          <tr>
+            <td><strong>{{ it.no }}</strong></td>
+            <td>{{ it.description|default:"—" }}</td>
+            <td><span class="badge" style="background:#fee2e2;color:#dc2626;font-weight:600;">{{ it.template_name|default:"Standard" }}</span></td>
+            <td>{{ it.customername|default:"—" }}</td>
+            <td><span class="badge badge-success">{{ it.status|default:"Active" }}</span></td>
+            <td><small class="text-muted">{{ it.last_date_modified|default:"—" }}</small></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              <i class="fas fa-box-open mr-1"></i> No items developed yet in Item Creation.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
- 
-  <!-- ROW 8: Chat Engagement Summary -->
-  <div class="card">
-    <div class="card-title" style="color:#ef4444;">Chat Engagement Summary</div>
-    <table class="chat-table">
-      <thead>
-        <tr>
-          <th>Metric</th>
-          <th>Current Value</th>
-          <th>Previous Value</th>
-          <th>Change (%)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Total Chat Conversations</td>
-          <td>12850</td>
-          <td>11200</td>
-          <td class="change-pos">14.73</td>
-        </tr>
-        <tr>
-          <td>Active Chat Sessions</td>
-          <td>342</td>
-          <td>298</td>
-          <td class="change-pos">14.77</td>
-        </tr>
-        <tr>
-          <td>Avg Chat Response Time (sec)</td>
-          <td>38.2</td>
-          <td>42.5</td>
-          <td class="change-neg">-10.12</td>
-        </tr>
-        <tr>
-          <td>Chat Conversion Rate (%)</td>
-          <td>4.3</td>
-          <td>3.8</td>
-          <td class="change-pos">13.16</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
- 
-</div><!-- end main -->
- 
+
+  <script>
+    function showV1Table(type) {
+      const oppsDiv = document.getElementById('v1TableOpps');
+      const itemsDiv = document.getElementById('v1TableItems');
+      const btnOpps = document.getElementById('tabBtnV1Opps');
+      const btnItems = document.getElementById('tabBtnV1Items');
+
+      if (type === 'opps') {
+        oppsDiv.style.display = 'block';
+        itemsDiv.style.display = 'none';
+        btnOpps.style.background = '#ffffff';
+        btnOpps.style.color = '#dc2626';
+        btnOpps.classList.remove('text-muted');
+        btnOpps.style.boxShadow = '0 1px 3px rgba(220,38,38,0.15)';
+        btnItems.style.background = 'transparent';
+        btnItems.classList.add('text-muted');
+        btnItems.style.boxShadow = 'none';
+      } else {
+        oppsDiv.style.display = 'none';
+        itemsDiv.style.display = 'block';
+        btnItems.style.background = '#ffffff';
+        btnItems.style.color = '#dc2626';
+        btnItems.classList.remove('text-muted');
+        btnItems.style.boxShadow = '0 1px 3px rgba(220,38,38,0.15)';
+        btnOpps.style.background = 'transparent';
+        btnOpps.classList.add('text-muted');
+        btnOpps.style.boxShadow = 'none';
+      }
+    }
+  </script>
+
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// ---- CHART DEFAULTS ----
-Chart.defaults.font.family = "'DM Sans', sans-serif";
-Chart.defaults.font.size = 11;
-Chart.defaults.color = '#6b7280';
- 
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const months6 = ['Jul','Aug','Sep','Oct','Nov','Dec'];
- 
-// ---- CATEGORY DONUT ----
-new Chart(document.getElementById('categoryDonut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Electronics','Software','Services','Hardware','Consulting','Support','Training','Licensing'],
-    datasets: [{
-      data: [385200,298550,210400,185230,150100,110900,85300,42300],
-      backgroundColor: ['#4f46e5','#7c3aed','#a78bfa','#c4b5fd','#ddd6fe','#818cf8','#6d28d9','#ede9fe'],
-      borderWidth: 2,
-      borderColor: '#fff'
-    }]
-  },
-  options: {
-    cutout: '65%',
-    plugins: { legend: { display: false }, tooltip: { enabled: true } },
-    animation: { animateRotate: true, duration: 800 }
-  }
-});
- 
-// ---- SALES TREND ----
-new Chart(document.getElementById('salesTrend'), {
-  type: 'line',
-  data: {
-    labels: months,
-    datasets: [{
-      label: 'Sales Revenue',
-      data: [8,10,9,12,11,13,10,14,12,13,14,15],
-      borderColor: '#4f46e5',
-      backgroundColor: 'rgba(79,70,229,0.08)',
-      tension: 0.4,
-      fill: true,
-      pointRadius: 3,
-      pointBackgroundColor: '#4f46e5',
-      borderWidth: 2
-    },{
-      label: 'Growth Rate',
-      data: [2,3,2,4,3,5,3,6,4,5,6,6],
-      borderColor: '#a78bfa',
-      backgroundColor: 'transparent',
-      tension: 0.4,
-      pointRadius: 3,
-      pointBackgroundColor: '#a78bfa',
-      borderWidth: 1.5,
-      borderDash: [4,3]
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { maxRotation: 0 } },
-      y: { grid: { color: '#f3f4f6' }, ticks: { stepSize: 2 } }
+document.addEventListener("DOMContentLoaded", function() {
+  const RED = '#dc2626';
+  const LIGHT_RED = '#f87171';
+  const DEEP_RED = '#991b1b';
+  const ROSE = '#fb7185';
+  const SOFT_RED = '#fca5a5';
+
+  // 1. Segments Chart
+  const segLabels = {{ d.segment_labels|safe }};
+  const segData = {{ d.segment_counts|safe }};
+  new Chart(document.getElementById('segmentChart'), {
+    type: 'bar',
+    data: {
+      labels: segLabels,
+      datasets: [{
+        label: 'Opportunities',
+        data: segData,
+        backgroundColor: [DEEP_RED, RED, LIGHT_RED, ROSE, SOFT_RED],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { ticks: { stepSize: 1 }, grid: { color: '#fee2e2' } }
+      }
     }
-  }
-});
- 
-// ---- TRAFFIC DONUT ----
-new Chart(document.getElementById('trafficDonut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Organic','Direct','Paid','Referral','Social','Email','Affiliate'],
-    datasets: [{
-      data: [198400,156200,87300,65100,52800,41200,24600],
-      backgroundColor: ['#312e81','#4f46e5','#7c3aed','#a78bfa','#c4b5fd','#818cf8','#ede9fe'],
-      borderWidth: 2,
-      borderColor: '#fff'
-    }]
-  },
-  options: {
-    cutout: '65%',
-    plugins: { legend: { display: false } },
-    animation: { duration: 800 }
-  }
-});
- 
-// ---- REVENUE FORECAST ----
-new Chart(document.getElementById('revenueForecast'), {
-  type: 'bar',
-  data: {
-    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'],
-    datasets: [{
-      label: 'Actual Revenue',
-      data: [1.1,1.2,1.3,1.4,1.5,1.6,1.65,1.7,1.75,1.85],
-      backgroundColor: '#4f46e5',
-      borderRadius: 4,
-      barPercentage: 0.6
-    },{
-      label: 'Forecast Revenue',
-      data: [1.15,1.25,1.32,1.42,1.52,1.62,1.68,1.73,1.78,1.88],
-      type: 'line',
-      borderColor: '#10b981',
-      backgroundColor: 'rgba(16,185,129,0.07)',
-      tension: 0.4,
-      pointRadius: 3,
-      fill: true,
-      borderWidth: 2
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: '#f3f4f6' } }
+  });
+
+  // 2. Sales Rep Chart
+  const repLabels = {{ d.sales_labels|safe }};
+  const repData = {{ d.sales_counts|safe }};
+  new Chart(document.getElementById('salesRepChart'), {
+    type: 'doughnut',
+    data: {
+      labels: repLabels,
+      datasets: [{
+        data: repData,
+        backgroundColor: [DEEP_RED, RED, LIGHT_RED, ROSE, SOFT_RED],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      cutout: '65%',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'right' } }
     }
-  }
-});
- 
-// ---- NEW VS RETURNING ----
-new Chart(document.getElementById('visitorsChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [{
-      label: 'New Visitors',
-      data: [30,45,55,60,70,65,75,80,85,78,82,90],
-      backgroundColor: '#4f46e5',
-      borderRadius: 3,
-      barPercentage: 0.7
-    },{
-      label: 'Returning Visitors',
-      data: [20,25,30,35,30,40,35,45,40,45,42,48],
-      backgroundColor: '#c4b5fd',
-      borderRadius: 3,
-      barPercentage: 0.7
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, stacked: false },
-      y: { grid: { color: '#f3f4f6' } }
-    }
-  }
-});
- 
-// ---- CHAT CONVERSION ----
-new Chart(document.getElementById('chatConversion'), {
-  type: 'bar',
-  data: {
-    labels: months6,
-    datasets: [{
-      label: 'Chat Abandonment Rate',
-      data: [4.5,4.2,4.0,3.8,3.5,3.2],
-      backgroundColor: '#818cf8',
-      borderRadius: 3,
-      barPercentage: 0.6
-    },{
-      label: 'Chat Conversion Rate',
-      data: [3.2,3.4,3.6,3.9,4.1,4.3],
-      type: 'line',
-      borderColor: '#4f46e5',
-      tension: 0.4,
-      pointRadius: 3,
-      fill: false,
-      borderWidth: 2,
-      yAxisID: 'y2'
-    },{
-      label: 'Customer Satisfaction',
-      data: [7.5,8,8.2,8.5,8.8,9],
-      type: 'line',
-      borderColor: '#10b981',
-      tension: 0.4,
-      pointRadius: 3,
-      fill: false,
-      borderWidth: 2,
-      yAxisID: 'y2'
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: '#f3f4f6' }, min: 2.5 },
-      y2: { position: 'right', grid: { display: false }, min: 5, max: 10 }
-    }
-  }
-});
- 
-// ---- GAUGE ----
-(function drawGauge() {
-  const canvas = document.getElementById('gaugeChart');
-  const ctx = canvas.getContext('2d');
-  const cx = canvas.width / 2;
-  const cy = canvas.height - 10;
-  const r = 90;
-  const startAngle = Math.PI;
-  const endAngle = 2 * Math.PI;
- 
-  // Background arc
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, startAngle, endAngle);
-  ctx.lineWidth = 22;
-  ctx.strokeStyle = '#e5e7eb';
-  ctx.stroke();
- 
-  // Value arc (38 out of 120)
-  const pct = 38 / 120;
-  const valueAngle = startAngle + pct * Math.PI;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, startAngle, valueAngle);
-  ctx.lineWidth = 22;
-  ctx.strokeStyle = '#4f46e5';
-  ctx.lineCap = 'round';
-  ctx.stroke();
- 
-  // Needle
-  const needleAngle = startAngle + pct * Math.PI;
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(needleAngle - Math.PI);
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(-r + 10, 0);
-  ctx.strokeStyle = '#1e1b4b';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-  ctx.restore();
- 
-  // Center dot
-  ctx.beginPath();
-  ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
-  ctx.fillStyle = '#1e1b4b';
-  ctx.fill();
- 
-  // Labels
-  ctx.font = '11px DM Sans';
-  ctx.fillStyle = '#6b7280';
-  ctx.textAlign = 'center';
-  ctx.fillText('0', cx - r - 4, cy + 16);
-  ctx.fillText('45', cx, cy - r - 8);
-  ctx.fillText('120', cx + r + 4, cy + 16);
-})();
- 
-// ---- AGENT PERFORMANCE TABLE ----
-const agents = [
-  { name: 'Alice', res: 88, resp: 87, sat: 87, fcr: 89, ht: 91 },
-  { name: 'Ben', res: 85, resp: 91, sat: 89, fcr: 92, ht: 84 },
-  { name: 'Clara', res: 90, resp: 88, sat: 86, fcr: 89, ht: 89 },
-  { name: 'David', res: 87, resp: 89, sat: 88, fcr: 91, ht: 86 },
-  { name: 'Eva', res: 89, resp: 92, sat: 90, fcr: 93, ht: 88 },
-  { name: 'Frank', res: 84, resp: 86, sat: 85, fcr: 88, ht: 83 },
-  { name: 'Grace', res: 91, resp: 94, sat: 92, fcr: 95, ht: 90 },
-  { name: 'Henry', res: 86, resp: 88, sat: 87, fcr: 90, ht: 85 },
-  { name: 'Iris', res: 88, resp: 91, sat: 89, fcr: 92, ht: 87 },
-];
- 
-function cellClass(v) {
-  if (v >= 90) return 'agent-high';
-  if (v >= 87) return 'agent-med';
-  return 'agent-low';
-}
- 
-const tbody = document.getElementById('agentTableBody');
-agents.forEach(a => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${a.name}</td>
-    <td><span class="agent-cell ${cellClass(a.res)}">${a.res}</span></td>
-    <td><span class="agent-cell ${cellClass(a.resp)}">${a.resp}</span></td>
-    <td><span class="agent-cell ${cellClass(a.sat)}">${a.sat}</span></td>
-    <td><span class="agent-cell ${cellClass(a.fcr)}">${a.fcr}</span></td>
-    <td><span class="agent-cell ${cellClass(a.ht)}">${a.ht}</span></td>
-  `;
-  tbody.appendChild(tr);
+  });
 });
 </script>
-{% endblock %}
+{% endblock extra_scripts %}

@@ -1,49 +1,92 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Report{% endblock %}
+
 {% block content %}
-<div class="container-fluid full-dashboard">
-  <h2>Report</h2>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 
-  <div class="card card-primary mt-3">
-    <div class="card-header">
-      <h3 class="card-title">Report Form</h3>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  .report-container, .report-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .report-card {
+    background: #fff;
+    border: 1px solid #c8d6e8;
+    border-radius: 8px;
+    margin: 16px 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .report-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+  }
+
+  .report-card-title {
+    font-family: 'Permanent Marker', cursive !important;
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .btn-report-back {
+    background-color: transparent !important;
+    border: 2px solid #FFFFFF !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    padding: 4px 14px !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-report-back:hover {
+    background-color: #FFFFFF !important;
+    color: #2E266D !important;
+  }
+
+  .under-dev-container {
+    padding: 90px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 320px;
+  }
+
+  .under-dev-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #2E266D;
+    margin: 0;
+  }
+</style>
+
+<div class="container-fluid full-dashboard report-container pb-4">
+  <div class="card shadow-sm mt-3 report-card">
+    <div class="report-card-header">
+      <h3 class="report-card-title">Report</h3>
+      <button type="button" class="btn-report-back" onclick="window.history.back();">← Back</button>
     </div>
-
-    <form method="post">
-      {% csrf_token %}
-      <div class="card-body">
-        <!-- Customer ID -->
-        <div class="form-group">
-          <label for="customer_id">Customer ID</label>
-          <select id="customer_id" name="customer_id" class="form-control">
-            <option value="">Select ID</option>
-            {% for id in customer_ids %}
-              <option value="{{ id }}">{{ id }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Customer Name -->
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
-        </div>
-
-        <!-- Search Name -->
-        <div class="form-group">
-          <label for="search_name">Search Name</label>
-          <select id="search_name" name="search_name" class="form-control">
-            <option value="">Select Search Name</option>
-            {% for sname in search_names %}
-              <option value="{{ sname }}">{{ sname }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
-      </div>
-    </form>
+    <div class="card-body under-dev-container">
+      <h2 class="under-dev-text">UNDER DEVELOPMENT</h2>
+    </div>
   </div>
 </div>
 {% endblock %}

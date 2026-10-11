@@ -17,6 +17,32 @@ from .models import (
 from config.decorators import require_active_customer
 
 
+def _send_bom_email(item_creation_id):
+    """VBA SendBOMEmail implementation."""
+    try:
+        from django.core.mail import EmailMultiAlternatives
+        from django.conf import settings
+        item_id = str(item_creation_id or "").strip()
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@voss.net')
+        subject = f"Item Creation:{item_id}"
+        html_body = (
+            f"Hi<br><br>"
+            f"Item created with ID:{item_id}created for new RFQ<br><br>"
+            f"Request you to work on BOP Creation.<br><br>"
+            f"Regards,<br>Voss Team"
+        )
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body="Please view this email in an HTML-supported client.",
+            from_email=from_email,
+            to=["BOM_Creation@voss.net"],
+        )
+        email.attach_alternative(html_body, "text/html")
+        email.send(fail_silently=False)
+    except Exception as exc:
+        print(f"[WARN] SendBOMEmail failed: {exc}")
+
+
 def _next_bom_trans_id():
     """Return the next available Id for tbl_bomcreation_partselection.
 
@@ -347,15 +373,61 @@ def bom_ajax_action(request):
                 
             elif action == "complete":
                 bom_creation_id = data.get("bom_creation_id")
+                item_creation_id = data.get("item_creation_id")
+                table_id = data.get("table_id")
                 if not bom_creation_id:
                     return JsonResponse({"status": "error", "message": "Missing bom_creation_id"}, status=400)
                 
                 header = BOMHeader.objects.filter(bom_creation_id=bom_creation_id).first()
-                if header:
-                    header.action_status = "COMPLETED"
-                    header.save()
-                    return JsonResponse({"status": "success", "message": "Done"})
-                return JsonResponse({"status": "error", "message": "Header not found"}, status=404)
+                if not header:
+                    return JsonResponse({"status": "error", "message": "Header not found"}, status=404)
+
+                header.action_status = "COMPLETED"
+                header.save()
+
+                if not item_creation_id:
+                    item_creation_id = header.item_creation_id
+                if not table_id:
+                    table_id = header.table_id
+
+                today_str = date.today().isoformat()
+                try:
+                    with connection.cursor() as cur:
+                        cur.execute("""
+                            DO $$
+                            BEGIN
+                                IF NOT EXISTS (
+                                    SELECT 1 FROM information_schema.columns 
+                                    WHERE table_name='tbl_bomcreation_partselection' AND column_name='completedon'
+                                ) THEN
+                                    ALTER TABLE tbl_bomcreation_partselection ADD COLUMN completedon VARCHAR(50);
+                                END IF;
+                            END $$;
+                        """)
+                        if table_id:
+                            cur.execute(
+                                """
+                                UPDATE tbl_bomcreation_partselection
+                                SET completedon=%s
+                                WHERE ("BOMCreation_ID"=%s OR bomcreation_id=%s)
+                                  AND ("Table_Id"=%s OR table_id=%s)
+                                """,
+                                [today_str, bom_creation_id, bom_creation_id, str(table_id), str(table_id)]
+                            )
+                        else:
+                            cur.execute(
+                                """
+                                UPDATE tbl_bomcreation_partselection
+                                SET completedon=%s
+                                WHERE ("BOMCreation_ID"=%s OR bomcreation_id=%s)
+                                """,
+                                [today_str, bom_creation_id, bom_creation_id]
+                            )
+                except Exception as db_err:
+                    print(f"[WARN] Failed to update completedon in tbl_bomcreation_partselection: {db_err}")
+
+                _send_bom_email(item_creation_id)
+                return JsonResponse({"status": "success", "message": "BOM record marked as Complete! Email notification sent to BOM_Creation@voss.net."})
                 
             elif action == "download":
                 bom_creation_id = data.get("bom_creation_id")

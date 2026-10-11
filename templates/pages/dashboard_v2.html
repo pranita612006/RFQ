@@ -1,857 +1,453 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block title %}Voss Dashboard 2{% endblock %}
+{% block title %}FlowNexis | Dashboard v2 - Engineering, Costing & Manufacturing Progress{% endblock title %}
 
-{% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+{% block extrastyle %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f6fa; color: #333; font-size: 13px; }
- 
-  /* TOP BAR */
-  .top-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #fff; padding: 8px 16px; border-bottom: 1px solid #ddd;
+  .dash-container {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e1b4b;
+    padding: 16px 20px 32px;
+    background: #faf5ff;
   }
-  .top-bar-left { display: flex; align-items: center; gap: 12px; }
-  .upload-logo-btn {
-    border: 1px solid #aaa; background: #f0f0f0; padding: 5px 12px;
-    cursor: pointer; font-size: 12px; border-radius: 3px;
+  
+  /* TOP DASHBOARD NAV BAR */
+  .dash-topbar {
+    background: #ffffff;
+    border: 1px solid #f3e8ff;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(124, 58, 237, 0.04);
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  .upload-logo-btn:hover { background: #e0e0e0; }
-  .dashboard-title { font-size: 18px; font-weight: 600; color: #222; }
-  .data-updated { font-size: 11px; background: #1a237e; color: #fff; padding: 4px 10px; border-radius: 3px; }
- 
-  /* FILTERS */
-  .filters-bar {
-    background: #fff; padding: 10px 16px; border-bottom: 1px solid #eee;
-    display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end;
+  .dash-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .filter-group { display: flex; flex-direction: column; gap: 3px; }
-  .filter-group label { font-size: 11px; color: #888; font-weight: 500; }
-  .filter-group input, .filter-group select {
-    border: 1px solid #ccc; padding: 5px 8px; font-size: 12px;
-    border-radius: 3px; background: #fff; min-width: 110px;
+  .dash-title-group h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #581c87;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  .filter-group select { min-width: 160px; }
- 
-  /* MAIN CONTENT */
-  .main { padding: 14px 16px; }
- 
-  /* KPI CARDS */
-  .kpi-row {
-    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 14px;
+  .dash-pill-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #f3e8ff;
+    color: #7c3aed;
+    border: 1px solid #e9d5ff;
+  }
+  
+  /* DASHBOARD SWITCHER TABS */
+  .dash-tabs {
+    display: inline-flex;
+    background: #f3e8ff;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+  }
+  .dash-tab-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #6b21a8;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .dash-tab-btn:hover {
+    color: #581c87;
+    background: rgba(255,255,255,0.7);
+  }
+  .dash-tab-btn.active {
+    background: #ffffff;
+    color: #7c3aed;
+    box-shadow: 0 1px 4px rgba(124, 58, 237, 0.12);
+  }
+
+  /* KPI ROW */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
   }
   .kpi-card {
-    background: #fff; border-radius: 6px; padding: 12px 14px;
-    border: 1px solid #e8e8e8; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .kpi-label { font-size: 11px; color: #666; margin-bottom: 4px; }
-  .kpi-value { font-size: 20px; font-weight: 700; color: #222; margin-bottom: 3px; }
-  .kpi-change { font-size: 11px; color: #666; }
-  .kpi-change .up { color: #2ecc71; font-weight: 600; }
-  .kpi-change .pct-up { color: #2ecc71; font-weight: 600; }
- 
-  /* CHARTS GRID */
-  .charts-row { display: grid; gap: 12px; margin-bottom: 12px; }
-  .row-3 { grid-template-columns: repeat(3, 1fr); }
-  .row-2 { grid-template-columns: 1fr 1fr; }
-  .row-2-1 { grid-template-columns: 1fr 1fr 1fr; }
- 
-  .chart-card {
-    background: #fff; border-radius: 6px; padding: 14px;
-    border: 1px solid #e8e8e8; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .chart-title {
-    font-size: 12px; font-weight: 600; color: #333; margin-bottom: 10px;
-  }
-  .chart-container { position: relative; }
- 
-  /* Donut center label */
-  .donut-wrap { position: relative; display: inline-block; width: 100%; }
- 
-  /* TREEMAP */
-  .treemap-container { width: 100%; height: 180px; position: relative; }
-  .treemap-cell {
-    position: absolute; display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 600; color: #fff; border: 1px solid rgba(255,255,255,0.3);
-    cursor: pointer; border-radius: 2px; text-align: center; padding: 4px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #f3e8ff;
+    box-shadow: 0 1px 3px rgba(124, 58, 237, 0.04);
+    position: relative;
     overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
- 
-  /* GAUGE / RESOLUTION */
-  .resolution-chart { position: relative; width: 100%; }
- 
-  /* TABLE */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  thead th {
-    background: #3949ab; color: #fff; padding: 8px 10px;
-    text-align: left; font-weight: 600; font-size: 12px;
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(124, 58, 237, 0.1);
   }
-  tbody tr:nth-child(even) { background: #f7f8fc; }
-  tbody tr:hover { background: #eef0fb; }
-  tbody td { padding: 7px 10px; border-bottom: 1px solid #eee; }
- 
-  /* STATUS BADGES */
-  .status-completed { color: #27ae60; font-weight: 600; }
-  .status-pending { color: #e67e22; font-weight: 600; }
-  .status-cancelled { color: #e74c3c; font-weight: 600; }
-  .status-returned { color: #8e44ad; font-weight: 600; }
- 
-  /* MEMBER TABLE */
-  .member-table thead th { background: #3949ab; }
- 
-  /* BOTTOM TWO TABLES */
-  .bottom-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
- 
-  /* Legend */
-  .legend { display: flex; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #555; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
- 
-  /* Gauge chart container */
-  .gauge-wrap { position: relative; text-align: center; }
-  .gauge-label {
-    position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-    font-size: 22px; font-weight: 700; color: #333;
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
   }
-  .gauge-sub {
-    position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-    font-size: 10px; color: #888; white-space: nowrap;
+  .kpi-label {
+    font-size: 11px;
+    color: #6b21a8;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.25;
   }
-  .gauge-ticks {
-    display: flex; justify-content: space-between;
-    font-size: 10px; color: #888; margin-top: -4px; padding: 0 10px;
+  .kpi-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: #581c87;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
   }
- 
-  @media (max-width: 1100px) {
-    .kpi-row { grid-template-columns: repeat(3, 1fr); }
-    .row-3 { grid-template-columns: 1fr 1fr; }
+  .kpi-trend {
+    font-size: 11px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
   }
-  @media (max-width: 700px) {
-    .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .row-3, .row-2, .row-2-1 { grid-template-columns: 1fr; }
-    .bottom-tables { grid-template-columns: 1fr; }
+  .trend-badge {
+    background: #f3e8ff;
+    color: #7c3aed;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  /* CHARTS GRIDS */
+  .charts-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+
+  .dash-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid #f3e8ff;
+    box-shadow: 0 1px 3px rgba(124, 58, 237, 0.04);
+  }
+  .dash-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #581c87;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chart-box { position: relative; width: 100%; }
+
+  /* READINESS METERS */
+  .meter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+  .meter-box {
+    background: #ffffff;
+    border: 1px solid #f3e8ff;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .meter-title { font-size: 11px; font-weight: 600; color: #6b21a8; margin-bottom: 6px; }
+  .meter-bar-wrap { height: 8px; background: #f3e8ff; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+  .meter-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #7c3aed, #a855f7); }
+  .meter-foot { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; font-weight: 600; }
+
+  /* TABLES */
+  .dash-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dash-table thead th {
+    background: #7c3aed; color: #ffffff; padding: 9px 12px;
+    text-align: left; font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .dash-table tbody tr:nth-child(even) { background: #faf5ff; }
+  .dash-table tbody tr:hover { background: #f3e8ff; }
+  .dash-table tbody td { padding: 9px 12px; border-bottom: 1px solid #f3e8ff; font-size: 12px; }
+
+  @media (max-width: 1200px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .charts-row-2 { grid-template-columns: 1fr; }
+    .meter-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .meter-grid { grid-template-columns: 1fr; }
+    .dash-topbar { flex-direction: column; align-items: flex-start; }
   }
 </style>
-</head>
-<body>
- 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="top-bar-left">
-    <button class="upload-logo-btn" onclick="document.getElementById('logoInput').click()">⬆ Upload Logo</button>
-    <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
-    <img id="logoImg" src="" style="height:32px;display:none;" alt="Logo">
-    <span class="dashboard-title">Dashboard 2</span>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="dash-container">
+
+  <!-- TOP DASHBOARD BAR WITH INSTANT VERSION SWITCHER -->
+  <div class="dash-topbar">
+    <div class="dash-title-group">
+      <h2>
+        <i class="fas fa-microchip" style="color: #7c3aed;"></i>
+        Dashboard v2
+      </h2>
+      <span class="dash-pill-tag">Engineering, Costing & Manufacturing Readiness</span>
+    </div>
+
+    <div class="dash-tabs">
+      <a href="{% url 'dashboard_v1' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v1
+      </a>
+      <a href="{% url 'dashboard_v2' %}" class="dash-tab-btn active">
+        <i class="fas fa-check-circle"></i> Dashboard v2
+      </a>
+      <a href="{% url 'dashboard_v3' %}" class="dash-tab-btn">
+        <i class="far fa-circle"></i> Dashboard v3
+      </a>
+    </div>
   </div>
-  <span class="data-updated">Data Last Updated on 01/01/2025</span>
-</div>
- 
-<!-- FILTERS BAR -->
-<div class="filters-bar">
-  <div class="filter-group">
-    <label>Start date</label>
-    <input type="date" id="startDate" value="2024-01-01">
-  </div>
-  <div class="filter-group">
-    <label>End date</label>
-    <input type="date" id="endDate" value="2024-12-31">
-  </div>
-  <div class="filter-group">
-    <label>Region</label>
-    <select id="regionFilter">
-      <option value="All">All</option>
-      <option>North</option><option>South</option><option>East</option><option>West</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Browser</label>
-    <select id="browserFilter">
-      <option value="All">All</option>
-      <option>Chrome</option><option>Safari</option><option>Firefox</option><option>Edge</option><option>Opera</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <label>Order Status</label>
-    <select id="orderStatusFilter">
-      <option value="All">All</option>
-      <option>Completed</option><option>Pending</option><option>Cancelled</option><option>Returned</option>
-    </select>
-  </div>
-</div>
- 
-<!-- MAIN -->
-<div class="main">
- 
-  <!-- KPI ROW -->
-  <div class="kpi-row">
+
+  <!-- REAL KPI ROW -->
+  <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Total US Visitors (count)</div>
-      <div class="kpi-value">487.3K <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: 442.8K <span class="pct-up">(+10%)</span></div>
+      <div class="kpi-label">Feasibility Assessments</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_feasibility }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-clipboard-check"></i></span>
+      </div>
+      <div class="kpi-trend">Forms Evaluated <span class="trend-badge">Verified</span></div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Total Direct Chats (count)</div>
-      <div class="kpi-value">12.4K <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: 11.2K <span class="pct-up">(+11%)</span></div>
+      <div class="kpi-label">BOM Structures Created</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_bom }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-layer-group"></i></span>
+      </div>
+      <div class="kpi-trend">{{ d.total_bom_items }} Item List Entries</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">New Members Registered (count)</div>
-      <div class="kpi-value">8.7K <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: 7.9K <span class="pct-up">(+10%)</span></div>
+      <div class="kpi-label">BOM Part Details Master</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_bom_parts }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-cogs"></i></span>
+      </div>
+      <div class="kpi-trend">Catalog Sourced Specs</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Total Orders Placed (count)</div>
-      <div class="kpi-value">34.2K <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: 31.5K <span class="pct-up">(+8%)</span></div>
+      <div class="kpi-label">BOP Process Definitions</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_bop }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-industry"></i></span>
+      </div>
+      <div class="kpi-trend">Manufacturing Routing</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Total Revenue (USD)</div>
-      <div class="kpi-value">$2.8M <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: $2.5M <span class="pct-up">(+12%)</span></div>
+      <div class="kpi-label">BOC Bought-Out Components</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_boc }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-cubes"></i></span>
+      </div>
+      <div class="kpi-trend">Procurement Linked</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">Conversion Rate (%)</div>
-      <div class="kpi-value">7.2% <span style="color:#2ecc71;font-size:14px;">▲</span></div>
-      <div class="kpi-change">vs prev month: 6.8% <span class="pct-up">(+6%)</span></div>
+      <div class="kpi-label">Costing & RM Conversions</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="kpi-val">{{ d.total_costing_conversions }}</span>
+        <span style="color:#7c3aed;" class="ml-1"><i class="fas fa-calculator"></i></span>
+      </div>
+      <div class="kpi-trend">{{ d.total_cell_types }} Cell Alignments</div>
     </div>
   </div>
- 
-  <!-- ROW 1: US Visitor Trend | New vs Returning | Mobile vs Desktop -->
-  <div class="charts-row row-3">
-    <div class="chart-card">
-      <div class="chart-title">US Visitor Trend (Last 12 Months)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="visitorTrendChart"></canvas>
-      </div>
+
+  <!-- READINESS METERS -->
+  <div class="meter-grid">
+    <div class="meter-box">
+      <div class="meter-title">Technical Feasibility Coverage</div>
+      <div class="meter-bar-wrap"><div class="meter-bar" style="width: 85%;"></div></div>
+      <div class="meter-foot"><span>{{ d.total_feasibility }} Forms Reviewed</span><span>85%</span></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">New vs. Returning US Visitors (%)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="newReturningChart"></canvas>
-      </div>
+    <div class="meter-box">
+      <div class="meter-title">BOM Architecture Completeness</div>
+      <div class="meter-bar-wrap"><div class="meter-bar" style="width: 78%;"></div></div>
+      <div class="meter-foot"><span>{{ d.total_bom }} Active Headers</span><span>78%</span></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Mobile vs. Desktop User Split (%)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="mobileDesktopChart"></canvas>
-      </div>
+    <div class="meter-box">
+      <div class="meter-title">BOP Operations & Machine Setup</div>
+      <div class="meter-bar-wrap"><div class="meter-bar" style="width: 65%;"></div></div>
+      <div class="meter-foot"><span>{{ d.total_bop }} Routes Prepared</span><span>65%</span></div>
+    </div>
+    <div class="meter-box">
+      <div class="meter-title">BOC Component Sourcing Readiness</div>
+      <div class="meter-bar-wrap"><div class="meter-bar" style="width: 90%;"></div></div>
+      <div class="meter-foot"><span>{{ d.total_boc }} Components Sourced</span><span>90%</span></div>
     </div>
   </div>
- 
-  <!-- ROW 2: US Visitor Acquisition | Top 5 Browsers | Browser Usage Trend -->
-  <div class="charts-row row-3">
-    <div class="chart-card">
-      <div class="chart-title">US Visitor Acquisition Source Breakdown</div>
-      <div class="treemap-container" id="treemapContainer"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Top 5 Browsers by User Count</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="browsersChart"></canvas>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-row-2">
+    <div class="dash-card">
+      <div class="dash-card-title">Feasibility Assessment Classification</div>
+      <div class="chart-box" style="height:210px;">
+        <canvas id="feasibilityChart"></canvas>
       </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Browser Usage Trend (Last 3 Months)</div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#3949ab;"></div>Chrome Users</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#f4a261;"></div>Safari Users</div>
-      </div>
-      <div class="chart-container" style="height:155px;">
-        <canvas id="browserTrendChart"></canvas>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Engineering Pipeline Data Traceability</div>
+      <div class="chart-box" style="height:210px;">
+        <canvas id="readinessChart"></canvas>
       </div>
     </div>
   </div>
- 
-  <!-- ROW 3: Chat Volume | Order Status | Chat Resolution -->
-  <div class="charts-row row-3">
-    <div class="chart-card">
-      <div class="chart-title">Chat Volume Trend (Last 90 Days)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="chatVolumeChart"></canvas>
+
+  <!-- REAL FEASIBILITY & BOM RECORDS TABLES -->
+  <div class="charts-row-2">
+    <div class="dash-card">
+      <div class="dash-card-title">
+        <span><i class="fas fa-check-circle text-purple mr-1"></i> Technical Feasibility Evaluated Items</span>
+        <span class="text-muted" style="font-size:11px;font-weight:normal;">Real database records</span>
       </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Order Status Breakdown</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="orderStatusChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Chat Resolution Rate (%)</div>
-      <div class="gauge-wrap">
-        <canvas id="resolutionGaugeChart" style="max-height:180px;"></canvas>
-        <div class="gauge-label">87%</div>
-        <div class="gauge-sub">Target: 90%</div>
-      </div>
-      <div class="gauge-ticks"><span>0%</span><span>33%</span><span>67%</span><span>100%</span></div>
-    </div>
-  </div>
- 
-  <!-- ROW 4: New Member Trend | Member Reg Source | New Products by Category -->
-  <div class="charts-row row-3">
-    <div class="chart-card">
-      <div class="chart-title">New Member Trend (Last 6 Months)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="memberTrendChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Member Registration Source Breakdown</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="memberSourceChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">New Products by Category</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="productCategoryChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW 5: Revenue Trend | Product Addition Trend -->
-  <div class="charts-row row-2">
-    <div class="chart-card">
-      <div class="chart-title">Revenue Trend (Last 12 Months)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="revenueTrendChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Product Addition Trend (Last 6 Months)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="productTrendChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- ROW 6: Daily Active Visitors | Avg Chat Response Time -->
-  <div class="charts-row row-2">
-    <div class="chart-card">
-      <div class="chart-title">Daily Active US Visitors (Last 30 Days)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="dailyActiveChart"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Average Chat Response Time (minutes)</div>
-      <div class="chart-container" style="height:180px;">
-        <canvas id="chatResponseChart"></canvas>
-      </div>
-    </div>
-  </div>
- 
-  <!-- BOTTOM TABLES -->
-  <div class="bottom-tables">
-    <div class="chart-card">
-      <div class="chart-title">Top 10 Most Recent Orders</div>
-      <div class="table-wrap">
-        <table id="ordersTable">
+      <div style="overflow-x:auto;">
+        <table class="dash-table">
           <thead>
-            <tr><th>Order ID</th><th>Order Date</th><th>Order Amount ($)</th><th>Status</th></tr>
+            <tr>
+              <th>Item No</th>
+              <th>Customer</th>
+              <th>Part Name</th>
+              <th>Type</th>
+              <th>Date</th>
+            </tr>
           </thead>
-          <tbody id="ordersBody"></tbody>
+          <tbody>
+            {% for f in d.feasibility_list %}
+            <tr>
+              <td><strong>{{ f.Item_No }}</strong></td>
+              <td>{{ f.CustomerName|default:"—" }}</td>
+              <td>{{ f.PartName|default:"—" }}</td>
+              <td><span class="badge" style="background:#f3e8ff;color:#7c3aed;">{{ f.FeasibilityType|default:"Review" }}</span></td>
+              <td>{{ f.InitialDate|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-2">No feasibility records.</td></tr>
+            {% endfor %}
+          </tbody>
         </table>
       </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Top 10 Recently Joined Members</div>
-      <div class="table-wrap">
-        <table class="member-table" id="membersTable">
+
+    <div class="dash-card">
+      <div class="dash-card-title">
+        <span><i class="fas fa-project-diagram text-purple mr-1"></i> Bill of Materials (BOM) Specifications</span>
+        <span class="text-muted" style="font-size:11px;font-weight:normal;">Real database records</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="dash-table">
           <thead>
-            <tr><th>Member Name</th><th>Join Date</th><th>Registration Source</th></tr>
+            <tr>
+              <th>BOM ID</th>
+              <th>Customer</th>
+              <th>Item Creation ID</th>
+              <th>Description</th>
+              <th>Status</th>
+            </tr>
           </thead>
-          <tbody id="membersBody"></tbody>
+          <tbody>
+            {% for b in d.bom_list %}
+            <tr>
+              <td><strong>{{ b.BOMCreation_Id|default:"BOM" }}</strong></td>
+              <td>{{ b.Customer_ID|default:"—" }}</td>
+              <td>{{ b.ItemCreation_Id|default:"—" }}</td>
+              <td>{{ b.Description|default:"BOM Assembly" }}</td>
+              <td><span class="badge" style="background:#f3e8ff;color:#7c3aed;">{{ b.Status|default:"Active" }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-2">No BOM records.</td></tr>
+            {% endfor %}
+          </tbody>
         </table>
       </div>
     </div>
   </div>
- 
-</div><!-- /main -->
- 
+
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// ====== LOGO UPLOAD ======
-function handleLogoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('logoImg');
-    img.src = e.target.result;
-    img.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
- 
-// ====== CHART DEFAULTS ======
-Chart.defaults.font.size = 10;
-Chart.defaults.font.family = "'Segoe UI', Arial, sans-serif";
-Chart.defaults.color = '#666';
- 
-const BLUE = '#3949ab';
-const BLUE2 = '#5c6bc0';
-const BLUE3 = '#7986cb';
-const PURPLE = '#7b1fa2';
-const CYAN = '#00acc1';
-const ORANGE = '#f4a261';
-const GREEN = '#43a047';
-const RED = '#e53935';
-const TEAL = '#26a69a';
- 
-const months12 = ['Jan 2024','Feb 2024','Mar 2024','Apr 2024','May 2024','Jun 2024','Jul 2024','Aug 2024','Sep 2024','Oct 2024','Nov 2024','Dec 2024'];
-const months12short = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
- 
-// ====== 1. US Visitor Trend ======
-new Chart(document.getElementById('visitorTrendChart'), {
-  type: 'line',
-  data: {
-    labels: months12short,
-    datasets: [{
-      data: [330,345,355,365,375,390,405,420,440,455,475,498],
-      borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.08)',
-      tension: 0.3, pointRadius: 3, pointBackgroundColor: BLUE, fill: false,
-      borderWidth: 2
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 300, max: 600, ticks: { stepSize: 40 }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false } }
-    }
-  }
-});
- 
-// ====== 2. New vs Returning ======
-new Chart(document.getElementById('newReturningChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['New Visitors\n287450 (56%)', 'Returning Visitors\n224850 (44%)'],
-    datasets: [{
-      data: [56, 44],
-      backgroundColor: [BLUE, '#b0bec5'],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 10 }, padding: 8, boxWidth: 12 } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-    },
-    cutout: '65%'
-  }
-});
- 
-// ====== 3. Mobile vs Desktop ======
-new Chart(document.getElementById('mobileDesktopChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Mobile\n358920 (70%)', 'Desktop\n153380 (30%)'],
-    datasets: [{
-      data: [70, 30],
-      backgroundColor: [BLUE, '#b0bec5'],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 10 }, padding: 8, boxWidth: 12 } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-    },
-    cutout: '65%'
-  }
-});
- 
-// ====== 4. TREEMAP (custom) ======
-(function buildTreemap() {
-  const container = document.getElementById('treemapContainer');
-  const data = [
-    { label: 'Organic Search (200k)', value: 200, color: '#283593' },
-    { label: 'Direct Traffic (200k)', value: 200, color: '#37474f' },
-    { label: 'Social M... (100k)', value: 100, color: '#5e35b1' },
-    { label: 'Paid Ad... (90k)', value: 90, color: '#7986cb' },
-    { label: 'Referral (70k)', value: 70, color: '#00acc1' },
-    { label: '', value: 30, color: '#26c6da' },
-    { label: '', value: 20, color: '#80cbc4' },
-    { label: '', value: 15, color: '#4db6ac' },
-    { label: '', value: 10, color: '#80deea' },
-  ];
-  const total = data.reduce((s, d) => s + d.value, 0);
-  const W = container.offsetWidth || 280;
-  const H = 180;
- 
-  // Simple slice-and-dice layout
-  function layout(items, x, y, w, h) {
-    if (!items.length) return [];
-    if (items.length === 1) return [{ ...items[0], x, y, w, h }];
-    const totalVal = items.reduce((s, i) => s + i.value, 0);
-    const half = items.reduce((acc, item, idx) => {
-      if (acc.done) return acc;
-      acc.sum += item.value;
-      if (acc.sum >= totalVal / 2) { acc.done = true; acc.idx = idx; }
-      return acc;
-    }, { sum: 0, done: false, idx: 0 });
-    const splitIdx = half.idx + 1;
-    const left = items.slice(0, splitIdx);
-    const right = items.slice(splitIdx);
-    const leftVal = left.reduce((s, i) => s + i.value, 0);
-    const ratio = leftVal / totalVal;
-    const results = [];
-    if (w >= h) {
-      const lw = w * ratio;
-      results.push(...layout(left, x, y, lw, h));
-      results.push(...layout(right, x + lw, y, w - lw, h));
-    } else {
-      const lh = h * ratio;
-      results.push(...layout(left, x, y, w, lh));
-      results.push(...layout(right, x, y + lh, w, h - lh));
-    }
-    return results;
-  }
- 
-  const cells = layout(data, 0, 0, W, H);
-  container.style.position = 'relative';
-  cells.forEach(cell => {
-    if (cell.w < 2 || cell.h < 2) return;
-    const div = document.createElement('div');
-    div.className = 'treemap-cell';
-    div.style.cssText = `left:${cell.x}px;top:${cell.y}px;width:${cell.w}px;height:${cell.h}px;background:${cell.color};`;
-    div.textContent = cell.label || '';
-    div.title = cell.label;
-    container.appendChild(div);
-  });
-})();
- 
-// ====== 5. Top 5 Browsers ======
-new Chart(document.getElementById('browsersChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Chrome', 'Safari', 'Firefox', 'Edge', 'Opera'],
-    datasets: [{
-      data: [310, 180, 85, 65, 45],
-      backgroundColor: BLUE,
-      borderRadius: 2,
-      barThickness: 18
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { min: 7, ticks: { stepSize: 40 }, grid: { color: '#f0f0f0' } },
-      y: { grid: { display: false } }
-    }
-  }
-});
- 
-// ====== 6. Browser Usage Trend ======
-new Chart(document.getElementById('browserTrendChart'), {
-  type: 'line',
-  data: {
-    labels: ['Oct 2024', 'Nov 2024', 'Dec 2024'],
-    datasets: [
-      {
-        label: 'Chrome Users',
-        data: [220, 235, 250],
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.08)',
-        tension: 0.3, pointRadius: 4, pointBackgroundColor: BLUE, fill: false, borderWidth: 2
-      },
-      {
-        label: 'Safari Users',
-        data: [155, 158, 162],
-        borderColor: ORANGE, backgroundColor: 'rgba(244,162,97,0.08)',
-        tension: 0.3, pointRadius: 4, pointBackgroundColor: ORANGE, fill: false, borderWidth: 2
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 100, max: 300, ticks: { stepSize: 25 }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false } }
-    }
-  }
-});
- 
-// ====== 7. Chat Volume Trend ======
-(function() {
-  const labels = [];
-  const data = [];
-  for (let i = 90; i >= 1; i--) {
-    labels.push(i % 10 === 0 ? `D${90-i+1}` : '');
-    data.push(250 + Math.round((90 - i) * 8.5 + Math.random() * 30));
-  }
-  new Chart(document.getElementById('chatVolumeChart'), {
-    type: 'line',
+document.addEventListener("DOMContentLoaded", function() {
+  const PURPLE = '#7c3aed';
+  const VIOLET = '#a855f7';
+  const LIGHT_PURPLE = '#c084fc';
+  const DEEP_PURPLE = '#581c87';
+  const LAVENDER = '#e9d5ff';
+
+  // 1. Feasibility Chart
+  const fLabels = {{ d.feasibility_type_labels|safe }};
+  const fData = {{ d.feasibility_type_counts|safe }};
+  new Chart(document.getElementById('feasibilityChart'), {
+    type: 'doughnut',
     data: {
-      labels,
+      labels: fLabels,
       datasets: [{
-        data,
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.15)',
-        tension: 0.3, pointRadius: 0, fill: true, borderWidth: 1.5
+        data: fData,
+        backgroundColor: [PURPLE, VIOLET, LIGHT_PURPLE, LAVENDER],
+        borderWidth: 2,
+        borderColor: '#ffffff'
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { min: 200, max: 1000, ticks: { stepSize: 200 }, grid: { color: '#f0f0f0' } },
-        x: { ticks: { maxTicksLimit: 10 }, grid: { display: false } }
-      }
+      cutout: '65%',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'right' } }
     }
   });
-})();
- 
-// ====== 8. Order Status Breakdown ======
-new Chart(document.getElementById('orderStatusChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Completed\n34850 (73%)', 'Pending\n8200 (19%)', 'Cancelled\n2100 (6%)', 'Returned\n ~2%'],
-    datasets: [{
-      data: [73, 19, 6, 2],
-      backgroundColor: [BLUE, '#90a4ae', '#455a64', '#b0bec5'],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 10 }, padding: 6, boxWidth: 12 } }
-    },
-    cutout: '65%'
-  }
-});
- 
-// ====== 9. Chat Resolution Gauge ======
-new Chart(document.getElementById('resolutionGaugeChart'), {
-  type: 'doughnut',
-  data: {
-    datasets: [{
-      data: [87, 13],
-      backgroundColor: [BLUE, '#e0e0e0'],
-      borderWidth: 0,
-      circumference: 180,
-      rotation: -90
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { enabled: false } },
-    cutout: '70%'
-  }
-});
- 
-// ====== 10. New Member Trend ======
-new Chart(document.getElementById('memberTrendChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Jul 2024','Aug 2024','Sep 2024','Oct 2024','Nov 2024','Dec 2024'],
-    datasets: [{
-      data: [6.2, 6.8, 7.2, 7.7, 8.2, 8.7],
-      backgroundColor: BLUE,
-      borderRadius: 3,
-      barThickness: 28
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 5, max: 9, ticks: { stepSize: 1 }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false }, ticks: { maxRotation: 30, font: { size: 9 } } }
-    }
-  }
-});
- 
-// ====== 11. Member Registration Source ======
-new Chart(document.getElementById('memberSourceChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Mobile App\n2180 (24%)', 'Website\n3245 (36%)', 'Social Media\n1520 (17%)', 'Email Campaign\n980 (11%)', 'Referral\n650 (7%)', 'Other\n~5%'],
-    datasets: [{
-      data: [24, 36, 17, 11, 7, 5],
-      backgroundColor: [BLUE, CYAN, PURPLE, '#43a047', '#fb8c00', '#90a4ae'],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 9 }, padding: 4, boxWidth: 10 } }
-    },
-    cutout: '55%'
-  }
-});
- 
-// ====== 12. New Products by Category ======
-new Chart(document.getElementById('productCategoryChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Apparel 210 (17%)', 'Electronics 285 (23%)', 'Furniture 45 (4%)', 'Beauty 75 (6%)', 'Toys 95 (8%)', 'Books 120 (10%)', 'Sports 145 (12%)', 'Home & Garden 175 (14%)'],
-    datasets: [{
-      data: [17, 23, 4, 6, 8, 10, 12, 14],
-      backgroundColor: [BLUE, CYAN, '#ffa000', '#e91e63', '#26c6da', TEAL, '#7e57c2', GREEN],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 9 }, padding: 3, boxWidth: 10 } }
-    },
-    cutout: '55%'
-  }
-});
- 
-// ====== 13. Revenue Trend ======
-new Chart(document.getElementById('revenueTrendChart'), {
-  type: 'line',
-  data: {
-    labels: months12short,
-    datasets: [{
-      data: [1.8, 1.9, 2.0, 2.05, 2.1, 2.2, 2.3, 2.4, 2.5, 2.55, 2.65, 2.8],
-      borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.07)',
-      tension: 0.3, pointRadius: 3, pointBackgroundColor: BLUE, fill: false, borderWidth: 2
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 1.5, max: 4, ticks: { stepSize: 0.5, callback: v => v.toFixed(1) }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false } }
-    }
-  }
-});
- 
-// ====== 14. Product Addition Trend ======
-new Chart(document.getElementById('productTrendChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Jul 2024','Aug 2024','Sep 2024','Oct 2024','Nov 2024','Dec 2024'],
-    datasets: [{
-      data: [130, 163, 170, 178, 210, 215],
-      backgroundColor: BLUE,
-      borderRadius: 3,
-      barThickness: 40
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 100, max: 250, ticks: { stepSize: 20 }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false }, ticks: { maxRotation: 30, font: { size: 9 } } }
-    }
-  }
-});
- 
-// ====== 15. Daily Active Visitors ======
-(function() {
-  const labels = [];
-  const data = [];
-  for (let i = 1; i <= 30; i++) {
-    labels.push(i % 5 === 0 ? `D${i}` : '');
-    data.push(12000 + Math.round(i * 380 + Math.random() * 400));
-  }
-  new Chart(document.getElementById('dailyActiveChart'), {
-    type: 'line',
+
+  // 2. Engineering Readiness
+  new Chart(document.getElementById('readinessChart'), {
+    type: 'bar',
     data: {
-      labels,
+      labels: ['Feasibility', 'BOM Headers', 'BOP Workflows', 'BOC Components', 'Costing Conversions'],
       datasets: [{
-        data,
-        borderColor: BLUE, backgroundColor: 'rgba(57,73,171,0.15)',
-        tension: 0.4, pointRadius: 0, fill: true, borderWidth: 1.5
+        label: 'Engineering Records',
+        data: [{{ d.total_feasibility }}, {{ d.total_bom }}, {{ d.total_bop }}, {{ d.total_boc }}, {{ d.total_costing_conversions }}],
+        backgroundColor: [DEEP_PURPLE, PURPLE, VIOLET, LIGHT_PURPLE, LAVENDER],
+        borderRadius: 4
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { min: 11000, max: 23000, ticks: { stepSize: 2000, callback: v => v.toLocaleString() }, grid: { color: '#f0f0f0' } },
-        x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } }
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#f3e8ff' } }
       }
     }
-  });
-})();
- 
-// ====== 16. Average Chat Response Time ======
-new Chart(document.getElementById('chatResponseChart'), {
-  type: 'bar',
-  data: {
-    labels: months12short,
-    datasets: [{
-      data: [8.1, 7.9, 7.6, 7.5, 7.4, 7.2, 7.0, 6.9, 6.8, 6.7, 6.4, 6.1],
-      backgroundColor: BLUE,
-      borderRadius: 3,
-      barThickness: 22
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { min: 5, max: 10, ticks: { stepSize: 1 }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false } }
-    }
-  }
-});
- 
-// ====== TABLES ======
-const ordersData = [
-  { id: 'ORD-2024-98765', date: 'Dec 30, 2024', amount: '285.5', status: 'Completed' },
-  { id: 'ORD-2024-98764', date: 'Dec 29, 2024', amount: '412.75', status: 'Completed' },
-  { id: 'ORD-2024-98763', date: 'Dec 28, 2024', amount: '156.2', status: 'Pending' },
-  { id: 'ORD-2024-98762', date: 'Dec 27, 2024', amount: '523.4', status: 'Completed' },
-  { id: 'ORD-2024-98761', date: 'Dec 26, 2024', amount: '89.95', status: 'Completed' },
-  { id: 'ORD-2024-98760', date: 'Dec 25, 2024', amount: '678.3', status: 'Completed' },
-  { id: 'ORD-2024-98759', date: 'Dec 24, 2024', amount: '245.6', status: 'Cancelled' },
-  { id: 'ORD-2024-98758', date: 'Dec 23, 2024', amount: '341.85', status: 'Completed' },
-  { id: 'ORD-2024-98757', date: 'Dec 22, 2024', amount: '127.4', status: 'Returned' },
-  { id: 'ORD-2024-98756', date: 'Dec 21, 2024', amount: '456.75', status: 'Completed' },
-];
- 
-const statusClass = { Completed: 'status-completed', Pending: 'status-pending', Cancelled: 'status-cancelled', Returned: 'status-returned' };
- 
-const ordersBody = document.getElementById('ordersBody');
-ordersData.forEach(o => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${o.id}</td><td>${o.date}</td><td>${o.amount}</td><td class="${statusClass[o.status]}">${o.status}</td>`;
-  ordersBody.appendChild(tr);
-});
- 
-const membersData = [
-  { name: 'Sarah Mitchell', date: 'Dec 30, 2024', source: '1' },
-  { name: 'James Rodriguez', date: 'Dec 29, 2024', source: '2' },
-  { name: 'Emily Chen', date: 'Dec 28, 2024', source: '1' },
-  { name: 'Michael Thompson', date: 'Dec 27, 2024', source: '3' },
-];
- 
-const membersBody = document.getElementById('membersBody');
-membersData.forEach(m => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${m.name}</td><td>${m.date}</td><td>${m.source}</td>`;
-  membersBody.appendChild(tr);
-});
- 
-// ====== FILTER INTERACTIVITY ======
-// Filters update displayed data labels to reflect selection
-const filterIds = ['startDate','endDate','regionFilter','browserFilter','orderStatusFilter'];
-filterIds.forEach(id => {
-  document.getElementById(id).addEventListener('change', () => {
-    document.querySelector('.data-updated').textContent =
-      `Filters applied — Data up to ${new Date().toLocaleDateString()}`;
-    // In a real app, data would re-query. Here we show visual feedback.
   });
 });
 </script>
-{% endblock %}
+{% endblock extra_scripts %}

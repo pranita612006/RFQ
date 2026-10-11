@@ -1,20 +1,121 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {% block content %}
-<div class="container-fluid full-dashboard bg-white pb-5">
-    <div class="d-flex justify-content-between align-items-center pt-2 px-2">
-        <div class="d-flex align-items-center">
-            <h2 class="mb-0 mr-2" style="color: #FF3131; font-weight: bold; font-family: 'Permanent Marker', cursive;">FlowNexis</h2>
-            <h3 class="mb-0 text-secondary" style="font-size: 1.5rem; color: #2E266D !important; font-family: 'Permanent Marker', cursive;">BOM Creation</h3>
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  /* Base typography: Montserrat for all text except headings */
+  .bom-container,
+  .bom-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Headings: Permanent Marker */
+  .bom-card-title {
+    font-family: 'Permanent Marker', cursive !important;
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .bom-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  .btn-bom-back {
+    background-color: transparent !important;
+    border: 2px solid #FFFFFF !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    padding: 4px 14px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-bom-back:hover {
+    background-color: #FFFFFF !important;
+    color: #2E266D !important;
+  }
+
+  /* Form labels and inputs styling */
+  .bom-container label {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .bom-container .form-control:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  .bom-step-heading {
+    color: #2E266D;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* All Action Buttons: Red (#FF3131) with Blue Border (#2E266D) & Spacing */
+  .bom-container .btn:not(.btn-bom-back):not(.close),
+  .modal .btn:not(.close) {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 5px 14px !important;
+    margin-right: 6px !important;
+    margin-bottom: 4px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .bom-container .btn:not(.btn-bom-back):not(.close):hover,
+  .modal .btn:not(.close):hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35) !important;
+  }
+
+  .bom-container .btn:disabled,
+  .bom-container .btn.disabled,
+  .modal .btn:disabled {
+    background-color: #ff8585 !important;
+    border: 2px solid #7b75a6 !important;
+    color: #FFFFFF !important;
+    opacity: 0.65 !important;
+  }
+
+  /* Table Header styling */
+  .bom-container thead.table-dark th {
+    background-color: #212529 !important;
+    color: #FFFFFF !important;
+    border-color: #373b3e !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+  }
+</style>
+
+<div class="container-fluid full-dashboard bom-container pb-5">
+    <div class="card card-primary shadow-sm mt-3">
+        <div class="bom-card-header">
+            <h3 class="bom-card-title">BOM Creation</h3>
+            <button type="button" class="btn-bom-back" id="btn-back" onclick="window.history.back();">← Back</button>
         </div>
-        <button class="btn btn-outline-secondary btn-sm px-4" onclick="window.history.back();"
-            type="button"><i><u>Back</u></i></button>
-    </div>
-
-    <hr class="my-2">
-
-    <div class="px-2">
-        <h6 class="font-weight-bold">Step 1 : <span class="text-secondary font-weight-normal">Create BOM</span></h6>
+        <div class="card-body p-3">
+            <div class="px-2">
+                <h5 class="bom-step-heading">Step 1 : <span class="text-secondary font-weight-normal">Create BOM</span></h5>
 
         <form method="post" id="bom-form" onsubmit="return false;">
             {% csrf_token %}
@@ -155,11 +256,10 @@
         </form>
     </div>
 
-    <hr class="my-3" style="border-top: 2px solid #666;">
+    <hr class="my-3" style="border-top: 2px solid #e2e8f0;">
 
     <div class="px-2">
-        <h6 class="font-weight-bold">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material
-                List</span></h6>
+        <h5 class="bom-step-heading">Step 2 : <span class="text-secondary font-weight-normal">Add Part / Material List</span></h5>
 
         <div class="d-flex align-items-center mb-2 small">
             <span class="mr-4">BOM Creation : <strong id="lbl-bom-creation"></strong></span>
@@ -176,7 +276,7 @@
 
         <div class="table-responsive">
             <table class="table table-sm table-bordered mb-2">
-                <thead style="background-color: #e9ecef; font-size: 0.85rem;">
+                <thead class="table-dark" style="font-size: 0.85rem;">
                     <tr>
                         <th style="width: 10%;">Entry Type</th>
                         <th style="width: 10%;">Part_Number</th>
@@ -237,8 +337,8 @@
         </div>
 
         <div class="table-responsive border" style="max-height: 300px; overflow-x: auto;">
-            <table class="table table-sm table-bordered text-nowrap mb-0" style="font-size: 0.8rem;">
-                <thead style="background-color: #e9ecef;">
+            <table class="table table-sm table-bordered table-hover text-nowrap mb-0" style="font-size: 0.8rem;">
+                <thead class="table-dark">
                     <tr>
                         <th>Entry Type</th>
                         <th>Grp Part No</th>
@@ -258,7 +358,9 @@
             </table>
         </div>
     </div>
-</div>
+        </div><!-- /card-body -->
+    </div><!-- /card -->
+</div><!-- /container-fluid -->
 
 <!-- ============================================================
      Modal: Production BOM Group Part Selection
@@ -277,12 +379,12 @@
             style="border-radius: 4px; border: 1px solid #999; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
 
             <!-- Header -->
-            <div class="modal-header py-1 px-3" style="background-color: #f2f2f5; border-bottom: 1px solid #ccc;">
-                <h6 class="modal-title font-weight-normal small" id="prodBomModalLabel" style="color: #333;">
-                    <i class="far fa-window-restore mr-2" style="color: #555;"></i>BOMProdItem_GrpPartSelected
+            <div class="modal-header py-1 px-3" style="background:#FF3131; color:white; border-bottom: 2px solid #2E266D;">
+                <h6 class="modal-title font-weight-bold small text-white" id="prodBomModalLabel">
+                    <i class="far fa-window-restore mr-2" style="color: #fff;"></i>BOMProdItem_GrpPartSelected
                 </h6>
-                <button type="button" class="close py-1" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="font-size: 1.1rem;">&times;</span>
+                <button type="button" class="close py-1 text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 1.1rem; color:white;">&times;</span>
                 </button>
             </div>
 
@@ -351,12 +453,12 @@
             style="border-radius: 4px; border: 1px solid #999; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
 
             <!-- Header -->
-            <div class="modal-header py-1 px-3" style="background-color: #f2f2f5; border-bottom: 1px solid #ccc;">
-                <h6 class="modal-title font-weight-normal small" id="partDetailsMasterLabel" style="color: #333;">
-                    <i class="far fa-window-restore mr-2" style="color: #555;"></i>BOM_PartDetails_Master
+            <div class="modal-header py-1 px-3" style="background:#FF3131; color:white; border-bottom: 2px solid #2E266D;">
+                <h6 class="modal-title font-weight-bold small text-white" id="partDetailsMasterLabel">
+                    <i class="far fa-window-restore mr-2" style="color: #fff;"></i>BOM_PartDetails_Master
                 </h6>
-                <button type="button" class="close py-1" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="font-size: 1.1rem;">&times;</span>
+                <button type="button" class="close py-1 text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 1.1rem; color:white;">&times;</span>
                 </button>
             </div>
 
@@ -1565,9 +1667,13 @@
         // Other Step 2 Actions
         document.getElementById("btn-complete").addEventListener("click", () => {
             const bom_id = document.getElementById("bom_creation_id").value;
+            const item_id = document.getElementById("item_creation_id")?.value || "";
+            const table_id = document.getElementById("table_id")?.value || "";
             if (!bom_id) return alert("Select BOM Creation ID first");
-            sendAjax("complete", { bom_creation_id: bom_id }, (res) => {
-                showMsg("BOM record marked as Complete!");
+            sendAjax("complete", { bom_creation_id: bom_id, item_creation_id: item_id, table_id: table_id }, (res) => {
+                const msg = res.message || "BOM record marked as Complete! Email sent successfully.";
+                showMsg(msg);
+                alert(msg);
             });
         });
 

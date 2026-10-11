@@ -16,6 +16,9 @@ urlpatterns = [
     path("get_opportunity_details/", views.get_opportunity_details, name="get_opportunity_details"),
     path("get_item_info/", views.get_item_info, name="get_item_info"),
     path("get_ecn_details/", views.get_ecn_details, name="get_ecn_details"),
+    path("get_ecn_count/", views.get_ecn_count, name="get_ecn_count"),
+    path("get_opportunity_list/", views.get_opportunity_list, name="get_opportunity_list"),
+    path("get_opportunity_ecn_list/", views.get_opportunity_ecn_list, name="get_opportunity_ecn_list"),
     path("check_rfq_lock/", views.check_rfq_lock, name="check_rfq_lock"),
 
     # CRUD
@@ -25,6 +28,7 @@ urlpatterns = [
     path("opportunity/complete/", views.complete_opportunity, name="complete_opportunity"),
 
     # ECN CRUD
+    path("opportunity_ecn/save/", views.save_ecn, name="save_ecn"),
     path("opportunity_ecn/update/", views.update_ecn, name="update_ecn"),
     path("opportunity_ecn/delete/", views.delete_ecn, name="delete_ecn"),
 ]

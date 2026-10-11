@@ -2,7 +2,106 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid mt-3">
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  /* Base typography: Montserrat for all text except headings */
+  .item-creation-container,
+  .item-creation-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Headings: Permanent Marker */
+  .ic-card-title,
+  .items-grid-title {
+    font-family: 'Permanent Marker', cursive !important;
+  }
+
+  .ic-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  .ic-card-title {
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .btn-ic-back {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-ic-back:hover {
+    background-color: #FFFFFF;
+    color: #2E266D !important;
+  }
+
+  /* Labels and inputs styling */
+  .item-creation-container label {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .item-creation-container .form-control:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  /* All Action Buttons in Red (#FF3131) with Blue Border (#2E266D) & Spacing */
+  .card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .card-footer .btn,
+  .btn-action-red {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 6px 16px;
+    margin-right: 8px !important;
+    margin-bottom: 4px;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+  }
+
+  .card-footer .btn:hover,
+  .btn-action-red:hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35);
+  }
+
+  .card-footer .btn:disabled,
+  .card-footer .btn.disabled {
+    background-color: #ff8585 !important;
+    border: 2px solid #7b75a6 !important;
+    color: #FFFFFF !important;
+    opacity: 0.65;
+  }
+</style>
+<div class="container-fluid mt-3 item-creation-container">
 
   <!-- RFQ Locked Banner (hidden by default, shown via JS) -->
   <div id="rfq-locked-banner" class="alert alert-danger d-none" role="alert">
@@ -10,11 +109,9 @@
   </div>
 
   <div class="card card-primary shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title mb-0">Item Creation</h3>
-      <div>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-back">← Back</button>
-      </div>
+    <div class="ic-card-header">
+      <h3 class="ic-card-title">Item Creation</h3>
+      <button type="button" class="btn-ic-back" id="btn-back">← Back</button>
     </div>
 
     {% if messages %}
@@ -284,15 +381,16 @@
 
     <!-- ══ ACTION BUTTONS ══ -->
     <div class="card-footer d-flex flex-wrap gap-2 align-items-center">
-      <button type="button" class="btn btn-primary btn-sm" id="btn-add">➕ Add</button>
-      <button type="button" class="btn btn-warning btn-sm" id="btn-update">✏ Update</button>
-      <button type="button" class="btn btn-danger btn-sm" id="btn-delete">🗑 Delete</button>
-      <a id="btn-ecn" href="{% url 'ecn_request_page' %}" class="btn btn-info btn-sm">📋 ECN Request</a>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-add">➕ Add</button>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-edit">✏ Edit</button>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-update">✏ Update</button>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-delete">🗑 Delete</button>
+      <a id="btn-ecn" href="{% url 'ecn_request_page' %}" class="btn btn-action-red btn-sm">📋 ECN Request</a>
 
       <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
         <input type="email" class="form-control form-control-sm" id="recipient_email"
           placeholder="Recipient email" style="width:240px">
-        <button type="button" class="btn btn-success btn-sm" id="btn-email">✉ Send Email</button>
+        <button type="button" class="btn btn-action-red btn-sm" id="btn-email">✉ Send Email</button>
       </div>
     </div>
 
@@ -301,23 +399,35 @@
   <!-- ══ Items Grid ══ -->
   <div class="card mt-3 shadow-sm">
     <div class="card-header">
-      <h5 class="mb-0">Items for Customer</h5>
+      <h5 class="mb-0 items-grid-title" style="color: #2E266D;">Existing Item Records for Customer</h5>
     </div>
     <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-sm table-bordered table-hover mb-0" id="items-table">
+        <table class="table table-sm table-bordered table-hover mb-0" id="items-table" style="font-size: 0.85rem; white-space: nowrap;">
           <thead class="table-dark">
             <tr>
-              <th>Item No</th>
+              <th>No</th>
+              <th>No_2 / Rev</th>
+              <th>Template Name</th>
+              <th>Base Unit</th>
               <th>Description</th>
-              <th>Template</th>
+              <th>Cell</th>
+              <th>Cell Type</th>
+              <th>Shelf No</th>
+              <th>Product Group</th>
+              <th>Item Category</th>
               <th>Status</th>
-              <th>HSN Code</th>
+              <th>Fixture No</th>
+              <th>No Of MEFT</th>
+              <th>No Of Parts</th>
+              <th>Customer Name</th>
+              <th>Customer Vendor Code</th>
+              <th>HSN/SAC Code</th>
               <th>Last Modified</th>
             </tr>
           </thead>
           <tbody id="items-tbody">
-            <tr><td colspan="6" class="text-center text-muted py-3">Select or add an item to see it here.</td></tr>
+            <tr><td colspan="18" class="text-center text-muted py-3">Select or add an item to see it here.</td></tr>
           </tbody>
         </table>
       </div>
@@ -362,6 +472,51 @@
     return fd;
   }
 
+  let isFieldsUnlocked = false;
+
+  function setAutofilledLock(locked) {
+    const lockedInputIds = [
+      "customer_id", "customer_name", "lastEcnNo", "lastModifiedDate",
+      "fixture", "noofmeet", "noofparts", "custname_short", "custVenderCode",
+      "costingmethod", "inventory", "genpro", "replenishment", "qc",
+      "manu", "assembly", "reordering", "inventoryinclude", "gst",
+      "flushing", "template_applied", "rounding", "gstgroup"
+    ];
+    const lockedSelectIds = ["cell", "cell_type"];
+
+    lockedInputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (["customer_id", "customer_name", "lastEcnNo", "lastModifiedDate"].includes(id)) {
+        el.readOnly = true;
+        el.style.backgroundColor = "#e9ecef";
+        el.style.cursor = "default";
+        return;
+      }
+      el.readOnly = locked;
+      if (locked) {
+        el.style.backgroundColor = "#e9ecef";
+        el.style.cursor = "not-allowed";
+      } else {
+        el.style.backgroundColor = "#ffffff";
+        el.style.cursor = "";
+      }
+    });
+
+    lockedSelectIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.disabled = locked;
+      if (locked) {
+        el.style.backgroundColor = "#e9ecef";
+        el.style.cursor = "not-allowed";
+      } else {
+        el.style.backgroundColor = "#ffffff";
+        el.style.cursor = "";
+      }
+    });
+  }
+
   function clearForm() {
     const skipIds = new Set(["customer_id","customer_name","custname_short","custVenderCode"]);
     const allInputs = document.querySelectorAll(".card-body input, .card-body select");
@@ -371,10 +526,14 @@
     setVal("lastEcnNo", "");
     document.getElementById("rfq-locked-banner").classList.add("d-none");
     setLocked(false);
+    isFieldsUnlocked = false;
+    setAutofilledLock(true);
+    const editBtn = document.getElementById("btn-edit");
+    if (editBtn) editBtn.innerHTML = "✏ Edit";
   }
 
   function setLocked(locked) {
-    const lockBtns = ["btn-add","btn-update","btn-delete","btn-email","btn-ecn"];
+    const lockBtns = ["btn-add","btn-edit","btn-update","btn-delete","btn-email","btn-ecn"];
     lockBtns.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -427,7 +586,7 @@
         tbody.innerHTML = "";
 
         if (!data.items || data.items.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No items found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="18" class="text-center text-muted py-3">No items found for this customer.</td></tr>';
           return;
         }
 
@@ -442,10 +601,22 @@
           tr.style.cursor = "pointer";
           tr.dataset.no = item.no;
           tr.innerHTML = `
-            <td>${item.no}</td>
-            <td>${item.description || ""}</td>
+            <td><strong>${item.no || ""}</strong></td>
+            <td>${item.revision_no || ""}</td>
             <td>${item.template_name || ""}</td>
+            <td>${item.base_unit_of_measure || ""}</td>
+            <td>${item.description || ""}</td>
+            <td>${item.cell || ""}</td>
+            <td>${item.cell_type || ""}</td>
+            <td>${item.shelf_no || ""}</td>
+            <td>${item.product_group_code || ""}</td>
+            <td>${item.item_category_code || ""}</td>
             <td>${item.status || ""}</td>
+            <td>${item.fixture_no || ""}</td>
+            <td>${item.no_of_meft || ""}</td>
+            <td>${item.no_of_parts || ""}</td>
+            <td>${item.customer_name || ""}</td>
+            <td>${item.customer_vendor_code || ""}</td>
             <td>${item.hsn_sac_code || ""}</td>
             <td>${item.last_date_modified || ""}</td>
           `;
@@ -491,6 +662,17 @@
 
         Object.entries(fieldMap).forEach(([apiKey, domId]) => setVal(domId, data[apiKey] || ""));
         setVal("lastEcnNo", data.last_ecn || "");
+
+        const ecnBtn = document.getElementById("btn-ecn");
+        if (ecnBtn) {
+          ecnBtn.href = `{% url 'ecn_request_page' %}?item_no=${encodeURIComponent(data.no || "")}`;
+        }
+
+        // Lock specified autofilled fields upon item load
+        isFieldsUnlocked = false;
+        setAutofilledLock(true);
+        const editBtn = document.getElementById("btn-edit");
+        if (editBtn) editBtn.innerHTML = "✏ Edit";
 
         // RFQ lock
         const locked = !!data.is_locked;
@@ -595,6 +777,24 @@
     });
   }
 
+  // ── EDIT (Toggle autofilled fields lock/unlock) ───────────────────────────
+
+  document.getElementById("btn-edit")?.addEventListener("click", function () {
+    const itemNo = getVal("no").trim();
+    if (!itemNo) {
+      showAlert("Please search and select an item first to edit.", "warning");
+      return;
+    }
+    isFieldsUnlocked = !isFieldsUnlocked;
+    setAutofilledLock(!isFieldsUnlocked);
+    this.innerHTML = isFieldsUnlocked ? "🔒 Lock Fields" : "✏ Edit";
+    if (isFieldsUnlocked) {
+      showAlert("Autofilled data fields unlocked for editing.", "info");
+    } else {
+      showAlert("Autofilled data fields locked.", "success");
+    }
+  });
+
   // ── ADD ───────────────────────────────────────────────────────────────────
 
   document.getElementById("btn-add").addEventListener("click", function () {
@@ -645,8 +845,17 @@
 
     fetch("/item_creation/send-item-email/", { method: "POST", body: fd })
       .then(r => {
-        if (r.redirected || r.ok) showAlert("Email sent successfully!", "success");
-        else showAlert("Failed to send email.", "danger");
+        if (r.redirected || r.ok) {
+          showAlert("Email sent successfully!", "success");
+          alert("Email sent successfully!");
+        } else {
+          showAlert("Failed to send email.", "danger");
+          alert("Failed to send email.");
+        }
+      })
+      .catch(err => {
+        showAlert("Failed to send email: " + err.message, "danger");
+        alert("Failed to send email: " + err.message);
       });
   });
 

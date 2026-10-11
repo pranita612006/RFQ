@@ -1,10 +1,74 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<div class="container-fluid full-dashboard">
-  <h2>Customer Creation</h2>
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap"
+  rel="stylesheet">
 
-  <div class="card card-primary mt-3">
-    <div class="card-header">
+<style>
+  .full-dashboard {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .customer-page-heading {
+    font-family: 'Permanent Marker', cursive;
+    color: #2E266D;
+  }
+
+  .customer-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+  }
+
+  .customer-card-header .card-title {
+    font-family: 'Permanent Marker', cursive;
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+  }
+
+  .customer-form-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .customer-form-input {
+    font-family: 'Montserrat', sans-serif;
+    color: #000000;
+  }
+
+  .customer-form-input:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  .btn-customer-submit {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    border-radius: 6px !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    padding: 7px 26px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-customer-submit:hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35);
+  }
+</style>
+
+<div class="container-fluid full-dashboard">
+  <h2 class="customer-page-heading">Customer Creation</h2>
+
+  <div class="card mt-3">
+    <div class="card-header customer-card-header">
       <h3 class="card-title">Customer Information</h3>
     </div>
 
@@ -13,82 +77,84 @@
       <div class="card-body">
         <!-- Customer ID -->
         <div class="form-group">
-          <label for="customer_id">Customer ID</label>
-          <select id="customer_id" name="customer_id" class="form-control">
+          <label for="customer_id" class="customer-form-label">Customer ID</label>
+          <select id="customer_id" name="customer_id" class="form-control customer-form-input">
             <option value="">Select ID</option>
             {% for id in customer_ids %}
-              <option value="{{ id }}">{{ id }}</option>
+            <option value="{{ id }}">{{ id }}</option>
             {% endfor %}
           </select>
         </div>
 
         <!-- Customer Name -->
         <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name">
+          <label for="name" class="customer-form-label">Name</label>
+          <input type="text" id="name" name="name" class="form-control customer-form-input"
+            placeholder="Enter customer name">
         </div>
 
         <!-- Search Name -->
         <div class="form-group">
-          <label for="search_name">Search Name</label>
-          <select id="search_name" name="search_name" class="form-control">
+          <label for="search_name" class="customer-form-label">Search Name</label>
+          <select id="search_name" name="search_name" class="form-control customer-form-input">
             <option value="">Select Search Name</option>
             {% for sname in search_names %}
-              <option value="{{ sname }}">{{ sname }}</option>
+            <option value="{{ sname }}">{{ sname }}</option>
             {% endfor %}
           </select>
         </div>
       </div>
 
       <div class="card-footer text-right">
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-customer-submit">Submit</button>
       </div>
     </form>
   </div>
 </div>
+
 <script>
-  document.getElementById('btn-back')?.addEventListener('click', function() {
+  document.getElementById('btn-back')?.addEventListener('click', function () {
     window.history.back();
   });
-console.log("Script loaded");
-document.addEventListener("DOMContentLoaded", function() {
+  console.log("Script loaded");
+  document.addEventListener("DOMContentLoaded", function () {
     const customerSelect = document.getElementById("customer_id");
-    customerSelect.addEventListener("change", function() {
-        const selectedId = this.value;
-        console.log("Customer ID changed:", selectedId);  // debug log
+    customerSelect.addEventListener("change", function () {
+      const selectedId = this.value;
+      console.log("Customer ID changed:", selectedId);  // debug log
 
-        if (selectedId) {
-            fetch("{% url 'get_customer_info' %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: "customer_id=" + encodeURIComponent(selectedId)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Returned search_name:", data.search_name);
+      if (selectedId) {
+        fetch("{% url 'get_customer_info' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: "customer_id=" + encodeURIComponent(selectedId)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Returned search_name:", data.search_name);
 
-                if (data.name) {
-                    document.getElementById("name").value = data.name;
+            if (data.name) {
+              document.getElementById("name").value = data.name;
+            }
+            if (data.search_name) {
+              const searchDropdown = document.getElementById("search_name");
+              const returnedValue = data.search_name.trim().toLowerCase();
+              for (let i = 0; i < searchDropdown.options.length; i++) {
+                const optionValue = searchDropdown.options[i].value.trim().toLowerCase();
+                console.log("Comparing option:", optionValue); // debug log
+                if (optionValue === returnedValue) {
+                  searchDropdown.selectedIndex = i;
+                  console.log("Match found at index:", i); // debug log
+                  break;
                 }
-                if (data.search_name) {
-                    const searchDropdown = document.getElementById("search_name");
-                    const returnedValue = data.search_name.trim().toLowerCase();
-                    for (let i = 0; i < searchDropdown.options.length; i++) {
-                        const optionValue = searchDropdown.options[i].value.trim().toLowerCase();
-                        console.log("Comparing option:", optionValue); // debug log
-                        if (optionValue === returnedValue) {
-                            searchDropdown.selectedIndex = i;
-                            console.log("Match found at index:", i); // debug log
-                            break;
-                        }
-                    }
-                }
-            });
-        }
+              }
+            }
+          });
+      }
     });
-});
+  });
 </script>
 {% endblock %}

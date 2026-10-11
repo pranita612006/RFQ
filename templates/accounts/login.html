@@ -1,106 +1,380 @@
 {% extends 'layouts/auth_base.html' %}
 {% load static %}
 
-{% block title %} User Login {% endblock title %}
+{% block title %}Sign In | FlowNexis{% endblock title %}
 
-{% block bodyclass %} login-page {% endblock bodyclass %}
+{% block bodyclass %}login-page{% endblock bodyclass %}
 
 {% block content %}
-
 <style>
-  body {
-    background-color: #f2f3f5;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
-  .rfq-login-wrapper {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0c29, #1a1a2e, #16213e);
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 60px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
   }
 
-  .rfq-login-box {
-    width: 520px;
-    background: #ffffff;
-    border: 3px solid #6d6d6d;
-    padding: 35px 40px;
+  /* Animated background orbs */
+  body.login-page::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: orbFloat 8s ease-in-out infinite;
+    pointer-events: none;
   }
 
-  .rfq-header {
-    font-size: 26px;
-    font-weight: 700;
-    color: #e6007e;
-    margin-bottom: 6px;
+  body.login-page::after {
+    content: '';
+    position: fixed;
+    bottom: -150px;
+    right: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: orbFloat 10s ease-in-out infinite reverse;
+    pointer-events: none;
   }
 
-  .rfq-subtitle {
-    color: #555;
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, 40px) scale(1.05); }
+  }
+
+  /* Login container */
+  .fn-login-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    animation: slideUp 0.5s ease forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Logo area */
+  .fn-logo-area {
+    text-align: center;
     margin-bottom: 28px;
   }
 
-  .form-group label {
+  .fn-logo-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+
+  .fn-logo-name {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: block;
+  }
+
+  .fn-logo-tagline {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Card */
+  .fn-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 36px 36px 32px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .fn-card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .fn-card-subtitle {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 28px;
+  }
+
+  /* Error messages */
+  .fn-error {
+    background: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: #fca5a5;
+  }
+
+  /* Form fields */
+  .fn-field-group {
+    margin-bottom: 16px;
+  }
+
+  .fn-field-label {
+    display: block;
+    font-size: 12px;
     font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
   }
 
-  .btn-login {
-    background-color: #5a6f8f;
-    color: #fff;
-    border-radius: 2px;
+  .fn-field-wrap {
+    position: relative;
   }
 
-  .btn-login:hover {
-    background-color: #4c5f7a;
-    color: #fff;
-  }
-
-  .login-links a {
+  .fn-field-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.3);
     font-size: 14px;
-    color: #6c757d;
-    margin-right: 15px;
+    pointer-events: none;
   }
 
-  .login-links a:hover {
-    text-decoration: underline;
+  .fn-field-wrap input,
+  .fn-field-group input[type="text"],
+  .fn-field-group input[type="password"] {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 11px 14px 11px 40px;
+    font-size: 14.5px;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .fn-field-wrap input::placeholder {
+    color: rgba(255,255,255,0.25);
+  }
+
+  .fn-field-wrap input:focus {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(124, 58, 237, 0.7);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Links row */
+  .fn-links-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 22px;
+    margin-top: -4px;
+  }
+
+  .fn-links-row a {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .fn-links-row a:hover {
+    color: #a78bfa;
+  }
+
+  /* Sign-in button */
+  .fn-btn-signin {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fn-btn-signin::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .fn-btn-signin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(124, 58, 237, 0.55);
+  }
+
+  .fn-btn-signin:hover::before { opacity: 1; }
+
+  .fn-btn-signin:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.35);
+  }
+
+  .fn-btn-signin .btn-icon {
+    margin-right: 8px;
+    opacity: 0.85;
+  }
+
+  /* Footer link */
+  .fn-card-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .fn-card-footer a {
+    color: #a78bfa;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .fn-card-footer a:hover {
+    color: #c4b5fd;
+  }
+
+  /* Copyright */
+  .fn-copyright {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
   }
 </style>
 
-<div class="rfq-login-wrapper">
-  <div class="rfq-login-box">
+<div class="fn-login-container">
 
-    <div class="rfq-header">Welcome to VOSS!</div>
-    <div class="rfq-subtitle">Please sign-in to your account</div>
+  <!-- Logo -->
+  <div class="fn-logo-area">
+    <img src="{% static 'img/digisynergies_logo.png' %}"
+         alt="FlowNexis"
+         class="fn-logo-img">
+    <span class="fn-logo-name">FlowNexis</span>
+    <span class="fn-logo-tagline">Powered by DigiSynergies</span>
+  </div>
 
-    <form method="post">
+  <!-- Card -->
+  <div class="fn-card">
+    <div class="fn-card-title">Welcome back</div>
+    <div class="fn-card-subtitle">Sign in to your FlowNexis account</div>
+
+    <form method="post" action="{% url 'login' %}" autocomplete="off">
       {% csrf_token %}
 
       {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-          <small class="text-danger d-block mb-2">{{ error }}</small>
-        {% endfor %}
+        <div class="fn-error">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
       {% endif %}
 
-      <div class="form-group">
-        <label>User ID</label>
-        {{ form.username }}
-        <small class="text-danger">{{ form.username.errors }}</small>
+      <!-- Username -->
+      <div class="fn-field-group">
+        <label class="fn-field-label" for="id_username">User ID</label>
+        <div class="fn-field-wrap">
+          <i class="fas fa-user fn-field-icon"></i>
+          <input type="text"
+                 id="id_username"
+                 name="username"
+                 placeholder="Enter your username"
+                 value="{{ form.username.value|default:'' }}"
+                 autocomplete="username"
+                 autofocus>
+        </div>
+        {% if form.username.errors %}
+          <small style="color:#fca5a5; font-size:12px;">{{ form.username.errors }}</small>
+        {% endif %}
       </div>
 
-      <div class="form-group">
-        <label>Password</label>
-        {{ form.password }}
-        <small class="text-danger">{{ form.password.errors }}</small>
+      <!-- Password -->
+      <div class="fn-field-group">
+        <label class="fn-field-label" for="id_password">Password</label>
+        <div class="fn-field-wrap">
+          <i class="fas fa-lock fn-field-icon"></i>
+          <input type="password"
+                 id="id_password"
+                 name="password"
+                 placeholder="Enter your password"
+                 autocomplete="current-password">
+        </div>
+        {% if form.password.errors %}
+          <small style="color:#fca5a5; font-size:12px;">{{ form.password.errors }}</small>
+        {% endif %}
       </div>
 
-      <div class="login-links mb-3">
-        <a href="{% url 'password_reset' %}">Change Password</a>
-        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+      <!-- Forgot password -->
+      <div class="fn-links-row">
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn btn-login btn-block">
-        Sign in
+      <!-- Submit -->
+      <button type="submit" class="fn-btn-signin">
+        <i class="fas fa-sign-in-alt btn-icon"></i> Sign In
       </button>
     </form>
 
+    <div class="fn-card-footer">
+      Don't have an account? &nbsp;<a href="/accounts/register/">Register</a>
+    </div>
   </div>
+
+  <div class="fn-copyright">&copy; 2026 FlowNexis &mdash; DigiSynergies Pvt. Ltd.</div>
 </div>
+
+<script>
+  // If user navigates back using browser history, force a refresh so the CSRF token is fresh
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted || (window.performance && window.performance.navigation && window.performance.navigation.type === 2)) {
+      window.location.reload();
+    }
+  });
+</script>
 
 {% endblock %}

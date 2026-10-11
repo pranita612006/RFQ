@@ -1,51 +1,48 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>User Management</title>
-
+<!-- Google Fonts: Permanent Marker & Montserrat -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
-    body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:0; }
+    .user-management-container { font-family: 'Montserrat', sans-serif; }
 
     /* Page Header */
-    h2 { background:#2a6ebb; color:white; padding:16px 24px; font-size:22px; margin:0; }
+    .page-card { background:#fff; border:1px solid #c8d6e8; border-radius:8px; max-width:900px; margin:24px auto; box-shadow:0 3px 10px rgba(0,0,0,0.1); overflow:hidden; }
+    .card-header { background:#2E266D; display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:6px 6px 0 0; }
+    .card-header h2 { font-family:'Permanent Marker',cursive; color:#fff; font-size:1.5rem; margin:0; }
 
-    /* Tabs */
-    .tabs { display:flex; gap:20px; padding:15px 30px; background:#fff; border-bottom:1px solid #ddd; }
-    .tabs button { font-weight:bold; color:#333; background:none; border:none; cursor:pointer; font-size:15px; }
-    .tabs button.active { color:#2a6ebb; border-bottom:2px solid #2a6ebb; }
-    .tabs button:hover { color:#2a6ebb; }
+    /* Tabs (BOC-style) */
+    .tabs { display:flex; align-items:flex-end; gap:0; padding:0 20px; background:#fff; border-bottom:2px solid #2E266D; }
+    .tabs button { padding:10px 20px; font-size:0.85rem; font-weight:600; font-family:'Montserrat',sans-serif; border:1px solid #c8d6e8; border-bottom:none; border-radius:6px 6px 0 0; background:#f4f7fb; color:#444; cursor:pointer; margin-right:4px; transition:background 0.15s; }
+    .tabs button:hover { background:#e2eaf5; }
+    .tabs button.active { background:#2E266D !important; color:#fff !important; border-color:#2E266D !important; }
 
     /* Form Section */
-    .form-section { background:#fff; border:1px solid #ddd; border-radius:8px; padding:30px; max-width:900px; margin:30px auto; box-shadow:0 3px 8px rgba(0,0,0,0.1); }
+    .form-section { background:#fff; padding:24px 30px; max-width:900px; margin:0 auto; }
 
-    .row { display:flex; align-items:center; margin-bottom:20px; }
-    label { width:200px; font-weight:bold; font-size:15px; color:#333; }
-    input, select { flex:1; height:36px; padding:6px 10px; font-size:15px; border:1px solid #ccc; border-radius:5px; }
+    .row { display:flex; align-items:center; margin-bottom:18px; }
+    label { width:200px; font-weight:700; font-size:14px; color:#333; font-family:'Montserrat',sans-serif; }
+    input, select { flex:1; height:36px; padding:6px 10px; font-size:14px; border:1px solid #c8d6e8; border-radius:5px; font-family:'Montserrat',sans-serif; }
+    input:focus, select:focus { outline:none; border-color:#2E266D; box-shadow:0 0 0 2px rgba(46,38,109,0.15); }
 
-    .btn { background:#2a6ebb; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; margin-right:10px; }
-    .btn:hover { background:#1f4f8a; }
+    .btn { background:#FF3131; color:white; border:2px solid #2E266D; padding:8px 22px; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; transition:background 0.2s, box-shadow 0.2s; margin-right:8px; }
+    .btn:hover { background:#e02525; box-shadow:0 2px 6px rgba(46,38,109,0.35); }
+    .green-btn { background:#FF3131; color:white; border:2px solid #2E266D; padding:8px 18px; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; transition:background 0.2s; }
+    .green-btn:hover { background:#e02525; box-shadow:0 2px 6px rgba(46,38,109,0.35); }
+    .red-btn { background:#FF3131; color:white; border:2px solid #2E266D; padding:8px 22px; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; transition:background 0.2s; }
+    .red-btn:hover { background:#e02525; box-shadow:0 2px 6px rgba(46,38,109,0.35); }
 
-    .green-btn { background:#28a745; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; }
-    .green-btn:hover { background:#218838; }
-
-    .red-btn { background:#dc3545; color:white; border:none; padding:10px 24px; border-radius:5px; cursor:pointer; font-size:15px; }
-    .red-btn:hover { background:#b52a37; }
-
-    .section-title { font-size:18px; font-weight:bold; margin:25px 0 15px; color:#2a6ebb; }
+    .section-title { font-size:15px; font-weight:700; margin:20px 0 14px; color:#2E266D; text-transform:uppercase; letter-spacing:.4px; border-bottom:2px solid #2E266D; padding-bottom:4px; }
 
     /* Alert messages */
-    .alert-container { max-width: 900px; margin: 15px auto; }
-    .alert { padding: 12px; margin-bottom: 10px; border-radius: 4px; font-weight: bold; }
+    .alert-container { max-width: 900px; margin: 12px auto; padding:0 20px; }
+    .alert { padding: 10px 14px; margin-bottom: 8px; border-radius: 4px; font-weight: 600; font-family:'Montserrat',sans-serif; }
     .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
     /* Table styling */
-    .permissions-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .permissions-table th, .permissions-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    .permissions-table th { background-color: #f2f2f2; }
+    .permissions-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-family:'Montserrat',sans-serif; }
+    .permissions-table th, .permissions-table td { border: 1px solid #c8d6e8; padding: 8px 12px; text-align: left; font-size:13px; }
+    .permissions-table th { background-color: #2E266D; color:#fff; font-weight:600; }
 </style>
 
 <script>
@@ -156,29 +153,28 @@
             .catch(err => console.error("Error loading user details:", err));
     }
 </script>
-</head>
 
-<body>
+<div class="user-management-container pb-4">
+<div class="page-card">
+  <div class="card-header"><h2>User Management</h2></div>
 
-<h2>User Management</h2>
+  <!-- Flash messages -->
+  {% if messages %}
+  <div class="alert-container">
+      {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+          {{ message }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
 
-<!-- Flash messages -->
-{% if messages %}
-<div class="alert-container">
-    {% for message in messages %}
-    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- Tabs -->
-<div class="tabs">
-    <button data-tab="add" class="active" onclick="showTab('add')">Add New</button>
-    <button data-tab="delete" onclick="showTab('delete')">Delete</button>
-    <button data-tab="update" onclick="showTab('update')">Update</button>
-</div>
+  <!-- Tabs (BOC-style) -->
+  <div class="tabs">
+      <button data-tab="add" class="active" onclick="showTab('add')">Add New</button>
+      <button data-tab="delete" onclick="showTab('delete')">Delete</button>
+      <button data-tab="update" onclick="showTab('update')">Update</button>
+  </div>
 
 <!-- Add New User -->
 <div id="add" class="form-section" style="display:block;">
@@ -353,6 +349,5 @@
     </table>
 </div>
 
-</body>
-</html>
+</div><!-- /user-management-container -->
 {% endblock %}

@@ -3,11 +3,150 @@
 
 
 {% block content %}
-<div class="container-fluid mt-4">
-  <div class="card card-primary">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title mb-0">Opportunity Creation</h3>
-      <button type="button" class="btn btn-outline-secondary" id="btn-back">Back</button>
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  /* Base typography: Montserrat for all text except headings */
+  .opp-container,
+  .opp-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Headings: Permanent Marker */
+  .opp-card-title,
+  .opp-grid-title,
+  .items-grid-title {
+    font-family: 'Permanent Marker', cursive !important;
+  }
+  .opp-card-title {
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .opp-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  .btn-opp-back {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-opp-back:hover {
+    background-color: #FFFFFF;
+    color: #2E266D !important;
+  }
+
+  /* Labels and inputs */
+  .opp-container label {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .opp-container .form-control:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  /* Action Buttons: Red (#FF3131) with Blue Border (#2E266D) & Spacing */
+  .card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .card-footer .btn,
+  .btn-action-red {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 6px 16px;
+    margin-right: 8px !important;
+    margin-bottom: 4px;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+  }
+
+  .card-footer .btn:hover,
+  .btn-action-red:hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35);
+  }
+
+  .card-footer .btn:disabled,
+  .card-footer .btn.disabled {
+    background-color: #ff8585 !important;
+    border: 2px solid #7b75a6 !important;
+    color: #FFFFFF !important;
+    opacity: 0.65;
+  }
+
+  .locked-field {
+    background-color: #e9ecef !important;
+  }
+
+  .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  .opp-history-table th {
+    background-color: #2E266D !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border: 1px solid #3c3380;
+  }
+
+  .opp-history-table td {
+    white-space: nowrap;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    vertical-align: middle;
+  }
+
+  .opp-history-table tbody tr {
+    cursor: pointer;
+  }
+
+  .opp-history-table tbody tr:hover {
+    background-color: #e8f0fe !important;
+  }
+</style>
+
+<div class="container-fluid mt-4 opp-container">
+  <div class="card card-primary shadow-sm">
+    <div class="opp-card-header">
+      <h3 class="opp-card-title">Opportunity Creation</h3>
+      <button type="button" class="btn-opp-back" id="btn-back">← Back</button>
     </div>
 
     {% if messages %}
@@ -43,7 +182,7 @@
 
             <div class="form-group mb-2">
               <label for="lastEcnNo">Last ECN No</label>
-              <input type="text" class="form-control" id="lastEcnNo" name="lastEcnNo" readonly>
+              <input type="text" class="form-control locked-field" id="lastEcnNo" name="lastEcnNo" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -88,7 +227,7 @@
 
             <div class="form-group mb-2">
               <label for="creationDate">Creation Date</label>
-              <input type="date" class="form-control" id="creationDate" name="creationDate">
+              <input type="date" class="form-control locked-field" id="creationDate" name="creationDate" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -116,7 +255,7 @@
 
             <div class="form-group mb-2">
               <label for="statusDate">Status Date</label>
-              <input type="date" class="form-control" id="statusDate" name="statusDate">
+              <input type="date" class="form-control locked-field" id="statusDate" name="statusDate" readonly>
             </div>
           </div>
 
@@ -126,7 +265,7 @@
 
             <div class="form-group mb-2">
               <label for="custId">Cust ID</label>
-              <input type="text" class="form-control" id="custId" name="custId"
+              <input type="text" class="form-control locked-field" id="custId" name="custId"
                      value="{{ customer_id }}" readonly>
             </div>
 
@@ -207,7 +346,7 @@
 
             <div class="form-group mb-2">
               <label for="customer_name">Customer Name</label>
-              <input type="text" class="form-control" id="customer_name" name="customer_name"
+              <input type="text" class="form-control locked-field" id="customer_name" name="customer_name"
                      value="{{ customer_name }}" readonly>
             </div>
 
@@ -228,7 +367,7 @@
               </div>
               <div class="col-6 form-group mb-2">
                 <label for="annualYear1">Year 1</label>
-                <input type="text" class="form-control" id="annualYear1" name="annualYear1">
+                <input type="text" class="form-control locked-field" id="annualYear1" name="annualYear1" readonly>
               </div>
             </div>
 
@@ -239,7 +378,7 @@
               </div>
               <div class="col-6 form-group mb-2">
                 <label for="annualYear2">Year 2</label>
-                <input type="text" class="form-control" id="annualYear2" name="annualYear2">
+                <input type="text" class="form-control locked-field" id="annualYear2" name="annualYear2" readonly>
               </div>
             </div>
 
@@ -250,7 +389,7 @@
               </div>
               <div class="col-6 form-group mb-2">
                 <label for="annualYear3">Year 3</label>
-                <input type="text" class="form-control" id="annualYear3" name="annualYear3">
+                <input type="text" class="form-control locked-field" id="annualYear3" name="annualYear3" readonly>
               </div>
             </div>
 
@@ -261,7 +400,7 @@
               </div>
               <div class="col-6 form-group mb-2">
                 <label for="annualYear4">Year 4</label>
-                <input type="text" class="form-control" id="annualYear4" name="annualYear4">
+                <input type="text" class="form-control locked-field" id="annualYear4" name="annualYear4" readonly>
               </div>
             </div>
 
@@ -272,13 +411,13 @@
               </div>
               <div class="col-6 form-group mb-2">
                 <label for="annualYear5">Year 5</label>
-                <input type="text" class="form-control" id="annualYear5" name="annualYear5">
+                <input type="text" class="form-control locked-field" id="annualYear5" name="annualYear5" readonly>
               </div>
             </div>
 
             <div class="form-group mb-2">
               <label for="estimatedValuePa">Estimated Value (PA) <small class="text-muted">auto-calculated</small></label>
-              <input type="number" step="0.01" class="form-control" id="estimatedValuePa" name="estimatedValuePa" value="0" readonly>
+              <input type="number" step="0.01" class="form-control locked-field" id="estimatedValuePa" name="estimatedValuePa" value="0" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -288,12 +427,12 @@
 
             <div class="form-group mb-2">
               <label for="estimatedValueEuro">Estimated Value Euro <small class="text-muted">auto-calculated</small></label>
-              <input type="number" step="0.01" class="form-control" id="estimatedValueEuro" name="estimatedValueEuro" value="0" readonly>
+              <input type="number" step="0.01" class="form-control locked-field" id="estimatedValueEuro" name="estimatedValueEuro" value="0" readonly>
             </div>
 
             <div class="form-group mb-2">
               <label for="lifeCycleYears">Life Cycle in Years</label>
-              <input type="number" class="form-control" id="lifeCycleYears" name="lifeCycleYears" value="0">
+              <input type="number" class="form-control locked-field" id="lifeCycleYears" name="lifeCycleYears" value="0" readonly>
             </div>
 
             <div class="form-group mb-2">
@@ -324,51 +463,83 @@
 
             <div class="form-group mb-2">
               <label for="lastModifiedDate">Last Modified Date</label>
-              <input type="date" class="form-control" id="lastModifiedDate" name="lastModifiedDate" readonly>
+              <input type="date" class="form-control locked-field" id="lastModifiedDate" name="lastModifiedDate" readonly>
             </div>
           </div>
 
         </div>
       </div>
 
-      <div class="card-footer d-flex flex-wrap gap-2">
-        <button type="button" class="btn btn-primary" id="btn-add">Add</button>
-        <button type="button" class="btn btn-warning" id="btn-update">Update</button>
-        <a href="{% url 'opportunitycreation_ecn' %}" class="btn btn-info" id="btn-ecn">ECN Request</a>
-        <button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
-        <button type="button" class="btn btn-success" id="btn-complete">Complete</button>
+      <!-- ══ ACTION BUTTONS ══ -->
+      <div class="card-footer d-flex flex-wrap gap-2 align-items-center">
+        <button type="button" class="btn btn-action-red btn-sm" id="btn-add">➕ Add</button>
+        <button type="button" class="btn btn-action-red btn-sm" id="btn-edit">✏ Edit</button>
+        <button type="button" class="btn btn-action-red btn-sm" id="btn-update">✏ Update</button>
+        <button type="button" class="btn btn-action-red btn-sm" id="btn-delete">🗑 Delete</button>
+        <a href="{% url 'opportunitycreation_ecn' %}" class="btn btn-action-red btn-sm" id="btn-ecn">📋 ECN Request</a>
+
+        <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+          <input type="email" class="form-control form-control-sm" id="recipient_email"
+            placeholder="Recipient email" style="width:240px">
+          <button type="button" class="btn btn-action-red btn-sm" id="btn-email">✉ Send Email</button>
+        </div>
       </div>
 
     </form>
+  </div>
 
-    <div class="px-3 pb-3">
-      <details>
-        <summary class="btn btn-outline-primary mt-2">Send Email</summary>
-        <div class="border rounded p-3 mt-2">
-          <form method="post" action="{% url 'send_item_email' %}">
-            {% csrf_token %}
-            <div class="form-group mb-2">
-              <label for="recipient_email">Recipient Email</label>
-              <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient email address" required>
-            </div>
-            <!-- Pass current form fields as hidden for email -->
-            <input type="hidden" name="itemNo" id="email-itemNo">
-            <input type="hidden" name="projectName" id="email-projectName">
-            <input type="hidden" name="customer_name" id="email-custName">
-            <input type="hidden" name="contactName" id="email-contactName">
-            <input type="hidden" name="contactNo" id="email-contactNo">
-            <input type="hidden" name="status" id="email-status">
-            <input type="hidden" name="remarks" id="email-remarks">
-            <button type="submit" class="btn btn-primary">Send Email</button>
-          </form>
-        </div>
-      </details>
+  <!-- ══ Existing Opportunities Grid ══ -->
+  <div class="card mt-3 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0 items-grid-title" style="color: #2E266D; font-family: 'Permanent Marker', cursive !important;">Existing Opportunities for Customer</h5>
     </div>
-
-    <div class="px-3 pb-3">
-      <a href="/feasibility_form/" class="btn btn-primary">Go to Feasibility</a>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered table-hover mb-0" id="opp-history-table" style="font-size: 0.85rem; white-space: nowrap;">
+          <thead class="table-dark">
+            <tr>
+              <th>Ref Docs</th>
+              <th>Item No</th>
+              <th>Customer ID</th>
+              <th>Customer Name</th>
+              <th>Project Name</th>
+              <th>Opp Received Date</th>
+              <th>Salesperson Code</th>
+              <th>Contact No</th>
+              <th>Contact Name</th>
+              <th>Sales Cycle Code</th>
+              <th>Creation Date</th>
+              <th>Status</th>
+              <th>Supply Location</th>
+              <th>Segment No</th>
+              <th>Segment Description</th>
+              <th>Part No</th>
+              <th>Status Date</th>
+              <th>Part Name</th>
+              <th>SOP Date</th>
+              <th>Drawing Revision No</th>
+              <th>Application</th>
+              <th>Business</th>
+              <th>Voss Plant Location</th>
+              <th>Sales Goahead Date for Tool</th>
+              <th>Part Price 1</th>
+              <th>Part Price 2</th>
+              <th>Annual Volume</th>
+              <th>Annual Volume 2</th>
+              <th>Annual Volume 3</th>
+              <th>Annual Volume 4</th>
+            </tr>
+          </thead>
+          <tbody id="opp-table-body">
+            <tr>
+              <td colspan="30" class="text-center text-muted py-3">Loading opportunities...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -428,10 +599,52 @@ function showToast(msg, type="success") {
     setTimeout(() => t.classList.add("d-none"), 4000);
 }
 
+// ─── Field Locking (Matches Feasibility / Item Creation) ─────────────────────
+const LOCKED_FIELDS_OPP = [
+    'custId',
+    'customer_name',
+    'lastEcnNo',
+    'creationDate',
+    'statusDate',
+    'annualYear1',
+    'annualYear2',
+    'annualYear3',
+    'annualYear4',
+    'annualYear5',
+    'estimatedValuePa',
+    'estimatedValueEuro',
+    'lifeCycleYears',
+    'lastModifiedDate'
+];
+
+let isOppFieldsUnlocked = false;
+
+function setAutofilledLock(locked) {
+    LOCKED_FIELDS_OPP.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.readOnly = locked;
+            el.style.backgroundColor = locked ? '#e9ecef' : '#ffffff';
+        }
+    });
+}
+
+document.getElementById('btn-edit')?.addEventListener('click', function() {
+    const itemNo = getVal('searchOpportunityNo') || getVal('itemNo');
+    if (!itemNo) {
+        showToast("Please select or search an opportunity to edit.", "warning");
+        return;
+    }
+    isOppFieldsUnlocked = !isOppFieldsUnlocked;
+    setAutofilledLock(!isOppFieldsUnlocked);
+    this.innerHTML = isOppFieldsUnlocked ? "🔒 Lock Fields" : "✏ Edit";
+    showToast(isOppFieldsUnlocked ? "Autofilled data fields unlocked for editing." : "Autofilled data fields locked.", "info");
+});
+
 // ─── RFQ Lock ────────────────────────────────────────────────────────────────
 
 let _rfqLocked = false;
-const ACTION_BTNS = ['btn-add','btn-update','btn-delete','btn-complete'];
+const ACTION_BTNS = ['btn-add','btn-update','btn-delete','btn-complete','btn-email'];
 
 function applyRfqLock(locked) {
     _rfqLocked = locked;
@@ -626,6 +839,13 @@ document.getElementById('searchOpportunityNo').addEventListener('change', functi
             fill("lastModifiedDate", d.modified_date);
 
             console.log("✅ Autofill successful");
+
+            isOppFieldsUnlocked = false;
+            setAutofilledLock(true);
+            const editBtn = document.getElementById("btn-edit");
+            if (editBtn) editBtn.innerHTML = "✏ Edit";
+
+            loadOpportunityTable(selectedItemNo);
         })
         .catch(err => showToast("Error loading opportunity: " + err.message, "danger"));
 });
@@ -694,6 +914,7 @@ document.getElementById('btn-add').addEventListener('click', async function() {
     showToast(res.message, res.status === 'success' ? 'success' : 'danger');
     if (res.status === 'success') {
         loadItemDatalist();
+        loadOpportunityTable();
     }
 });
 
@@ -706,6 +927,9 @@ document.getElementById('btn-update').addEventListener('click', async function()
     const fd = collectFormData();
     const res = await postAction('/opportunity/update/', fd);
     showToast(res.message, res.status === 'success' ? 'success' : 'danger');
+    if (res.status === 'success') {
+        loadOpportunityTable();
+    }
 });
 
 // ─── Delete ───────────────────────────────────────────────────────────────────
@@ -721,7 +945,10 @@ document.getElementById('btn-delete').addEventListener('click', async function()
     fd.append('custId', CUSTOMER_ID);
     const res = await postAction('/opportunity/delete/', fd);
     showToast(res.message, res.status === 'success' ? 'success' : 'danger');
-    if (res.status === 'success') loadItemDatalist();
+    if (res.status === 'success') {
+        loadItemDatalist();
+        loadOpportunityTable();
+    }
 });
 
 // ─── Complete ─────────────────────────────────────────────────────────────────
@@ -739,24 +966,112 @@ document.getElementById('btn-complete').addEventListener('click', async function
     showToast(res.message, res.status === 'success' ? 'success' : 'danger');
 });
 
-// ─── Sync email hidden fields ─────────────────────────────────────────────────
+// ─── Send Email ───────────────────────────────────────────────────────────────
 
-document.querySelector('details')?.addEventListener('toggle', function(e) {
-    if (this.open) {
-        document.getElementById('email-itemNo').value = getVal('itemNo');
-        document.getElementById('email-projectName').value = getVal('projectName');
-        document.getElementById('email-custName').value = getVal('customer_name');
-        document.getElementById('email-contactName').value = getVal('contactName');
-        document.getElementById('email-contactNo').value = getVal('contactNo');
-        document.getElementById('email-status').value = getVal('status');
-        document.getElementById('email-remarks').value = getVal('remarks');
+document.getElementById('btn-email')?.addEventListener('click', async function() {
+    if (_rfqLocked) { showToast("RFQ is closed. Cannot send email.", "danger"); return; }
+    const email = getVal('recipient_email').trim();
+    if (!email) { showToast("Please enter a recipient email address.", "warning"); return; }
+    const itemNo = getVal('itemNo') || getVal('searchOpportunityNo');
+    if (!itemNo) { showToast("Please select an item first.", "warning"); return; }
+
+    const fd = collectFormData();
+    fd.append('recipient_email', email);
+    fd.append('ajax', '1');
+
+    const btn = this;
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '✉ Sending...';
+
+    try {
+        const res = await fetch("{% url 'send_item_email' %}", {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: fd
+        });
+        const data = await res.json();
+        showToast(data.message, data.status === 'success' ? 'success' : 'danger');
+        alert(data.message || (data.status === 'success' ? 'Email sent successfully!' : 'Failed to send email.'));
+    } catch (err) {
+        showToast("Error sending email: " + err.message, "danger");
+        alert("Error sending email: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
     }
 });
 
-// Set today as creation date on load
+// ─── Load Opportunity Table (30 Fields from user SQL) ─────────────────────────
+function loadOpportunityTable(itemNo) {
+    let url = `/get_opportunity_list/?customer_id=${encodeURIComponent(CUSTOMER_ID)}`;
+    if (itemNo) url += `&item_no=${encodeURIComponent(itemNo)}`;
+    fetch(url)
+        .then(r => r.json())
+        .then(res => {
+            const tbody = document.getElementById('opp-table-body');
+            const rows = res.data || [];
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="30" class="text-center text-muted py-3">No opportunities found for this customer.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(d => `
+                <tr data-item="${d.item_no || ''}">
+                    <td>${d.attachmentofreferencedocs || ''}</td>
+                    <td><strong>${d.item_no || ''}</strong></td>
+                    <td>${d.customerid || ''}</td>
+                    <td>${d.customername || ''}</td>
+                    <td>${d.project_name || ''}</td>
+                    <td>${d.opportunity_received_date || ''}</td>
+                    <td>${d.salesperson_code || ''}</td>
+                    <td>${d.contact_no || ''}</td>
+                    <td>${d.contactname || ''}</td>
+                    <td>${d.sales_cycle_code || ''}</td>
+                    <td>${d.creation_date || ''}</td>
+                    <td>${d.status || ''}</td>
+                    <td>${d.supply_location || ''}</td>
+                    <td>${d.segment_no || ''}</td>
+                    <td>${d.segment_description || ''}</td>
+                    <td>${d.part_no || ''}</td>
+                    <td>${d.status_date || ''}</td>
+                    <td>${d.part_name || ''}</td>
+                    <td>${d.sop_date || ''}</td>
+                    <td>${d.drawing_revision_no || ''}</td>
+                    <td>${d.application || ''}</td>
+                    <td>${d.business || ''}</td>
+                    <td>${d.voss_plant_location || ''}</td>
+                    <td>${d.sales_goahead_date_for_tool || ''}</td>
+                    <td>${d.part_price_1 || ''}</td>
+                    <td>${d.part_price_2 || ''}</td>
+                    <td>${d.annual_volume || ''}</td>
+                    <td>${d.annual_volume_2 || ''}</td>
+                    <td>${d.annual_volume_3 || ''}</td>
+                    <td>${d.annual_volume_4 || ''}</td>
+                </tr>
+            `).join('');
+
+            tbody.querySelectorAll('tr').forEach((tr, idx) => {
+                tr.addEventListener('click', () => {
+                    const d = rows[idx];
+                    if (d && d.item_no) {
+                        fill('searchOpportunityNo', d.item_no);
+                        document.getElementById('searchOpportunityNo').dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+        })
+        .catch(() => {
+            const tbody = document.getElementById('opp-table-body');
+            tbody.innerHTML = '<tr><td colspan="30" class="text-center text-muted py-3">Error loading opportunities</td></tr>';
+        });
+}
+
+// On page load
 (function() {
     const cd = document.getElementById('creationDate');
     if (cd && !cd.value) cd.value = new Date().toISOString().split('T')[0];
+    setAutofilledLock(true);
+    loadOpportunityTable();
 })();
 </script>
 {% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'layouts/auth_base.html' %}
+{% load static %}
+
+{% block title %}Logged Out | FlowNexis{% endblock title %}
+
+{% block bodyclass %}logout-page{% endblock bodyclass %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+  body.logout-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0c29, #1a1a2e, #16213e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  body.logout-page::before, body.logout-page::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: orbFloat 10s ease-in-out infinite;
+  }
+  body.logout-page::before {
+    top: -250px; right: -200px; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+  }
+  body.logout-page::after {
+    bottom: -180px; left: -180px; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);
+  }
+  @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-30px,40px) scale(1.06);} }
+  .fn-logout-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 40px 30px;
+    max-width: 460px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+    animation: slideUp 0.5s ease forwards;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+  .fn-logout-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 700; color:#fff; margin-bottom:12px; }
+  .fn-logout-msg { font-size:14px; color:rgba(255,255,255,0.75); margin-bottom:24px; }
+  .fn-btn-login {
+    display:inline-block; padding:12px 28px; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; border:none; border-radius:8px; font-weight:600; text-decoration:none; transition:all 0.2s ease; box-shadow:0 3px 10px rgba(37,99,235,0.35);
+  }
+  .fn-btn-login:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(37,99,235,0.5); }
+</style>
+
+<div class="fn-logout-card">
+  <div class="fn-logout-title">You have been logged out</div>
+  <div class="fn-logout-msg">Thank you for using FlowNexis. We hope to see you again soon!</div>
+  <a href="{% url 'login' %}" class="fn-btn-login">Return to Login</a>
+</div>
+{% endblock content %}

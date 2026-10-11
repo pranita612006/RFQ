@@ -2,484 +2,557 @@
 {% load static %}
 
 {% block content %}
+<!-- Google Fonts: Permanent Marker (Headings) & Montserrat (Body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
-/* ── Access-style ECN form ── */
-.ecn-wrap {
-  background: #f0f0f0;
-  border: 1px solid #bbb;
-  padding: 10px 12px;
-  max-width: 1200px;
-  margin: 8px auto;
-}
-.ecn-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-.ecn-header-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.ecn-header-title .voss-logo {
-  color: #e2007a;
-  font-size: 22px;
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: 1px;
-  font-family: Arial, sans-serif;
-}
-.ecn-header-title h2 {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
-  color: #1a1a2e;
-  font-family: Arial, sans-serif;
-}
-.ecn-back-btn {
-  background: #e8e8e8;
-  border: 1px solid #999;
-  padding: 3px 14px;
-  font-size: 13px;
-  cursor: pointer;
-  border-radius: 2px;
-  font-family: Arial, sans-serif;
-}
-.ecn-back-btn:hover { background: #d0d0d0; }
+  /* Base typography: Montserrat for all text except headings */
+  .opp-container,
+  .opp-container * {
+    font-family: 'Montserrat', sans-serif;
+  }
 
-.ecn-field-row {
-  display: grid;
-  grid-template-columns: 44% 56%;
-  align-items: center;
-  margin-bottom: 2px;
-}
-.ecn-label {
-  background: #dbe5f1;
-  border: 1px solid #a8b4c5;
-  padding: 3px 7px;
-  font-size: 12px;
-  font-weight: 500;
-  font-family: Arial, sans-serif;
-  min-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #1a1a1a;
-}
-.ecn-label.pink { background: #f0c0d0; border-color: #c090a8; }
-.ecn-input {
-  border: 1px solid #b8b8b8;
-  padding: 2px 6px;
-  font-size: 12px;
-  background: #fff;
-  min-height: 24px;
-  width: 100%;
-  font-family: Arial, sans-serif;
-  outline: none;
-  box-sizing: border-box;
-}
-.ecn-input:focus { border-color: #4a90d9; box-shadow: 0 0 0 1px #4a90d9; }
-select.ecn-input { height: 24px; }
-.ecn-input[readonly] { background: #f5f5f5; color: #555; }
+  /* Headings: Permanent Marker */
+  .opp-card-title,
+  .opp-grid-title,
+  .items-grid-title,
+  .ecn-history-title {
+    font-family: 'Permanent Marker', cursive !important;
+  }
 
-/* 3-column grid */
-.ecn-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-/* Top search row layout */
-.top-label {
-  background: #dbe5f1;
-  border: 1px solid #a8b4c5;
-  padding: 3px 7px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: Arial, sans-serif;
-  min-height: 24px;
-  display: flex;
-  align-items: center;
-}
-.top-input {
-  border: 1px solid #b8b8b8;
-  padding: 2px 6px;
-  font-size: 12px;
-  background: #fff;
-  min-height: 24px;
-  font-family: Arial, sans-serif;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-select.top-input { height: 24px; }
+  .opp-card-header {
+    background-color: #2E266D !important;
+    border-bottom: 2px solid #231e57;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+  }
 
-/* Buttons */
-.ecn-btn-row {
-  display: flex;
-  gap: 6px;
-  margin: 6px 0;
-}
-.ecn-btn {
-  padding: 4px 18px;
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-family: Arial, sans-serif;
-}
-.ecn-btn-update { background: #4472c4; color: #fff; }
-.ecn-btn-update:hover { background: #3560b0; }
-.ecn-btn-delete { background: #e05050; color: #fff; }
-.ecn-btn-delete:hover { background: #c03030; }
+  .opp-card-title {
+    color: #FFFFFF !important;
+    font-size: 1.4rem;
+    margin: 0;
+  }
 
-/* Bottom table */
-.ecn-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-  font-family: Arial, sans-serif;
-  margin-top: 6px;
-}
-.ecn-table thead tr {
-  background: #1e3a5f;
-  color: #fff;
-}
-.ecn-table th {
-  padding: 4px 7px;
-  border: 1px solid #1e3a5f;
-  font-weight: 600;
-  white-space: nowrap;
-  text-align: left;
-  position: relative;
-}
-.ecn-table th::after {
-  content: ' ▼';
-  font-size: 8px;
-  opacity: 0.7;
-}
-.ecn-table td {
-  padding: 3px 7px;
-  border: 1px solid #ccc;
-  white-space: nowrap;
-}
-.ecn-table tbody tr:nth-child(even) { background: #f5f8ff; }
-.ecn-table tbody tr:hover { background: #cce0ff; }
+  .btn-opp-back {
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
 
-/* Toast */
-#toast-msg {
-  font-size: 13px;
-  padding: 6px 12px;
-  margin-bottom: 6px;
-  border-radius: 3px;
-  display: none;
-}
-#toast-msg.show { display: block; }
-#toast-msg.t-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
-#toast-msg.t-error   { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-#toast-msg.t-info    { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
-#toast-msg.t-warning { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+  .btn-opp-back:hover {
+    background-color: #FFFFFF;
+    color: #2E266D !important;
+  }
+
+  /* Labels and inputs styling */
+  .opp-container label {
+    font-weight: 600;
+    color: #333333;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+  }
+
+  .opp-container .form-control:focus,
+  .opp-container .form-select:focus {
+    border-color: #2E266D;
+    box-shadow: 0 0 0 0.2rem rgba(46, 38, 109, 0.25);
+  }
+
+  /* All Action Buttons in Red (#FF3131) with Blue Border (#2E266D) & Spacing */
+  .card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .card-footer .btn,
+  .btn-action-red {
+    background-color: #FF3131 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 6px 16px;
+    margin-right: 8px !important;
+    margin-bottom: 4px;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+  }
+
+  .card-footer .btn:hover,
+  .btn-action-red:hover {
+    background-color: #e02525 !important;
+    border: 2px solid #2E266D !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 38, 109, 0.35);
+  }
+
+  .card-footer .btn:disabled,
+  .card-footer .btn.disabled {
+    background-color: #ff8585 !important;
+    border: 2px solid #7b75a6 !important;
+    color: #FFFFFF !important;
+    opacity: 0.65;
+  }
+
+  /* Bottom table */
+  .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  .opp-history-table th {
+    background-color: #2E266D !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border: 1px solid #3c3380;
+  }
+
+  .opp-history-table td {
+    white-space: nowrap;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    vertical-align: middle;
+  }
+
+  .opp-history-table tbody tr {
+    cursor: pointer;
+  }
+
+  .opp-history-table tbody tr:hover {
+    background-color: #e8f0fe !important;
+  }
+
+  .locked-field {
+    background-color: #e9ecef !important;
+  }
 </style>
 
-{% csrf_token %}
-<div class="ecn-wrap">
+<div class="container-fluid mt-3 opp-container">
 
-  <!-- ── HEADER ── -->
-  <div class="ecn-header">
-    <div class="ecn-header-title">
-      <span class="voss-logo">VOSS</span>
-      <h2>ECN- Request For Opportunity Creation</h2>
-    </div>
-    <button class="ecn-back-btn" onclick="window.history.back()">Back</button>
+  <!-- RFQ Locked Banner -->
+  <div id="rfq-locked-banner" class="alert alert-danger d-none" role="alert">
+    <strong>⚠ RFQ Completed &amp; Locked.</strong> This item's RFQ is closed. No further ECN changes are allowed.
   </div>
 
-  <!-- Toast -->
-  <div id="toast-msg"></div>
-
-  <!-- ── TOP ROW ── -->
-  <div style="display:grid; grid-template-columns: 200px 1fr 200px 1fr 200px 1fr; gap:3px; margin-bottom:5px; align-items:center;">
-    <div class="top-label">Search Opportunity No</div>
-    <div>
-      <input type="text" id="searchItemNo" class="top-input" list="searchItemList" autocomplete="off" placeholder="">
-      <datalist id="searchItemList">
-        {% for item in items %}<option value="{{ item }}">{{ item }}</option>{% endfor %}
-      </datalist>
+  <div class="card card-primary shadow-sm">
+    <div class="opp-card-header">
+      <h3 class="opp-card-title">ECN- Request For Opportunity Creation</h3>
+      <button type="button" class="btn-opp-back" id="btn-back">← Back</button>
     </div>
-    <div class="top-label">Cust ID</div>
-    <input type="text" id="ecnCustId" class="top-input" value="{{ customer_id }}" readonly>
-    <div class="top-label">Customer Name</div>
-    <input type="text" id="ecnCustName" class="top-input" value="{{ customer_name }}" readonly>
+
+    {% if messages %}
+    <div class="px-3 pt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Toast message -->
+    <div id="toast-msg" class="alert mx-3 mt-2 d-none" role="alert"></div>
+
+    <div class="card-body p-3">
+      <div class="row gx-3">
+
+        <!-- ══ LEFT COLUMN ══ -->
+        <div class="col-md-4">
+          <h6 class="mb-2 text-primary" style="font-weight:700;">Opportunity Identification</h6>
+
+          <div class="form-group mb-2">
+            <label for="searchItemNo">Search Opportunity No <span class="text-danger">*</span></label>
+            <input type="text" id="searchItemNo" class="form-control form-control-sm" list="searchItemList" autocomplete="off" placeholder="— Type or Select Opportunity No —">
+            <datalist id="searchItemList">
+              {% for item in items %}<option value="{{ item }}">{{ item }}</option>{% endfor %}
+            </datalist>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnItemNo">Item_No/Part No</label>
+              <input type="text" id="ecnItemNo" class="form-control form-control-sm locked-field" readonly>
+            </div>
+            <div class="col-3 form-group mb-2">
+              <label for="ecnId">ECN ID</label>
+              <input type="text" id="ecnId" class="form-control form-control-sm locked-field" readonly>
+            </div>
+            <div class="col-3 form-group mb-2">
+              <label for="ecnType">ECN TYPE</label>
+              <input type="text" id="ecnType" class="form-control form-control-sm" readonly>
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnProjectName">Project_Name</label>
+            <input type="text" id="ecnProjectName" class="form-control form-control-sm">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnOppRecDate">Opportunity Received Date</label>
+            <input type="date" id="ecnOppRecDate" class="form-control form-control-sm">
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnSalesperson">Salesperson Code</label>
+            <select id="ecnSalesperson" class="form-control form-control-sm form-select form-select-sm">
+              <option value="">Select Salesperson</option>
+            </select>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnContactNo">Contact No</label>
+              <input type="text" id="ecnContactNo" class="form-control form-control-sm">
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnContactName">Contact Name</label>
+              <input type="text" id="ecnContactName" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnSalesCycle">Sales Cycle Code</label>
+            <select id="ecnSalesCycle" class="form-control form-control-sm form-select form-select-sm">
+              <option value="">Select Sales Cycle</option>
+            </select>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnCreationDate">Creation Date</label>
+              <input type="date" id="ecnCreationDate" class="form-control form-control-sm locked-field" readonly>
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnStatusDate">Status Date</label>
+              <input type="date" id="ecnStatusDate" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnStatus">Status</label>
+              <select id="ecnStatus" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Status</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Won">Won</option>
+                <option value="Lost">Lost</option>
+              </select>
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnReason">Reason <span class="text-danger">*</span></label>
+              <select id="ecnReason" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Reason</option>
+                <option value="Technical">Technical</option>
+                <option value="Price">Price</option>
+                <option value="Absolute">Absolute</option>
+                <option value="ECN">ECN</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ══ MIDDLE COLUMN ══ -->
+        <div class="col-md-4">
+          <h6 class="mb-2 text-primary" style="font-weight:700;">Product &amp; Location Details</h6>
+
+          <div class="form-group mb-2">
+            <label for="ecnCustId">Cust ID</label>
+            <input type="text" id="ecnCustId" class="form-control form-control-sm locked-field" value="{{ customer_id }}" readonly>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnSupplyLocation">Supply Location</label>
+            <input type="text" id="ecnSupplyLocation" class="form-control form-control-sm">
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-5 form-group mb-2">
+              <label for="ecnSegmentNo">Segment No</label>
+              <select id="ecnSegmentNo" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Segment</option>
+              </select>
+            </div>
+            <div class="col-7 form-group mb-2">
+              <label for="ecnSegmentDesc">Segment Description</label>
+              <input type="text" id="ecnSegmentDesc" class="form-control form-control-sm" readonly>
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnPartName">Part Name</label>
+            <input type="text" id="ecnPartName" class="form-control form-control-sm">
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnSopDate">SOP Date</label>
+              <input type="date" id="ecnSopDate" class="form-control form-control-sm">
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnDrawingRev">Drawing Revision No</label>
+              <input type="text" id="ecnDrawingRev" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnApplication">Application</label>
+              <select id="ecnApplication" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Application</option>
+                <option value="SCR">SCR</option>
+                <option value="Pneumatic">Pneumatic</option>
+                <option value="Coolant">Coolant</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnBusiness">Business</label>
+              <select id="ecnBusiness" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Business</option>
+                <option value="New">New</option>
+                <option value="Pneumatic">Pneumatic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnPlantLocation">Voss Plant Location</label>
+            <select id="ecnPlantLocation" class="form-control form-control-sm form-select form-select-sm">
+              <option value="">Select Plant Location</option>
+              <option value="Pune-1">Pune-1</option>
+              <option value="Pune-2">Pune-2</option>
+              <option value="Chennai">Chennai</option>
+              <option value="UTK">UTK</option>
+              <option value="Unit-3">Unit-3</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnSalesGoahead">Sales Goahead Date</label>
+            <input type="date" id="ecnSalesGoahead" class="form-control form-control-sm">
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnPartPrice1">Part Price 1</label>
+              <input type="number" step="0.01" id="ecnPartPrice1" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnPartPrice2">Part Price 2</label>
+              <input type="number" step="0.01" id="ecnPartPrice2" class="form-control form-control-sm" value="0">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ══ RIGHT COLUMN ══ -->
+        <div class="col-md-4">
+          <h6 class="mb-2 text-primary" style="font-weight:700;">Customer &amp; Volume Details</h6>
+
+          <div class="form-group mb-2">
+            <label for="ecnCustName">Customer Name</label>
+            <input type="text" id="ecnCustName" class="form-control form-control-sm locked-field" value="{{ customer_name }}" readonly>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-1">
+              <label for="ecnVol1">Annual Volume 1</label>
+              <input type="number" id="ecnVol1" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-1">
+              <label for="ecnYear1">Year 1</label>
+              <input type="text" id="ecnYear1" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-1">
+              <label for="ecnVol2">Annual Volume 2</label>
+              <input type="number" id="ecnVol2" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-1">
+              <label for="ecnYear2">Year 2</label>
+              <input type="text" id="ecnYear2" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-1">
+              <label for="ecnVol3">Annual Volume 3</label>
+              <input type="number" id="ecnVol3" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-1">
+              <label for="ecnYear3">Year 3</label>
+              <input type="text" id="ecnYear3" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-1">
+              <label for="ecnVol4">Annual Volume 4</label>
+              <input type="number" id="ecnVol4" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-1">
+              <label for="ecnYear4">Year 4</label>
+              <input type="text" id="ecnYear4" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-1">
+              <label for="ecnVol5">Annual Volume 5</label>
+              <input type="number" id="ecnVol5" class="form-control form-control-sm" value="0">
+            </div>
+            <div class="col-6 form-group mb-1">
+              <label for="ecnYear5">Year 5</label>
+              <input type="text" id="ecnYear5" class="form-control form-control-sm locked-field" readonly>
+            </div>
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnEstValue">Estimated Value (PA)</label>
+              <input type="number" step="0.01" id="ecnEstValue" class="form-control form-control-sm locked-field" value="0" readonly>
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnLifeCycle">Life Cycle in Years</label>
+              <input type="number" id="ecnLifeCycle" class="form-control form-control-sm locked-field" value="0" readonly>
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label for="ecnRemarks">Remarks</label>
+            <input type="text" id="ecnRemarks" class="form-control form-control-sm">
+          </div>
+
+          <div class="row gx-2">
+            <div class="col-6 form-group mb-2">
+              <label for="ecnQuoteStatus">Quote Status</label>
+              <select id="ecnQuoteStatus" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Quote Status</option>
+                <option value="Sent">Sent</option>
+                <option value="Not Sent">Not Sent</option>
+              </select>
+            </div>
+            <div class="col-6 form-group mb-2">
+              <label for="ecnCategoryType">Category Type</label>
+              <select id="ecnCategoryType" class="form-control form-control-sm form-select form-select-sm">
+                <option value="">Select Category Type</option>
+                <option value="NBO A">NBO A</option>
+                <option value="NBO B1">NBO B1</option>
+                <option value="NBO B2">NBO B2</option>
+                <option value="NBO C">NBO C</option>
+                <option value="NBO">NBO</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ ACTION BUTTONS ══ -->
+    <div class="card-footer d-flex flex-wrap gap-2 align-items-center">
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-update-ecn" disabled>✔ Request ECN</button>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-delete-ecn" disabled>🗑 Delete ECN</button>
+      <button type="button" class="btn btn-action-red btn-sm" id="btn-edit">✏ Edit</button>
+      <a href="{% url 'opportunity_creation' %}" class="btn btn-action-red btn-sm">← Opportunity Creation Page</a>
+    </div>
+
   </div>
 
-  <!-- ── 3-COLUMN FORM GRID ── -->
-  <div class="ecn-grid">
-
-    <!-- ══ LEFT COLUMN ══ -->
-    <div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Item_No/Part No</div>
-        <input type="text" id="ecnItemNo" class="ecn-input" readonly>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">ECN ID</div>
-        <input type="text" id="ecnId" class="ecn-input" readonly>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">ECN TYPE</div>
-        <input type="text" id="ecnType" class="ecn-input" readonly>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Project_Name</div>
-        <input type="text" id="ecnProjectName" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Opportunity Received Date</div>
-        <input type="date" id="ecnOppRecDate" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Salesperson Code</div>
-        <select id="ecnSalesperson" class="ecn-input">
-          <option value=""></option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Contact No</div>
-        <input type="text" id="ecnContactNo" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Contact Name</div>
-        <input type="text" id="ecnContactName" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Sales Cycle Code</div>
-        <select id="ecnSalesCycle" class="ecn-input">
-          <option value=""></option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Creation Date</div>
-        <input type="date" id="ecnCreationDate" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Status</div>
-        <select id="ecnStatus" class="ecn-input">
-          <option value=""></option>
-          <option value="Not Started">Not Started</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Won">Won</option>
-          <option value="Lost">Lost</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Reason</div>
-        <select id="ecnReason" class="ecn-input">
-          <option value=""></option>
-          <option value="Technical">Technical</option>
-          <option value="Price">Price</option>
-          <option value="Absolute">Absolute</option>
-          <option value="ECN">ECN</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label pink">Status Date</div>
-        <input type="date" id="ecnStatusDate" class="ecn-input">
+  <!-- ══ ECN Revision History Grid ══ -->
+  <div class="card mt-3 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0 items-grid-title" style="font-family: 'Permanent Marker', cursive !important; color: #2E266D !important;">ECN History for Opportunities</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered table-hover mb-0" id="ecn-history-table" style="font-size: 0.85rem; white-space: nowrap;">
+          <thead class="table-dark">
+            <tr>
+              <th>ECN ID</th>
+              <th>Customer ID</th>
+              <th>ECN Type</th>
+              <th>Item No</th>
+              <th>No_2 / Rev</th>
+              <th>Project Name</th>
+              <th>Part Name</th>
+              <th>Creation Date</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Closed</th>
+              <th>Date Closed</th>
+              <th>Segment No</th>
+              <th>Estimated Closing Date</th>
+              <th>Sales Cycle Stage</th>
+              <th>Estimated Value</th>
+              <th>Part No</th>
+              <th>Opportunity Received Date</th>
+              <th>Annual Volume</th>
+              <th>Drawing Revision No</th>
+              <th>Business</th>
+              <th>Life Cycle in Years</th>
+              <th>Competitor Name</th>
+              <th>Remarks</th>
+              <th>Annual Volume 2</th>
+              <th>Annual Volume 3</th>
+              <th>Annual Volume 4</th>
+              <th>Annual Volume 5</th>
+              <th>Annual Volume Year</th>
+              <th>Annual Volume Year 2</th>
+              <th>Annual Volume Year 3</th>
+              <th>Annual Volume Year 4</th>
+              <th>Annual Volume Year 5</th>
+              <th>Supply Location</th>
+              <th>Part Price 1</th>
+              <th>Category of Project</th>
+              <th>Tooling Payback Date</th>
+              <th>Part Price 2</th>
+              <th>Sales Goahead Date for Tool</th>
+              <th>Drawing No</th>
+              <th>Customer Name</th>
+              <th>Upload Status</th>
+            </tr>
+          </thead>
+          <tbody id="ecn-table-body">
+            <tr>
+              <td colspan="42" class="text-center text-muted py-3">Select an opportunity above to load ECN records</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <!-- ══ MIDDLE COLUMN ══ -->
-    <div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Supply Location</div>
-        <input type="text" id="ecnSupplyLocation" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Segment No</div>
-        <select id="ecnSegmentNo" class="ecn-input">
-          <option value=""></option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Segment Description</div>
-        <input type="text" id="ecnSegmentDesc" class="ecn-input" readonly>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Part Name</div>
-        <input type="text" id="ecnPartName" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">SOP Date</div>
-        <input type="date" id="ecnSopDate" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Drawing Revision No</div>
-        <input type="text" id="ecnDrawingRev" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Application</div>
-        <select id="ecnApplication" class="ecn-input">
-          <option value=""></option>
-          <option value="SCR">SCR</option>
-          <option value="Pneumatic">Pneumatic</option>
-          <option value="Coolant">Coolant</option>
-          <option value="Fuel">Fuel</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Business</div>
-        <select id="ecnBusiness" class="ecn-input">
-          <option value=""></option>
-          <option value="New">New</option>
-          <option value="Pneumatic">Pneumatic</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Voss Plant Location</div>
-        <select id="ecnPlantLocation" class="ecn-input">
-          <option value=""></option>
-          <option value="Pune-1">Pune-1</option>
-          <option value="Pune-2">Pune-2</option>
-          <option value="Chennai">Chennai</option>
-          <option value="UTK">UTK</option>
-          <option value="Unit-3">Unit-3</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Sales Goahead Date</div>
-        <input type="date" id="ecnSalesGoahead" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Part Price 1</div>
-        <input type="number" step="0.01" id="ecnPartPrice1" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Part Price 2</div>
-        <input type="number" step="0.01" id="ecnPartPrice2" class="ecn-input" value="0">
-      </div>
-    </div>
-
-    <!-- ══ RIGHT COLUMN ══ -->
-    <div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume 1</div>
-        <input type="number" id="ecnVol1" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume 2</div>
-        <input type="number" id="ecnVol2" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume 3</div>
-        <input type="number" id="ecnVol3" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume 4</div>
-        <input type="number" id="ecnVol4" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume 5</div>
-        <input type="number" id="ecnVol5" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Estimated Value (PA)</div>
-        <input type="number" step="0.01" id="ecnEstValue" class="ecn-input" value="0" readonly>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume Year 1</div>
-        <input type="text" id="ecnYear1" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume Year 2</div>
-        <input type="text" id="ecnYear2" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume Year 3</div>
-        <input type="text" id="ecnYear3" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume Year 4</div>
-        <input type="text" id="ecnYear4" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Annual Volume Year 5</div>
-        <input type="text" id="ecnYear5" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Life Cycle in Years</div>
-        <input type="number" id="ecnLifeCycle" class="ecn-input" value="0">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Remarks</div>
-        <input type="text" id="ecnRemarks" class="ecn-input">
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Quote Status</div>
-        <select id="ecnQuoteStatus" class="ecn-input">
-          <option value=""></option>
-          <option value="Sent">Sent</option>
-          <option value="Not Sent">Not Sent</option>
-        </select>
-      </div>
-      <div class="ecn-field-row">
-        <div class="ecn-label">Category Type</div>
-        <select id="ecnCategoryType" class="ecn-input">
-          <option value=""></option>
-          <option value="NBO A">NBO A</option>
-          <option value="NBO B1">NBO B1</option>
-          <option value="NBO B2">NBO B2</option>
-          <option value="NBO C">NBO C</option>
-          <option value="NBO">NBO</option>
-        </select>
-      </div>
-    </div>
-
-  </div><!-- /.ecn-grid -->
-
-  <!-- ── BUTTONS ── -->
-  <div class="ecn-btn-row">
-    <button class="ecn-btn ecn-btn-update" id="btn-update-ecn">Update</button>
-    <button class="ecn-btn ecn-btn-delete" id="btn-delete-ecn">Delete</button>
   </div>
 
-  <!-- ── BOTTOM TABLE ── -->
-  <div style="overflow-x:auto; margin-top:4px;">
-    <table class="ecn-table" id="ecn-history-table">
-      <thead>
-        <tr>
-          <th>ECN_ID</th>
-          <th>ECN_TYPE</th>
-          <th>CustomerID</th>
-          <th>CustomerNa</th>
-          <th>Item_No</th>
-          <th>No_2</th>
-          <th>Creation_Da</th>
-          <th>Status</th>
-          <th>Priority</th>
-          <th>Closed</th>
-          <th>Date_Closed</th>
-          <th>Segment_No</th>
-          <th>Estimated_C</th>
-          <th>Sales_Cycle_</th>
-          <th>Estimated_V</th>
-          <th>Part_Name</th>
-        </tr>
-      </thead>
-      <tbody id="ecn-table-body">
-        <tr>
-          <td colspan="16" style="text-align:center; color:#888; padding:8px;">
-            Select an item above to load ECN records
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-</div><!-- /.ecn-wrap -->
+</div>
 
 <script>
-const ECN_CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const ECN_CSRF = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
 const ECN_CUSTOMER_ID = "{{ customer_id }}";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -489,52 +562,116 @@ function fill(id, val) {
     if (el.type === 'date') el.value = fmtDate(val);
     else el.value = (val === null || val === undefined) ? '' : val;
 }
+
 function fmtDate(v) {
     if (!v) return '';
     if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
     try { const d = new Date(v); if (!isNaN(d)) return d.toISOString().split('T')[0]; } catch(e) {}
     return '';
 }
+
 function addDays(dateStr, days) {
     if (!dateStr) return '';
     const d = new Date(dateStr);
     d.setDate(d.getDate() + days);
     return d.toISOString().split('T')[0];
 }
+
 function setDD(id, val) {
     const el = document.getElementById(id);
-    if (!el || !val) return;
+    if (!el || val === null || val === undefined || val === '') return;
     if (![...el.options].some(o => o.value == val)) el.add(new Option(val, val));
     el.value = val;
 }
-function gv(id) { const e = document.getElementById(id); return e ? e.value : ''; }
+
+function gv(id) {
+    const e = document.getElementById(id);
+    return e ? e.value : '';
+}
 
 function toast(msg, type='success') {
     const t = document.getElementById('toast-msg');
-    t.className = 't-' + type + ' show';
+    if (!t) return;
+    t.className = `alert mx-3 mt-2 alert-${type === 'error' ? 'danger' : type}`;
     t.textContent = msg;
-    setTimeout(() => { t.classList.remove('show'); t.className=''; }, 4000);
+    t.classList.remove('d-none');
+    setTimeout(() => t.classList.add('d-none'), 4000);
 }
 
-// ─── Lazy-load dropdowns ──────────────────────────────────────────────────────
+// ─── Back Button ─────────────────────────────────────────────────────────────
+document.getElementById('btn-back')?.addEventListener('click', () => window.history.back());
+
+// ─── Field Locking (Matches Feasibility / Item Creation) ─────────────────────
+const LOCKED_FIELDS_ECN = [
+    'ecnItemNo',
+    'ecnId',
+    'ecnCustId',
+    'ecnCustName',
+    'ecnCreationDate',
+    'ecnStatusDate',
+    'ecnYear1',
+    'ecnYear2',
+    'ecnYear3',
+    'ecnYear4',
+    'ecnYear5',
+    'ecnEstValue',
+    'ecnLifeCycle'
+];
+
+let isEcnFieldsUnlocked = false;
+
+function setAutofilledLock(locked) {
+    LOCKED_FIELDS_ECN.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.readOnly = locked;
+            el.style.backgroundColor = locked ? '#e9ecef' : '#ffffff';
+        }
+    });
+}
+
+function setActionButtonsLocked(locked) {
+    const lockBtns = ['btn-update-ecn', 'btn-delete-ecn'];
+    lockBtns.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = locked;
+    });
+}
+
+// ─── Edit Button ─────────────────────────────────────────────────────────────
+document.getElementById('btn-edit')?.addEventListener('click', function() {
+    const itemNo = gv('ecnItemNo') || gv('searchItemNo');
+    if (!itemNo) {
+        toast('Please select or search an opportunity to edit.', 'warning');
+        return;
+    }
+    isEcnFieldsUnlocked = !isEcnFieldsUnlocked;
+    setAutofilledLock(!isEcnFieldsUnlocked);
+    this.innerHTML = isEcnFieldsUnlocked ? '🔒 Lock Fields' : '✏ Edit';
+    toast(isEcnFieldsUnlocked ? 'Autofilled data fields unlocked for editing.' : 'Autofilled data fields locked.', 'info');
+});
+
+// ─── Lazy-load dropdowns ─────────────────────────────────────────────────────
 document.getElementById('ecnSalesperson').addEventListener('focus', function() {
     if (this.options.length > 1) return;
     fetch('/get_salespersons/').then(r => r.json()).then(d => {
-        this.innerHTML = '<option value=""></option>';
+        this.innerHTML = '<option value="">Select Salesperson</option>';
         d.data.forEach(x => this.add(new Option(x.code + ' - ' + x.name, x.code)));
     });
 });
+
 document.getElementById('ecnSalesCycle').addEventListener('focus', function() {
     if (this.options.length > 1) return;
     fetch('/get_sales_cycles/').then(r => r.json()).then(d => {
-        this.innerHTML = '<option value=""></option>';
+        this.innerHTML = '<option value="">Select Sales Cycle</option>';
         d.data.forEach(x => this.add(new Option(x.code + ' - ' + x.description, x.code)));
     });
 });
+
 document.getElementById('ecnSegmentNo').addEventListener('focus', function() {
     if (this.options.length > 1) return;
     fetch('/get_segments/').then(r => r.json()).then(d => {
-        this.innerHTML = '<option value=""></option>';
+        this.innerHTML = '<option value="">Select Segment</option>';
         d.data.forEach(x => this.add(new Option(x.no + ' - ' + x.description, x.no)));
     });
 });
@@ -547,7 +684,6 @@ document.getElementById('ecnSegmentNo').addEventListener('change', function() {
 });
 
 // ── SOP Date → Year1=SOP, Year2=SOP+365, Year3=SOP+730, Year4=SOP+1095, Year5=SOP+1460 ──
-// (mirrors VBA: Txt_SOP_Date_AfterUpdate)
 document.getElementById('ecnSopDate').addEventListener('change', function() {
     if (!this.value) return;
     fill('ecnYear1', this.value);
@@ -565,17 +701,17 @@ document.getElementById('ecnStatus').addEventListener('change', function() {
     else fill('ecnSalesGoahead', '');
 });
 
-// ── Opportunity Received Date → Creation Date (mirrors VBA: Opportunity_Received_Date_AfterUpdate) ──
+// ── Opportunity Received Date → Creation Date ──
 document.getElementById('ecnOppRecDate').addEventListener('change', function() {
     fill('ecnCreationDate', this.value);
 });
 
-// ── Project Name → Part Name (mirrors VBA: Txt_Project_Name_AfterUpdate) ──
+// ── Project Name → Part Name ──
 document.getElementById('ecnProjectName').addEventListener('change', function() {
     fill('ecnPartName', this.value);
 });
 
-// ── Vol1 → mirrors to Vol2-5 if zero (mirrors VBA: Txt_Annual_Volume1_AfterUpdate) ──
+// ── Vol1 → mirrors to Vol2-5 if zero ──
 document.getElementById('ecnVol1').addEventListener('change', function() {
     const v = parseFloat(this.value) || 0;
     ['ecnVol2','ecnVol3','ecnVol4','ecnVol5'].forEach(id => {
@@ -588,7 +724,6 @@ document.getElementById('ecnVol1').addEventListener('change', function() {
     document.getElementById(id)?.addEventListener('change', recalc));
 
 // ── Estimated Value = Max(Vol1..5) × (Price2 if >0 else Price1) ──
-// (mirrors VBA: Txt_Annual_Volume*_AfterUpdate)
 function recalc() {
     const maxVol = Math.max(...['ecnVol1','ecnVol2','ecnVol3','ecnVol4','ecnVol5'].map(id => parseFloat(gv(id))||0));
     const p1 = parseFloat(gv('ecnPartPrice1'))||0, p2 = parseFloat(gv('ecnPartPrice2'))||0;
@@ -596,8 +731,6 @@ function recalc() {
 }
 
 // ─── Search / Autofill ────────────────────────────────────────────────────────
-// Mirrors VBA: Cmb_SearchOppNo_AfterUpdate
-// Logic: count ECN records → if 0: load from tbl_opportunitymaster; else load ECN:(count-1)
 document.getElementById('searchItemNo').addEventListener('change', function() {
     const itemNo = this.value.trim();
     if (!itemNo) return;
@@ -621,7 +754,6 @@ document.getElementById('searchItemNo').addEventListener('change', function() {
                         } else {
                             toast('No record found for this item.', 'warning');
                         }
-                        renderTable([]);
                     });
             } else {
                 // Load from tbl_opportunitymaster_ecn with ECN:(count-1)
@@ -631,12 +763,21 @@ document.getElementById('searchItemNo').addEventListener('change', function() {
                         if (res.status === 'success') {
                             fillEcn(res.data);
                             toast('ECN record loaded (ECN:' + (count-1) + ').', 'success');
-                            renderTable([res.data]);
                         } else {
                             toast('ECN record not found.', 'warning');
                         }
                     });
             }
+
+            // Always lock autofilled fields upon item load
+            isEcnFieldsUnlocked = false;
+            setAutofilledLock(true);
+            setActionButtonsLocked(false);
+            const editBtn = document.getElementById('btn-edit');
+            if (editBtn) editBtn.innerHTML = '✏ Edit';
+
+            // Load ECN History table
+            loadEcnHistory(itemNo);
         })
         .catch(e => toast('Error: ' + e.message, 'error'));
 });
@@ -644,11 +785,10 @@ document.getElementById('searchItemNo').addEventListener('change', function() {
 function fillEcn(d) {
     fill('ecnItemNo', d.item_no);
     fill('ecnId', d.ecn_id);
-    fill('ecnType', d.ecn_type);
+    fill('ecnType', d.ecn_type || 'REPLICATE');
     fill('ecnCustId', d.customerid || ECN_CUSTOMER_ID);
-    fill('ecnCustName', d.customername);
+    fill('ecnCustName', d.customername || ECN_CUSTOMER_ID);
     fill('ecnProjectName', d.project_name);
-    // Part Name = Project Name (VBA logic)
     fill('ecnPartName', d.part_name || d.project_name);
     fill('ecnOppRecDate', d.opportunity_received_date);
     fill('ecnContactNo', d.contact_no);
@@ -683,12 +823,10 @@ function fillEcn(d) {
 }
 
 function fillFromOpp(d) {
-    // Mirrors VBA: load from tbl_opportunitymaster when no ECN exists
     fill('ecnItemNo', d.item_no);
     fill('ecnCustId', d.customer_id || ECN_CUSTOMER_ID);
     fill('ecnCustName', d.customer_name_db);
     fill('ecnProjectName', d.project_name_db);
-    // Part Name = Project Name (VBA: Txt_Part_Name.Value = rsData("Project_Name"))
     fill('ecnPartName', d.project_name_db);
     fill('ecnOppRecDate', d.opp_received_date);
     fill('ecnContactNo', d.contact_no);
@@ -722,37 +860,108 @@ function fillFromOpp(d) {
     setDD('ecnCategoryType', d.cat_type);
 }
 
-function renderTable(rows) {
-    const tbody = document.getElementById('ecn-table-body');
-    if (!rows || rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="16" style="text-align:center;color:#888;padding:8px;">No ECN records found</td></tr>';
-        return;
-    }
-    tbody.innerHTML = rows.map(d => `<tr>
-        <td>${d.ecn_id||''}</td>
-        <td>${d.ecn_type||''}</td>
-        <td>${d.customerid||''}</td>
-        <td>${d.customername||''}</td>
-        <td>${d.item_no||''}</td>
-        <td>${d.no_2||''}</td>
-        <td>${d.creation_date||''}</td>
-        <td>${d.status||''}</td>
-        <td>${d.priority||''}</td>
-        <td>${d.closed||''}</td>
-        <td>${d.date_closed||''}</td>
-        <td>${d.segment_no||''}</td>
-        <td>${d.estimated_value||''}</td>
-        <td>${d.sales_cycle_code||''}</td>
-        <td>${d.estimated_value||''}</td>
-        <td>${d.part_name||''}</td>
-    </tr>`).join('');
+// ─── ECN History Table (43 Fields from user SQL) ─────────────────────────────
+function loadEcnHistory(itemNo) {
+    let url = `/get_opportunity_ecn_list/?customer_id=${encodeURIComponent(ECN_CUSTOMER_ID)}`;
+    if (itemNo) url += `&item_no=${encodeURIComponent(itemNo)}`;
+    fetch(url)
+        .then(r => r.json())
+        .then(res => {
+            if (res.status === 'success') {
+                renderTable(res.data);
+            } else {
+                renderTable([]);
+            }
+        })
+        .catch(() => renderTable([]));
 }
 
-// ─── Update ECN (INSERT new REPLICATE + UPDATE master) ────────────────────────
-// Mirrors VBA: Cmd_OppUpdate_ECN_Click
+function renderTable(rows) {
+    const tbody = document.getElementById('ecn-table-body');
+    const badge = document.getElementById('ecn-count-badge');
+    if (badge) badge.textContent = `${rows ? rows.length : 0} Records`;
+
+    if (!rows || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="42" class="text-center text-muted py-3">No ECN records found</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = rows.map(d => `
+        <tr data-item="${d.item_no || ''}">
+            <td><strong>${d.ecn_id || ''}</strong></td>
+            <td>${d.customerid || ''}</td>
+            <td><span class="badge ${d.ecn_type === 'ORIGINAL' ? 'bg-primary' : 'bg-success'}">${d.ecn_type || ''}</span></td>
+            <td>${d.item_no || ''}</td>
+            <td>${d.no_2 || ''}</td>
+            <td>${d.project_name || ''}</td>
+            <td>${d.part_name || ''}</td>
+            <td>${d.creation_date || ''}</td>
+            <td>${d.status || ''}</td>
+            <td>${d.priority || ''}</td>
+            <td>${d.closed || ''}</td>
+            <td>${d.date_closed || ''}</td>
+            <td>${d.segment_no || ''}</td>
+            <td>${d.estimated_closing_date || ''}</td>
+            <td>${d.sales_cycle_stage || ''}</td>
+            <td>${d.estimated_value || ''}</td>
+            <td>${d.part_no || ''}</td>
+            <td>${d.opportunity_received_date || ''}</td>
+            <td>${d.annual_volume || ''}</td>
+            <td>${d.drawing_revision_no || ''}</td>
+            <td>${d.business || ''}</td>
+            <td>${d.life_cycle_in_years || ''}</td>
+            <td>${d.competitor_name || ''}</td>
+            <td>${d.remarks || ''}</td>
+            <td>${d.annual_volume_2 || ''}</td>
+            <td>${d.annual_volume_3 || ''}</td>
+            <td>${d.annual_volume_4 || ''}</td>
+            <td>${d.annual_volume_5 || ''}</td>
+            <td>${d.annual_volume_year || ''}</td>
+            <td>${d.annual_volume_year_2 || ''}</td>
+            <td>${d.annual_volume_year_3 || ''}</td>
+            <td>${d.annual_volume_year_4 || ''}</td>
+            <td>${d.annual_volume_year_5 || ''}</td>
+            <td>${d.supply_location || ''}</td>
+            <td>${d.part_price_1 || ''}</td>
+            <td>${d.category_of_project || ''}</td>
+            <td>${d.tooling_payback_date || ''}</td>
+            <td>${d.part_price_2 || ''}</td>
+            <td>${d.sales_goahead_date_for_tool || ''}</td>
+            <td>${d.drawing_no || ''}</td>
+            <td>${d.customer_name || d.customername || ''}</td>
+            <td>${d.upload_status || ''}</td>
+        </tr>
+    `).join('');
+
+    // Row click loads into form
+    tbody.querySelectorAll('tr').forEach((tr, idx) => {
+        tr.addEventListener('click', () => {
+            const rowData = rows[idx];
+            if (rowData) {
+                fillEcn(rowData);
+                isEcnFieldsUnlocked = false;
+                setAutofilledLock(true);
+                setActionButtonsLocked(false);
+                const editBtn = document.getElementById('btn-edit');
+                if (editBtn) editBtn.innerHTML = '✏ Edit';
+                toast(`Loaded ECN record ${rowData.ecn_id || ''}.`, 'info');
+            }
+        });
+    });
+}
+
+// ─── Update ECN ──────────────────────────────────────────────────────────────
 document.getElementById('btn-update-ecn').addEventListener('click', async function() {
     const itemNo = gv('ecnItemNo') || gv('searchItemNo');
-    if (!itemNo) { toast('Please select an item first.', 'warning'); return; }
+    if (!itemNo) { toast('Please select an opportunity first.', 'warning'); return; }
+    const reason = gv('ecnReason');
+    if (!reason) { toast('Please select the reason to save the opportunity!', 'warning'); return; }
+
+    const btn = this;
+    const oldText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Saving...';
+
     const fd = new FormData();
     fd.append('csrfmiddlewaretoken', ECN_CSRF);
     const map = {
@@ -785,18 +994,27 @@ document.getElementById('btn-update-ecn').addEventListener('click', async functi
         if (res.status === 'success') {
             fill('ecnId', res.new_ecn_id || '');
             fill('ecnType', 'REPLICATE');
-            // Reload search list
-            document.getElementById('searchItemNo').dispatchEvent(new Event('change'));
+            loadEcnHistory(itemNo);
         }
-    } catch(e) { toast('Update failed: '+e.message, 'error'); }
+    } catch(e) {
+        toast('Update failed: '+e.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = oldText;
+    }
 });
 
 // ─── Delete ECN ───────────────────────────────────────────────────────────────
-// Mirrors VBA: Cmd_Delete_Click
 document.getElementById('btn-delete-ecn').addEventListener('click', async function() {
     const itemNo = gv('ecnItemNo') || gv('searchItemNo');
-    if (!itemNo) { toast('Please select an item first.', 'warning'); return; }
+    if (!itemNo) { toast('Please select an opportunity first.', 'warning'); return; }
     if (!confirm('Delete ECN record for item "' + itemNo + '"?')) return;
+
+    const btn = this;
+    const oldText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Deleting...';
+
     const fd = new FormData();
     fd.append('csrfmiddlewaretoken', ECN_CSRF);
     fd.append('item_no', itemNo);
@@ -806,21 +1024,22 @@ document.getElementById('btn-delete-ecn').addEventListener('click', async functi
         const res = await r.json();
         toast(res.message, res.status==='success'?'success':'error');
         if (res.status === 'success') {
-            document.querySelectorAll('.ecn-input:not([readonly])').forEach(el => el.value = '');
-            renderTable([]);
+            setActionButtonsLocked(true);
+            loadEcnHistory();
         }
-    } catch(e) { toast('Delete failed: '+e.message, 'error'); }
+    } catch(e) {
+        toast('Delete failed: '+e.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = oldText;
+    }
 });
 
-// ─── Set today as default + load customer info on page load ──────────────────
-// Mirrors VBA: Form_Load
+// ─── On page load ─────────────────────────────────────────────────────────────
 (function() {
-    // Set creation date to today
     const cd = document.getElementById('ecnCreationDate');
     if (cd && !cd.value) cd.value = new Date().toISOString().split('T')[0];
-    // Contact_No = Customer_ID (VBA: DLookup("[Customer_ID]","tbl_CustomerInfo",...))
     fill('ecnContactNo', ECN_CUSTOMER_ID);
-    // Supply_Location = City from customer info
     if (ECN_CUSTOMER_ID) {
         fetch(`/get_item_numbers/?customer_id=${ECN_CUSTOMER_ID}`)
             .then(r => r.json())
@@ -829,6 +1048,13 @@ document.getElementById('btn-delete-ecn').addEventListener('click', async functi
                 if (d.contact) fill('ecnContactName', d.contact);
             }).catch(() => {});
     }
+
+    // Set locked styles on initial load
+    setAutofilledLock(true);
+    setActionButtonsLocked(true);
+
+    // Initial load of history table for this customer
+    loadEcnHistory();
 })();
 </script>
 {% endblock %}

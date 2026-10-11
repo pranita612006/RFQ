@@ -1,4 +1,81 @@
 {% load static %}
+<style>
+  .boc-layout {
+    display: flex;
+    padding: 12px 16px;
+    gap: 16px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .boc-left-column, .boc-right-column {
+    flex: 1 1 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .boc-section-block {
+    background: #FFFFFF !important;
+    border: 1px solid #c8d6e8 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+    overflow: hidden !important;
+    margin-bottom: 12px !important;
+  }
+  .boc-header-bar {
+    background-color: #2E266D !important;
+    color: #FFFFFF !important;
+    padding: 8px 14px !important;
+    border-bottom: 2px solid #231e57 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  .boc-section-title {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    color: #FFFFFF !important;
+    font-family: 'Montserrat', sans-serif !important;
+    letter-spacing: 0.03em !important;
+  }
+  .boc-btn-save, .boc-btn-add {
+    background: #FF3131 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    padding: 3px 14px !important;
+    cursor: pointer !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: background 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  .boc-btn-save:hover, .boc-btn-add:hover {
+    background: #e02525 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+  }
+  .boc-table-container {
+    border: none !important;
+    padding: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    background: #FFFFFF !important;
+  }
+  .boc-data-table thead tr {
+    background: #212529 !important;
+  }
+  .boc-data-table thead th {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    padding: 6px 10px !important;
+  }
+  .boc-overview-header .boc-overview-link {
+    color: #2E266D !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+  }
+</style>
 <div class="boc-layout" id="boc-tab-root" data-item-id="{{ item_creation_id }}" data-year="{{ assignment_year }}">
   <!-- ── Left Column ── -->
   <div class="boc-left-column">

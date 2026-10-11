@@ -21,17 +21,48 @@
 
   <!-- Custom styles (compiled from custom.scss) -->
   <link rel="stylesheet" href="{% static 'assets/scss/custom.scss' %}">
+  <style>
+    /* Global sidebar stability across all pages */
+    .main-sidebar {
+      width: 250px !important;
+    }
+    body.sidebar-collapse .main-sidebar {
+      width: 4.6rem !important;
+    }
+    /* Protect sidebar search button and input from any page-level overrides */
+    .sidebar .btn-sidebar {
+      background-color: transparent !important;
+      border: 1px solid #56606a !important;
+      color: #c2c7d0 !important;
+      box-shadow: none !important;
+      transform: none !important;
+      margin: 0 !important;
+      padding: .375rem .75rem !important;
+      border-radius: 0 .25rem .25rem 0 !important;
+    }
+    .sidebar .btn-sidebar:hover {
+      background-color: #4f5962 !important;
+      color: #ffffff !important;
+    }
+    .sidebar .form-control-sidebar {
+      background-color: #3f474e !important;
+      border: 1px solid #56606a !important;
+      color: #fff !important;
+      height: calc(2.25rem + 2px) !important;
+    }
+  </style>
   {% block extrastyle %}{% endblock extrastyle %}
 </head>
-<body class="{% block bodyclass %}{% endblock bodyclass %}">
+<body class="hold-transition sidebar-mini layout-fixed {% block bodyclass %}{% endblock bodyclass %}">
 <div class="wrapper">
 
   {% block preloader %}
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake"
-         src="{% static 'dist/img/AdminLTELogo.png' %}"
-         alt="AdminLTELogo"
+    <img class="animation__shake img-circle elevation-3"
+         src="{% static 'img/digisynergies_logo.png' %}"
+         alt="Logo"
+         style="background-color: #ffffff; object-fit: contain; padding: 4px;"
          height="60"
          width="60">
   </div>
